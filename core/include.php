@@ -1,26 +1,24 @@
 <?php
 namespace Core;
 
-$gefunden = false;
-if(count($DSH_URL) >= 2 && $DSH_URL[0] == "Schulhof" && $DSH_URL[1] == "Verwaltung") {
-	if(count($DSH_URL) == 2) {
+/**
+* Bindet die zu $url passende Seite ein
+* @param array url Die URL der zu ladenenden Seite
+*/
+function seiteEinbinden(array $url) {
+	global $DSH_MODULE;
+
+	$gefunden = false;
+	if(count($url) == 2 && $url[0] == "Schulhof" && $url[1] == "Verwaltung") {
 		// Verwaltungsbereich
 		$gefunden = true;
 		include __DIR__."/seiten/verwaltungsbereich.php";
-	} else {
-		$gefunden = modulLaden($DSH_URL[2]);
-		if($gefunden !== false) {
-			$seitenliste = $gefunden["seiten"];
-			$seiten = \unserialize(\file_get_contents("$DSH_MODULE/{$DSH_URL[2]}/$seitenliste"));
-			seiteFinden($seiten);
-			$gefunden = true;
-		}
 	}
-}
 
-if(!$gefunden) {
-	$seiten = \unserialize(\file_get_contents(__DIR__."/seitenliste"));
-	seiteFinden($seiten);
+ 	if(!$gefunden) {
+		$seiten = \unserialize(\file_get_contents(__DIR__."/seitenliste.core"));
+		seiteFinden($seiten);
+	}
 }
 
 /**
@@ -30,7 +28,7 @@ if(!$gefunden) {
 * @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
 */
 function seiteFinden($seiten, $return = false) {
-	global $DSH_URL, $DSH_URLGANZ;
+	global $DSH_URL, $DSH_URLGANZ, $DSH_MODULE;
 	$gefunden = false;
 	foreach($seiten as $seite => $datei) {
 		if(\substr($seite, 0, 1) == "/") {
@@ -71,58 +69,48 @@ $geladeneModule = array();
 /**
 * Lädt das Modul und dessen Abhängigkeiten
 *	@param string $modul Das zu ladende Modul
+* @param bool $laden Ob die geladen-Funktion des Moduls ausgeführt werden soll
 * @param bool $configrueck Ob die Modulkonfiguration zurückgegeben werden soll
 * @return bool|array false wenn Modul nicht gefunden, sonst Modulkonfiguration
 */
-function modulLaden($modul, $configrueck = true) {
-	global $geladeneModule;
-	if(!file_exists("$DSH_MODULE/$modul/modul.yml")) {
+function modulLaden($modul, $laden = true, $configrueck = true) {
+	global $geladeneModule, $DSH_MODULE;
+	if(!file_exists("$DSH_MODULE/$modul/modul.core")) {
 		// Modul gibt's nicht
 		return false;
 	}
-	$config = \unserialize("$DSH_MODULE/$modul/modul.yml");
-	$benötigt = $config["benötigt"];
-	foreach($benötigt as $b) {
+	$config = \unserialize("$DSH_MODULE/$modul/modul.core");
+
+	// Nicht sich selbst laden
+	$geladeneModule[] = $modul;
+
+	foreach($config["benötigt"] as $b) {
 		if(!\in_array($b, $geladeneModule)) {
-			if(modulLaden($b, ) === false) {
+			$geladeneModule[] = $b;		// Vor modulLaden, um Endlosschleife zu verhindern
+			if(modulLaden($b, true, false) === false) {
 				return false;
 			}
-			$geladeneModule[] = $b;
 		}
 	}
 
-	if(	$config["name"] 				?? "" 	== "" 		||
-			$config["beschreibung"] ?? "" 	== "" 		||
-			$config["lehrernetz"] 	?? null == null 	||
-			$config["version"] 			?? null == null
-		) {
-		return false;
+	foreach($config["erweitert"] as $b) {
+		if(!\in_array($b, $geladeneModule)) {
+			$geladeneModule[] = $b;		// Vor modulLaden, um Endlosschleife zu verhindern
+			modulLaden($b, true, false);
+		}
 	}
 
-	$geladen = "$DSH_MODULE/$modul/".( $config["geladen"] ?? "funktionen/geladen.php" );
-	if(\file_exists($geladen)) {
-		include $geladen;
+	if($laden) {
+		$geladen = "$DSH_MODULE/$modul/funktionen/geladen.php";
+		if(\file_exists($geladen)) {
+			include $geladen;
+		}
 	}
 
 	if(!$configrueck) {
 		return true;
 	}
 
-	$standard = array(
-		"geladen"					=> "funktionen/geladen.php",
-		"ziele"						=> "funktionen/ziele",
-		"rechte"					=> "funktionen/rechte",
-		"seiten"					=> "seiten/seitenliste",
-		"speicher"				=> "dateien/$modul",
-		"einstellungen"		=> "funktionen/einstellungen",
-		"datenbanken"			=> array("schulhof", "personen"),
-		"benötigt"				=> array(),
-		"erweitert"				=> array()
-	);
-
-	$config = array_merge($standard, $config);
-
 	return $config;
 }
-
 ?>
