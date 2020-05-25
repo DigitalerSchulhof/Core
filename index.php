@@ -6,7 +6,12 @@ $DSH_URL = explode("/", $DSH_URLGANZ);
 $DSH_MODULE = __DIR__."/module";
 $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()_]{3,}";
 
+$DSH_DATENBANKEN = array();
+
 include __DIR__."/core/include.php";
+aktuellesModulBestimmen();
+$DSH_DATENBANKEN = array("schulhof");
+coreEinbinden();
 
 echo "<!DOCTYPE html>";
 echo "<html>";

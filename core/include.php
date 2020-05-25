@@ -1,6 +1,9 @@
 <?php
 namespace Core;
 
+include __DIR__."/db/DB.php";
+include __DIR__."/db/Anfrage.php";
+
 /**
 * Bindet die zu $url passende Seite ein
 * @param array url Die URL der zu ladenenden Seite
@@ -16,19 +19,19 @@ function seiteEinbinden(array $url) {
 	}
 
  	if(!$gefunden) {
-		$seiten = \unserialize(\file_get_contents(__DIR__."/seitenliste.core"));
-		seiteFinden($seiten);
+		seiteFinden();
 	}
 }
 
+/** @var array Daten über das aktuelle Modul */
+$aktuellesModul = null;
+
 /**
-* Bindet die passende PHP-Datei zu einer Seite ein
-* @param array $seiten Array an Seiten
-* @param bool $return Soll Pfad als Rückgabewert behandelt werden
-* @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
+* Bestimmt und lädt das aktulle Modul
 */
-function seiteFinden($seiten, $return = false) {
-	global $DSH_URL, $DSH_URLGANZ, $DSH_MODULE;
+function aktuellesModulBestimmen() {
+	global $DSH_URL, $DSH_URLGANZ, $DSH_MODULE, $aktuellesModul;
+	$seiten = \unserialize(\file_get_contents(__DIR__."/seitenliste.core"));
 	$gefunden = false;
 	foreach($seiten as $seite => $datei) {
 		if(\substr($seite, 0, 1) == "/") {
@@ -57,10 +60,22 @@ function seiteFinden($seiten, $return = false) {
 		$DSH_URL = \explode("/", $DSH_URLGANZ);
 		$gefunden = "../core/seiten/fehler/404.php";
 	}
+	$aktuellesModul["gefunden"] = $gefunden;
+	$aktuellesModul["modul"] = $modul;
+}
+
+/**
+* Bindet die passende PHP-Datei zu einer Seite ein
+* @param bool $return Soll Pfad als Rückgabewert behandelt werden
+* @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
+*/
+function seiteFinden($return = false) {
+	global $DSH_MODULE, $aktuellesModul;
 	if($return) {
-		return $gefunden;
+		return $aktuellesModul["gefunden"];
 	}
-	return include_once "$DSH_MODULE/$gefunden";
+
+	return include_once "$DSH_MODULE/{$aktuellesModul['gefunden']}";
 }
 
 /** @var array Geladene Module */
@@ -107,10 +122,30 @@ function modulLaden($modul, $laden = true, $configrueck = true) {
 		}
 	}
 
+	// Nötige Datenbankverbindungen bestimmen
+	$DSH_DATENBANKEN = array_merge($DSH_DATENBANKEN, $config["datendanken"]);
+
 	if(!$configrueck) {
 		return true;
 	}
 
 	return $config;
+}
+
+/**
+* Core-Funktionen einbinden
+*/
+include_once __DIR__."/db/DB.php";
+include_once __DIR__."/db/Anfrage.php";
+use \DB;
+
+function coreEinbinden() {
+	global $DSH_DATENBANKEN, $DBS, $DBP;
+
+	foreach($DSH_DATENBANKEN as $d) {
+		if($d == "schulhof") {
+			$DBS = new DB\DB("localhost", "root", "", "dsh_schulhof", "MeinPasswortIstSicher:)");
+		}
+	}
 }
 ?>
