@@ -1,3 +1,0 @@
-[submodule "module/DB"]
-	path = module/DB
-	url = https://github.com/DigitalerSchulhof/DB.git
