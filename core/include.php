@@ -1,9 +1,6 @@
 <?php
 namespace Core;
 
-include __DIR__."/db/DB.php";
-include __DIR__."/db/Anfrage.php";
-
 /**
 * Bindet die zu $url passende Seite ein
 * @param array url Die URL der zu ladenenden Seite
@@ -51,14 +48,14 @@ function aktuellesModulBestimmen() {
 	if($gefunden === false) {
 		$DSH_URLGANZ = "Fehler/404";
 		$DSH_URL = \explode("/", $DSH_URLGANZ);
-		$gefunden = "../core/seiten/fehler/404.php";
+		$gefunden = "Kern/seiten/fehler/404.php";
 	}
 	$modul = \substr($gefunden, 0, \strpos($gefunden, "/"));
 
-	if(substr($gefunden, 0, 8) != "../core/" && modulLaden($modul) === false) {
+	if($modul != "Kern" && modulLaden($modul) === false) {
 		$DSH_URLGANZ = "Fehler/404";
 		$DSH_URL = \explode("/", $DSH_URLGANZ);
-		$gefunden = "../core/seiten/fehler/404.php";
+		$gefunden = "Kern/seiten/fehler/404.php";
 	}
 	$aktuellesModul["gefunden"] = $gefunden;
 	$aktuellesModul["modul"] = $modul;
@@ -89,12 +86,13 @@ $geladeneModule = array();
 * @return bool|array false wenn Modul nicht gefunden, sonst Modulkonfiguration
 */
 function modulLaden($modul, $laden = true, $configrueck = true) {
-	global $geladeneModule, $DSH_MODULE;
+	global $geladeneModule, $DSH_MODULE, $DSH_DATENBANKEN, $MODUL;
 	if(!file_exists("$DSH_MODULE/$modul/modul.core")) {
 		// Modul gibt's nicht
 		return false;
 	}
-	$config = \unserialize("$DSH_MODULE/$modul/modul.core");
+
+	$config = \unserialize(file_get_contents("$DSH_MODULE/$modul/modul.core"));
 
 	// Nicht sich selbst laden
 	$geladeneModule[] = $modul;
@@ -116,6 +114,7 @@ function modulLaden($modul, $laden = true, $configrueck = true) {
 	}
 
 	if($laden) {
+		$MODUL = "$DSH_MODULE/$modul";
 		$geladen = "$DSH_MODULE/$modul/funktionen/geladen.php";
 		if(\file_exists($geladen)) {
 			include $geladen;
@@ -123,29 +122,12 @@ function modulLaden($modul, $laden = true, $configrueck = true) {
 	}
 
 	// Nötige Datenbankverbindungen bestimmen
-	$DSH_DATENBANKEN = array_merge($DSH_DATENBANKEN, $config["datendanken"]);
+	$DSH_DATENBANKEN = array_merge($DSH_DATENBANKEN, $config["datenbanken"]);
 
 	if(!$configrueck) {
 		return true;
 	}
 
 	return $config;
-}
-
-/**
-* Core-Funktionen einbinden
-*/
-include_once __DIR__."/db/DB.php";
-include_once __DIR__."/db/Anfrage.php";
-use \DB;
-
-function coreEinbinden() {
-	global $DSH_DATENBANKEN, $DBS, $DBP;
-
-	foreach($DSH_DATENBANKEN as $d) {
-		if($d == "schulhof") {
-			$DBS = new DB\DB("localhost", "root", "", "dsh_schulhof", "MeinPasswortIstSicher:)");
-		}
-	}
 }
 ?>

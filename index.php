@@ -11,20 +11,34 @@ $DSH_DATENBANKEN = array();
 include __DIR__."/core/include.php";
 aktuellesModulBestimmen();
 $DSH_DATENBANKEN = array("schulhof");
-coreEinbinden();
+modulLaden("Kern", true, false);
 
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
 		echo "<link rel=\"stylesheet\" href=\"css/hell.css\">";
-		// TODO: Darkmode Einstellung
-		echo "<link rel=\"stylesheet\" href=\"css/dunkel.css\">";
+		if(!isset($_COOKIE["dunkelmodus"])) {
+			echo "<link rel=\"stylesheet\" href=\"css/dunkel.css\">";
+		}
+		if($_COOKIE["dunkelmodus"] ?? "nein" == "ja") {
+			echo "<link rel=\"stylesheet\" href=\"css/dunkelroh.css\">";
+		}
 	echo "</head>";
 	echo "<body>";
-		seiteEinbinden($DSH_URL);
+		echo "<div id=\"dsh_kopfzeile\">";
+			echo "<img id=\"dsh_logo_bild\" src=\"dateien/schulspezifisch/logo.png\">";
+			echo "<span id=\"dsh_logo_schrift\">";
+				echo "<span id=\"dsh_logo_o\">Schulname</span>";
+				echo "<span id=\"dsh_logo_u\">Schule Ort</span>";	// TODO: Schuldaten
+			echo "</span>";
+			echo "<div class=\"dsh_clear\"></div>";
+		echo "</div>";
+		echo "<div id=\"dsh_hauptteil\">";
+			seiteEinbinden($DSH_URL);
+		echo "</div>";
+		echo "<div id=\"dsh_kopfzeile\">";
+		echo "</div>";
 	echo "</body>";
 echo "</body>";
 ?>
-
-<!-- Digitaler Schulhof - Version 1.2..4.5.6.87.8.. -->
-<!-- 🍪 -->
+<!-- Digitaler Schulhof - Version 1.2..4.5.6.87.8.. --><!-- 🍪 -->
