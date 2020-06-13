@@ -36,7 +36,7 @@ echo "<html>";
 		echo "<div id=\"dsh_hauptteil\">";
 			seiteEinbinden($DSH_URL);
 		echo "</div>";
-		echo "<div id=\"dsh_kopfzeile\">";
+		echo "<div id=\"dsh_fusszeile\">";
 		echo "</div>";
 	echo "</body>";
 echo "</body>";
