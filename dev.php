@@ -15,7 +15,7 @@ $DSH_MODULE = __DIR__."/module";
 $globseitenliste = array();
 
 /** @var array Alle Styles, die es gibt */
-$allestyles = array("hell" => "", "dunkel" => "", "dunkelroh" => "", "drucken" => "");
+$allestyles = array("layout" => "", "app" => "", "hell" => "", "dunkel" => "", "dunkelroh" => "", "drucken" => "");
 
 /**
 * Erzeugt die serialized-Version der YAML-Modulkonfiguration
@@ -84,7 +84,7 @@ function modulKeimen($modul) {
 	// Styles keimen lassen
 	$styledir = "$DSH_MODULE/$modul/styles";
 	if(is_dir($styledir)) {
-		$anfrage = $dbs->anfrage("SELECT bezeichnung, wert_h, wert_d FROM kern_styles as s LEFT JOIN dsh_module as m ON m.id = s.modul OR s.modul = 0 WHERE m.name = ? ORDER BY s.modul ASC", "s", $modul);
+		$anfrage = $dbs->anfrage("SELECT s.bezeichnung, IFNULL(s.wert_h, ah.wert_h), IFNULL(s.wert_d, ad.wert_d) FROM kern_styles as s LEFT JOIN dsh_module as m ON m.id = s.modul OR s.modul = 0 LEFT JOIN kern_styles as ah ON ah.id = s.alias_h LEFT JOIN kern_styles as ad ON ad.id = s.alias_d WHERE m.name = ? ORDER BY s.modul ASC", "s", $modul);
 		$styles = array();
 		while($anfrage->werte($bezeichnung, $wert_h, $wert_d)) {
 			$styles[$bezeichnung] = array($wert_h, $wert_d);
@@ -98,17 +98,22 @@ function modulKeimen($modul) {
 		$ob = ob_get_contents();
     ob_end_clean();
 
-		$hell = "";
-		$dunkel = "";
+		$layout = "";
+		$app = "";
+		$farben = "";
 		$drucken = "";
-		$modus = &$hell;
+		$modus = &$layout;
 		foreach(explode("\n", $ob) as $zeile) {
-			if(substr($zeile, 0, strlen("// HELL;")) === "// HELL;") {
-				$modus = &$hell;
+			if(substr($zeile, 0, strlen("// LAYOUT;")) === "// LAYOUT;") {
+				$modus = &$layout;
 				continue;
 			}
-			if(substr($zeile, 0, strlen("// DUNKEL;")) === "// DUNKEL;") {
-				$modus = &$dunkel;
+			if(substr($zeile, 0, strlen("// APP;")) === "// APP;") {
+				$modus = &$app;
+				continue;
+			}
+			if(substr($zeile, 0, strlen("// FARBEN;")) === "// FARBEN;") {
+				$modus = &$farben;
 				continue;
 			}
 			if(substr($zeile, 0, strlen("// DRUCKEN;")) === "// DRUCKEN;") {
@@ -121,19 +126,30 @@ function modulKeimen($modul) {
 			}
 		}
 
-		$hell 		= preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $hell);
-		$dunkel 	= preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-]+)/", function($match) use ($styles) {return $styles[$match[1]][1] ?? $style[$match[1]][0];}, $dunkel);
-		$drucken 	= preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $drucken);
+		$hell 	= $farben;
+		$dunkel = $farben;
 
+		$layout 	= preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $layout);
+		$app 			= preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $app);
+		$hell 		= preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $hell);
+		$dunkel 	= preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][1] ?? $styles[$match[1]][0];}, $dunkel);
+		$drucken 	= preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $drucken);
+
+		$layout 	= preg_replace("/;}/", "}", $layout);
+		$app 			= preg_replace("/;}/", "}", $app);
 		$hell 		= preg_replace("/;}/", "}", $hell);
 		$dunkel 	= preg_replace("/;}/", "}", $dunkel);
 		$drucken 	= preg_replace("/;}/", "}", $drucken);
 
+		$layout 			= "$layout";
+		$app 					= "$app";
 		$hell 				= "$hell";
 		$dunkelroh 		= "$dunkel";
 		$dunkel 			= "@media (prefers-color-scheme: dark) { $dunkel }";
 		$drucken 			= "@media print { $drucken }";
 
+		$allestyles["layout"] 		.= $layout;
+		$allestyles["app"] 				.= $app;
 		$allestyles["hell"] 			.= $hell;
 		$allestyles["dunkel"] 		.= $dunkel;
 		$allestyles["dunkelroh"] 	.= $dunkelroh;
@@ -163,6 +179,8 @@ if($_GET["keimen"] ?? "nein" == "ja") {
 	file_put_contents("$DSH_CORE/seitenliste.core", serialize($seiten));
 
 	// Styles keimen lassen
+	file_put_contents(__DIR__."/css/layout.css", 			$allestyles["layout"]);
+	file_put_contents(__DIR__."/css/app.css", 				$allestyles["app"]);
 	file_put_contents(__DIR__."/css/hell.css", 				$allestyles["hell"]);
 	file_put_contents(__DIR__."/css/dunkel.css",			$allestyles["dunkel"]);
 	file_put_contents(__DIR__."/css/dunkelroh.css", 	$allestyles["dunkelroh"]);

@@ -16,7 +16,6 @@ function ad_auth($username, $password) {
 	}
 
 	if (@ldap_bind($ldap, "uid=".$username.",ou=Nutzer,dc=dsh,dc=de", $password)) {
-		echo "<p>Angemeldet</p>";
 		ldap_unbind($ldap);
 		$_SESSION['angemeldet'] = true;
 
