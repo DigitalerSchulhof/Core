@@ -75,6 +75,8 @@ echo "<html>";
 		echo "<div id=\"dsh_hauptteil_o\">";
 			echo "<div id=\"dsh_hauptteil_i\">";
 				echo "<p>Seite wird geladen :)</p>";
+				echo (new UI\Meldung("Laden ...", "", "laden"))->ausgabe();
+				echo (new UI\Meldung("Erfolg ...", "<p>Juhu!</p>", "schutz"))->ausgabe();
 			echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dsh_fusszeile_o\">";
@@ -91,4 +93,4 @@ echo "<html>";
 	echo "</body>";
 echo "</html>";
 ?>
-<!-- Digitaler Schulhof - Version 1.0 --><!-- <?php echo str_repeat("🍪", \random_int(1, 5)); ?> -->
+<!-- Digitaler Schulhof - Version 1.0 -->
