@@ -1,3 +1,6 @@
 [submodule "module/Kern"]
 	path = module/Kern
 	url = https://github.com/DigitalerSchulhof/Kern.git
+[submodule "module/UI"]
+	path = module/UI
+	url = https://github.com/DigitalerSchulhof/UI.git
