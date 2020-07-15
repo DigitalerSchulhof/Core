@@ -10,6 +10,26 @@ function js($js) {
 	return "<script src=\"$js?$cb\"></script>";
 }
 
+function modulJs($modul) {
+	$jsdir = __DIR__."/../module/$modul/js";
+	$total = 0;
+
+	$scan = function($dir) use (&$scan, &$total) {
+		foreach(array_diff(scandir($dir), array(".", "..")) as $js) {
+			if(is_dir("$dir/$js")) {
+				$scan("$dir/$js");
+			} else if(substr($js, -3) === ".js") {
+				$total += filemtime("$dir/$js");
+			}
+		}
+	};
+
+	$scan($jsdir);
+	$cb = substr(sha1($total),0, 7);
+	return "<script src=\"js/modul.php?modul=$modul&$cb\"></script>";
+
+}
+
 function istZahl($x) {
 	if (preg_match("/^[0-9]+$/", $text)) {
 		return false;

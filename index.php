@@ -17,11 +17,10 @@ modulLaden("UI", true, false);
 
 use UI;
 
-seiteEinbinden($DSH_URL);
-
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
+		echo "<base href='/'>";
 		echo style("css/layout.css");
 		if(/* app */ false) {
 			echo style("css/app.css");
@@ -39,6 +38,8 @@ echo "<html>";
 		echo js("js/core.js");
 		echo js("js/ajax.js");
 		echo js("js/laden.js");
+		echo modulJs("Kern");
+		echo modulJs("UI");
 	echo "</head>";
 	echo "<body>";
 		echo "<div id=\"dshKopfzeileO\">";
@@ -51,21 +52,20 @@ echo "<html>";
 				echo "<ul class=\"dshKopfnavigation\">";
 					echo "<li>";
 						echo "<div class=\"dshSuche\">";
-
-							echo (new UI\Textfeld("dshSuchePcSuchbegriff", "", "", "Suchen...", new UI\Aktion("onkeyup", "dshSucheSuchen('dshSuche_pc_suchbegriff', 'dshSuchePcErgebnisse')")))->ausgabe();
+							// echo new UI\Textfeld("dshSuchePcSuchbegriff", "", "", "Suchen...", new UI\Aktion("onkeyup", "dshSucheSuchen('dshSuche_pc_suchbegriff', 'dshSuchePcErgebnisse')"));
 							echo "<div id=\"dshSuchePcErgebnisse\">";
-								echo (new UI\Knopf("Schließen", new UI\Aktion("onclick", "dhsWebsucheSchliessen('dshSuchePcSuchbegriff', 'dshSuchePcErgebnisse')"), new UI\Icon(Ui\Konstanten::SCHLIESSEN)))->ausgabe("m", "fehler", "UL");
+								// echo (new UI\Knopf("Schließen", new UI\Aktion("onclick", "dhsWebsucheSchliessen('dshSuchePcSuchbegriff', 'dshSuchePcErgebnisse')"), new UI\Icon(Ui\Konstanten::SCHLIESSEN)))->ausgabe("m", "fehler", "UL");
 								echo "<div id=\"dshSuchePcErgebnisseInhalt\">";
-									echo "<p class=\"dshNotiz\">Bitte warten...</p>";
+									// echo "<p class=\"dshNotiz\">Bitte warten...</p>";
 								echo "</div>";
 							echo "</div>";
 						echo "</div>";
 					echo "</li>";
 					echo "<li>";
-						echo (new UI\Knopf("Website", new UI\Aktion("href", "Website")))->ausgabe();
+						// echo (new UI\Knopf("Website", new UI\Aktion("href", "Website")))->ausgabe();
 					echo "</li>";
 					echo "<li>";
-						echo (new UI\Knopf("Schulhof", new UI\Aktion("href", "Schulhof")))->ausgabe();
+						// echo (new UI\Knopf("Schulhof", new UI\Aktion("href", "Schulhof")))->ausgabe();
 					echo "</li>";
 				echo "</ul>";
 				echo "<div class=\"dshClear\"></div>";
@@ -74,28 +74,27 @@ echo "<html>";
 		echo "<div id=\"dshPlatzhalter\"></div>";
 		echo "<div id=\"dshHauptteilO\">";
 			echo "<div id=\"dshHauptteilI\">";
-				$meldungladen = (new UI\Meldung("Laden ...", "<p>Die Seite wird geladen :)</p>", "laden"))->ausgabe();
-				$meldungtest = (new UI\Meldung("Erfolg ...", "<p>Juhu!</p>", "erfolg"))->ausgabe();
-				$toggle = new UI\Togglegruppe("wahl", "TEST", "test", "bla");
-				$toggle->dazu("Quatsch", "bla");
-				$test = "<p>".($toggle)->ausgabe()."</p>";
-				$spalte1 = new UI\Spalte($meldungladen);
-				$spalte1->dazu($meldungtest);
-				$spalte1->dazu($test);
-				echo $spalte1->ausgabe();
+				echo new UI\Elemente\Datumfeld("dshDemoDatumfeld");
+				echo new UI\Elemente\Uhrzeitfeld("dshDemoUhrzeitfeld");
+				echo new UI\Elemente\Schieber("dshDemoSchieber");
+				echo new UI\Elemente\Textfeld("dshDemoTextfeld");
+				echo new UI\Elemente\Zahlenfeld("dshDemoZahlenfeld");
+				echo new UI\Elemente\Farbfeld("dshDemoFarbfeld");
+				echo new UI\Elemente\Passwortfeld("dshDemoPasswortfeld");
+				echo new UI\Elemente\Mailfeld("dshDemoMailfeld");
+				echo new UI\Elemente\Textarea("dshDemoTextrea");
+
 			echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";
 			echo "<div id=\"dshFusszeileI\">";
 			echo "</div>";
 		echo "</div>";
-		?>
-		<script>
-			window.onload = () => {
-				core.seiteLaden('<?php echo $DSH_URLGANZ; ?>');
-			}
-		</script>
-		<?php
+		echo "<script>";
+			echo "window.onload = () => {";
+				echo "core.seiteLaden('$DSH_URLGANZ');";
+			echo "}";
+		echo "</script>";
 	echo "</body>";
 echo "</html>";
 ?>

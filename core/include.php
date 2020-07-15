@@ -28,12 +28,12 @@ $aktuellesModul = null;
 */
 function aktuellesModulBestimmen() {
 	global $DSH_URL, $DSH_URLGANZ, $DSH_MODULE, $aktuellesModul;
-	$seiten = \unserialize(\file_get_contents(__DIR__."/seitenliste.core"));
+	$seiten = unserialize(file_get_contents(__DIR__."/seitenliste.core"));
 	$gefunden = false;
 	foreach($seiten as $seite => $datei) {
-		if(\substr($seite, 0, 1) == "/") {
+		if(substr($seite, 0, 1) == "/") {
 			// RegEx
-			if(\preg_match(\str_replace("{linkmuster}", $DSH_LINKMUSTER, $seite), $DSH_URLGANZ) === 1) {
+			if(preg_match(str_replace("{linkmuster}", $DSH_LINKMUSTER, $seite), $DSH_URLGANZ) === 1) {
 				$gefunden = $datei;
 				break;
 			}
@@ -47,33 +47,33 @@ function aktuellesModulBestimmen() {
 	}
 	if($gefunden === false) {
 		$DSH_URLGANZ = "Fehler/404";
-		$DSH_URL = \explode("/", $DSH_URLGANZ);
+		$DSH_URL = explode("/", $DSH_URLGANZ);
 		$gefunden = "Kern/seiten/fehler/404.php";
 	}
-	$modul = \substr($gefunden, 0, \strpos($gefunden, "/"));
+	$modul = substr($gefunden, 0, strpos($gefunden, "/"));
 
 	if($modul != "Kern" && modulLaden($modul) === false) {
 		$DSH_URLGANZ = "Fehler/404";
-		$DSH_URL = \explode("/", $DSH_URLGANZ);
+		$DSH_URL = explode("/", $DSH_URLGANZ);
 		$gefunden = "Kern/seiten/fehler/404.php";
 	}
 	$aktuellesModul["gefunden"] = $gefunden;
 	$aktuellesModul["modul"] = $modul;
 }
 
-/**
-* Bindet die passende PHP-Datei zu einer Seite ein
-* @param bool $return Soll Pfad als Rückgabewert behandelt werden
-* @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
-*/
-function seiteFinden($return = false) {
-	global $DSH_MODULE, $aktuellesModul;
-	if($return) {
-		return $aktuellesModul["gefunden"];
-	}
-
-	return include_once "$DSH_MODULE/{$aktuellesModul['gefunden']}";
-}
+// /**
+// * Bindet die passende PHP-Datei zu einer Seite ein
+// * @param bool $return Soll Pfad als Rückgabewert behandelt werden
+// * @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
+// */
+// function seiteFinden($return = false) {
+// 	global $DSH_MODULE, $aktuellesModul;
+// 	if($return) {
+// 		return $aktuellesModul["gefunden"];
+// 	}
+//
+// 	return include_once "$DSH_MODULE/{$aktuellesModul['gefunden']}";
+// }
 
 /** @var array Geladene Module */
 $geladeneModule = array();
@@ -92,13 +92,13 @@ function modulLaden($modul, $laden = true, $configrueck = true) {
 		return false;
 	}
 
-	$config = \unserialize(file_get_contents("$DSH_MODULE/$modul/modul.core"));
+	$config = unserialize(file_get_contents("$DSH_MODULE/$modul/modul.core"));
 
 	// Nicht sich selbst laden
 	$geladeneModule[] = $modul;
 
 	foreach($config["benötigt"] as $b) {
-		if(!\in_array($b, $geladeneModule)) {
+		if(!in_array($b, $geladeneModule)) {
 			$geladeneModule[] = $b;		// Vor modulLaden, um Endlosschleife zu verhindern
 			if(modulLaden($b, true, false) === false) {
 				return false;
@@ -107,7 +107,7 @@ function modulLaden($modul, $laden = true, $configrueck = true) {
 	}
 
 	foreach($config["erweitert"] as $b) {
-		if(!\in_array($b, $geladeneModule)) {
+		if(!in_array($b, $geladeneModule)) {
 			$geladeneModule[] = $b;		// Vor modulLaden, um Endlosschleife zu verhindern
 			modulLaden($b, true, false);
 		}
@@ -115,8 +115,9 @@ function modulLaden($modul, $laden = true, $configrueck = true) {
 
 	if($laden) {
 		$MODUL = "$DSH_MODULE/$modul";
+		$KLASSEN = "$DSH_MODULE/$modul/klassen";
 		$geladen = "$DSH_MODULE/$modul/funktionen/geladen.php";
-		if(\file_exists($geladen)) {
+		if(file_exists($geladen)) {
 			include $geladen;
 		}
 	}
