@@ -35,6 +35,9 @@ echo "<html>";
 			echo style("css/hell.css");
 			echo style("css/dunkel.css");
 		}
+		if(/** drucken */ false) {
+			echo style("css/drucken.css");
+		}
 		echo js("js/core.js");
 		echo js("js/ajax.js");
 		echo js("js/laden.js");
