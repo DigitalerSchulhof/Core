@@ -33,6 +33,7 @@ Die Entwicklungssprache des Digitalen Schulhofs ist Deutsch. Umlaute sowie ß si
 - `set`
 - `add`
 - `remove`
+- `self`
 
 ### Versionierung<span id="StyleguideVersionierung"></span>
 Die Versionierung erfolgt jeweils innerhalb eines Moduls. Der Gesamte Digitale Schulhof erhält damit keine eigene einheitliche Versionsnummer.
@@ -50,7 +51,7 @@ Mit **38** veröffentlichten BugFixes
 ### PHP<span id="StyleguidePhp"></span>
 
 #### Dokumentation <span id="StyleguidePhpDokumentation"></span>
-Klassen erfordern eine ausführliche Typ-Dokumentation, die alle Attribute, Parameter und Rückgabewerte einschließen. Allgemein gilt das [PHPDoc](https://docs.phpdoc.org/latest/references/phpdoc/index.html).
+Klassen erfordern eine ausführliche Typ-Dokumentation, die alle Attribute, Parameter und Rückgabewerte einschließen. Allgemein gilt das [PHPDoc](https://docs.phpdoc.org/latest/references/phpdoc/index.html). Bei der Beschreibung von Parametern, deren Name selbsterklärend ist, kann die Beschreibung durch *trivial*, kurz *:)*, ersetzt werden
 
 #### Klassen<span id="StyleguidePhpKlassen"></span>
 Grundsätzlich gilt der Digitale Schulhof als objektorientiertes Softwareprojekt. Imperative Programmteile haben zu unterbleiben. Für den Aufruf von Funktionen oder Attributen von Klassen wird die Schreibweise mit `->` verwendet. Wird ein Attribut der eigenen Klasse (oder ggf. Elternklasse) verwendet, muss direkt auf das Attribut zugegriffen werden (`$this->ATTRIBUTNAME`). Sollte das Attribut in einer Elternklasse als `protected` angelegt sein, gilt dasselbe. Im Fall von als `private` deklarierten Attributs sind *Getter* oder *Setter* zulässig.
