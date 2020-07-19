@@ -135,11 +135,11 @@ function modulKeimen($modul) {
     $dunkel   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][1] ?? $styles[$match[1]][0];}, $dunkel);
     $drucken  = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $drucken);
 
-    $layout   = preg_replace("/;}/", "}",    $layout);
-    $mobil    = preg_replace("/;}/", "}",  $mobil);
-    $hell     = preg_replace("/;}/", "}",    $hell);
-    $dunkel   = preg_replace("/;}/", "}",    $dunkel);
-    $drucken  = preg_replace("/;}/", "}",    $drucken);
+    $layout   = preg_replace("/;}/", "}",   $layout);
+    $mobil    = preg_replace("/;}/", "}",   $mobil);
+    $hell     = preg_replace("/;}/", "}",   $hell);
+    $dunkel   = preg_replace("/;}/", "}",   $dunkel);
+    $drucken  = preg_replace("/;}/", "}",   $drucken);
 
     $layout       = "$layout";
     $mobil        = "$mobil";

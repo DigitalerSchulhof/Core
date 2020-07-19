@@ -6,7 +6,10 @@ core.seiteLaden = (seite) => {
 	ajax("Kern", 0, {"seite": seite}).then((r) => {
 		var rueck = JSON.parse(d);
 		if(rueck["kopfzeile"]) {
-      
+
 		}
+    if(rueck["seite"]) {
+      
+    }
 	})
 }
