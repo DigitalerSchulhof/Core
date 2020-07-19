@@ -32,11 +32,7 @@ function modulJs($modul) {
 }
 
 function istZahl($x) {
-	if (preg_match("/^[0-9]+$/", $text)) {
-		return false;
-	}	else {
-		return true;
-	}
+	return preg_match("/^[0-9]+$/", $x) === 1;
 }
 
 function fuehrendeNull($x) {
