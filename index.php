@@ -32,7 +32,7 @@ echo "<html>";
 			}
 		} else {
 			echo style("css/hell.css");
-			echo style("css/dunkel.css");
+			// echo style("css/dunkel.css");
 		}
 		if(/** drucken */ false) {
 			echo style("css/drucken.css");
@@ -102,6 +102,10 @@ echo "<html>";
 				echo new UI\Elemente\Passwortfeld("dshDemoPasswortfeld");
 				echo new UI\Elemente\Mailfeld("dshDemoMailfeld");
 				echo new UI\Elemente\Textarea("dshDemoTextrea");
+        echo "<br><br><br>";
+        foreach(UI\Elemente\Meldung::ARTEN as $art) {
+          echo new UI\Elemente\Meldung($art, "<p>$art ist sehr schön.</p>", $art);
+        }
 			echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";
