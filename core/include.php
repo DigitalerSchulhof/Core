@@ -113,12 +113,20 @@ function modulLaden($modul, $laden = true, $configrueck = true) {
 		}
 	}
 
+  $MODUL      = "$DSH_MODULE/$modul";
 	if($laden) {
-		$MODUL = "$DSH_MODULE/$modul";
-		$KLASSEN = "$DSH_MODULE/$modul/klassen";
-		$geladen = "$DSH_MODULE/$modul/funktionen/geladen.php";
-		if(file_exists($geladen)) {
+		$KLASSEN    = "$DSH_MODULE/$modul/klassen";
+		$geladen    = "$DSH_MODULE/$modul/funktionen/geladen.php";
+		$check      = "$DSH_MODULE/$modul/funktionen/check.php";
+		$generieren = "$DSH_MODULE/$modul/funktionen/generieren.php";
+    if(file_exists($geladen)) {
 			include $geladen;
+		}
+    if(file_exists($check)) {
+			include $check;
+		}
+    if(file_exists($generieren)) {
+			include $generieren;
 		}
 	}
 

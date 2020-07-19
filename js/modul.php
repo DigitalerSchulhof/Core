@@ -19,12 +19,16 @@ if($fehler) {
 	header("Content-Type: application/javascript");
 	$jsdir = "$moduldir/js";
 
+  if(file_exists("$jsdir/objekt.js")) {
+    echo file_get_contents("$jsdir/objekt.js")."\n";
+  }
+
 	$scan = function($dir) use (&$scan) {
-		foreach(array_diff(scandir($dir), array(".", "..")) as $js) {
+		foreach(array_diff(scandir($dir), array(".", "..", "objekt.js")) as $js) {
 			if(is_dir("$dir/$js")) {
 				$scan("$dir/$js");
 			} else if(substr($js, -3) === ".js") {
-				echo file_get_contents("$dir/$js");
+				echo file_get_contents("$dir/$js")."\n";
 			}
 		}
 	};

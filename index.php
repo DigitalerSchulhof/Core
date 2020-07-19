@@ -9,9 +9,9 @@ $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()
 $DSH_DATENBANKEN = array();
 
 include __DIR__."/core/funktionen.php";
+include __DIR__."/core/check.php";
 include __DIR__."/core/include.php";
 aktuellesModulBestimmen();
-$DSH_DATENBANKEN = array("schulhof");
 modulLaden("Kern", true, false);
 modulLaden("UI", true, false);
 
@@ -117,3 +117,4 @@ echo "<html>";
 echo "</html>";
 ?>
 <!-- Digitaler Schulhof - Version 1.0 -->
+<!-- 🍪 -->

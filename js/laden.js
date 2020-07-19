@@ -3,13 +3,13 @@
  * @param  {string} seite [description]
  */
 core.seiteLaden = (seite) => {
-	ajax("Kern", 0, {"seite": seite}).then((r) => {
-		var rueck = JSON.parse(d);
+	core.ajax("Kern", 0, {"seite": seite}).then((r) => {
+		var rueck = JSON.parse(r);
 		if(rueck["kopfzeile"]) {
 
 		}
     if(rueck["seite"]) {
-      
+
     }
 	})
 }

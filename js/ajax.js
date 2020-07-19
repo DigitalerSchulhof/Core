@@ -14,7 +14,7 @@
  * @param {Object} daten={} Die Anfrageparameter
  * @param {string|boolean} [host=""] Das Netz, in das die Anfrage geht
  */
-var ajax = (modul, ziel, laden, daten, host) => {
+core.ajax = (modul, ziel, laden, daten, host) => {
 	var host = host || "";
 
 	if(laden !== null) {
@@ -24,7 +24,7 @@ var ajax = (modul, ziel, laden, daten, host) => {
 			ui.laden.an(laden[0], laden[1]);
 		}
 	} else {
-		// HINTERGRUNF
+		// HINTERGRUND
 	}
 
   // Daten
@@ -33,7 +33,8 @@ var ajax = (modul, ziel, laden, daten, host) => {
   for(let key in pDaten) {
     daten.append(key, pDaten[key]);
   }
-  daten.append("ziel", ziel);
+  daten.append("modul", modul);
+  daten.append("ziel",  ziel);
 
   // Host
   if(host === true) {
@@ -51,12 +52,12 @@ var ajax = (modul, ziel, laden, daten, host) => {
 				erfolg(anfrage.responseText);
 			}
 		};
-		anfrage.open("POST",host+"core/anfrage.php", true);
+		anfrage.open("POST",host+"anfrage.php", true);
 		anfrage.send(daten);
 	});
 }
 
-var multiajax = (modul, ziel, laden, arrays, statisch, host) => {
+core.multiajax = (modul, ziel, laden, arrays, statisch, host) => {
   var host = host || "";
 
   if(laden !== null) {
@@ -71,9 +72,7 @@ var multiajax = (modul, ziel, laden, arrays, statisch, host) => {
 
   return new Promise((erfolg) => {
     var anfrage = (i) => {
-      ajax(modul, ziel, null, daten[i], host).then((r) => {
-
-      });
+      ajax(modul, ziel, null, daten[i], host).then(erfolg);
     }
 
     anfrage(0);
