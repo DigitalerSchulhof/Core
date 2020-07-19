@@ -70,12 +70,12 @@ echo "<html>";
 						echo "</div>";
 					echo "</li>";
 					echo "<li>";
-            $optWebsite = new UI\Elemente\ToggleOption("dshKopfnaviWebsite");
+            $optWebsite = new UI\Elemente\Toggleoption("dshKopfnaviWebsite");
             $optWebsite->setText("Website");
             $optWebsite->setWert("website");
             $optWebsite->getAktionen()->addFunktion("href", "Website");
 
-            $optSchulhof = new UI\Elemente\ToggleOption("dshKopfnaviSchulhof");
+            $optSchulhof = new UI\Elemente\Toggleoption("dshKopfnaviSchulhof");
             $optSchulhof->setText("Schulhof");
             $optSchulhof->setWert("schulhof");
             $optSchulhof->getAktionen()->addFunktion("href", "Schulhof");
@@ -83,6 +83,7 @@ echo "<html>";
             $kopfnavi = new UI\Elemente\Togglegruppe("dshKopfnavi");
             $kopfnavi->addOption($optWebsite);
             $kopfnavi->addOption($optSchulhof);
+            // @TODO: Wert der aktuellen Seite eintragen
             $kopfnavi->setWert("website");
             echo $kopfnavi;
 					echo "</li>";
