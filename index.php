@@ -20,7 +20,6 @@ use UI;
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
-		echo "<base href=\"/\">";
 		echo style("css/layout.css");
 		if(/* app */ false) {
 			echo style("css/app.css");
@@ -61,6 +60,7 @@ echo "<html>";
 							echo "<div id=\"dshSuchePcErgebnisse\">";
                 $schliessen = new UI\Elemente\MiniIconKnopf(new UI\Icon(Ui\Konstanten::SCHLIESSEN), "Schließen", "Fehler", "UL");
                 $schliessen->getAktionen()->addFunktion("onclick", "dhsWebsucheSchliessen('dshSuchePcSuchbegriff', 'dshSuchePcErgebnisse')");
+                $schliessen->setID("dshSuchePcSchliessen");
                 echo $schliessen;
 								echo "<div id=\"dshSuchePcErgebnisseInhalt\">";
 									echo "<p class=\"dshNotiz\">Bitte warten...</p>";
@@ -69,14 +69,22 @@ echo "<html>";
 						echo "</div>";
 					echo "</li>";
 					echo "<li>";
-            $website = new UI\Elemente\Knopf("Website");
-            $website->getAktionen()->addFunktion("href", "Website");
-            echo $website->setTag("a")->self();
-					echo "</li>";
-					echo "<li>";
-            $schulhof = new UI\Elemente\Knopf("Schulhof");
-            $schulhof->getAktionen()->addFunktion("href", "Schulhof");
-            echo $schulhof->setTag("a")->self();
+            $optWebsite = new UI\Elemente\Toggleoption("dshKopfnaviWebsite");
+            $optWebsite->setText("Website");
+            $optWebsite->setWert("website");
+            $optWebsite->getAktionen()->addFunktion("href", "Website");
+
+            $optSchulhof = new UI\Elemente\Toggleoption("dshKopfnaviSchulhof");
+            $optSchulhof->setText("Schulhof");
+            $optSchulhof->setWert("schulhof");
+            $optSchulhof->getAktionen()->addFunktion("href", "Schulhof");
+
+            $kopfnavi = new UI\Elemente\Togglegruppe("dshKopfnavi");
+            $kopfnavi->addOption($optWebsite);
+            $kopfnavi->addOption($optSchulhof);
+            // @TODO: Wert der aktuellen Seite eintragen
+            $kopfnavi->setWert("website");
+            echo $kopfnavi;
 					echo "</li>";
 				echo "</ul>";
 				echo "<div class=\"dshClear\"></div>";
