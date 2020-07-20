@@ -19,7 +19,7 @@ Mit `// FARBEN;` wird der Farb-Sektor begonnen. Sämtlicher CSS-Code, der bis zu
 ##### // DRUCKEN;<span id="ModulTechnikStylesheetsDrucken"></span>
 Mit `// DRUCKEN;` wird der Drunk-Sektor begonnen. Sämtlicher CSS-Code, der bis zum nächsten Sektor oder Dateiende folgt, wird in die globale Datei `/css/drucken.css` geschrieben und **nur** bei der Druckansicht eingebunden. Inhalte der Variablen werden vom hellen Anstrich genommen.
 #### Angebote
-Module haben die Möglichkeit, so genannte "Angebote" zu sammeln. Dabei stellen diese einen Platz bereit, in welchen andere Module eigene Elemente einbinden können. (Beispiel: Icons in der Aktionszeile. Das Modul *Kern* stellt den Platz *Kern/Aktionsicons* bereit, und Module registrieren eigene Icons.) Angebote sind in der Datei 
+Module haben die Möglichkeit, so genannte "Angebote" zu sammeln. Dabei stellen diese einen Platz bereit, in welchen andere Module eigene Elemente einbinden können. (Beispiel: Icons in der Aktionszeile. Das Modul *Kern* stellt den Platz `Kern/Aktionsicons` bereit, und Module registrieren eigene Icons.) Angebote sind in der Datei `angebote/angebote.yml` hinterlegt. Ein Beispiel dieser findet sich in Modul *Proto*. Diese gibt die Datei an, welche das Angebot bereitstellt. Dieses ist in der Variable `$ANGEBOT` abzuspeichern. Werden mehrere Objekte angeboten, sind dieses als Array in `$ANGEBOT` zu speichern.
 ## Styleguide<span id="Styleguide"></span>
 ### Allgemeines<span id="StyleguideAllgemeines"></span>
 Einrückungen betragen 2 Leerzeichen. Datien sind mit der Zeilenendung LF (`\n`) enkodiert. *Windows-CLRF ist doof und untersagt :)* Ein Zeilenvorschub ist nicht zulässig.

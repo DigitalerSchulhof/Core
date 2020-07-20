@@ -7,6 +7,7 @@ core.seiteLaden = (seite, push) => {
     push = true;
   }
   $("#dshHauptteilI").classList.add("dshSeiteLaedt");
+  document.title = "Seite wird geladen...";
 	core.ajax("Core", 0, null, {"seite": seite}).then((r) => {
     $("#dshHauptteilI").classList.remove("dshSeiteLaedt");
     console.log(r);

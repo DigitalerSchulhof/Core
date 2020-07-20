@@ -14,6 +14,9 @@ $DSH_MODULE = __DIR__."/module";
 /** @var array Priorität => Seitenliste */
 $globseitenliste = array();
 
+/** @var array Angbote als [Modul][Platz][Angebot]*/
+$globangebote = array();
+
 /** @var array Alle Styles, die es gibt */
 $allestyles = array("layout" => "", "mobil" => "", "hell" => "", "dunkel" => "", "dunkelroh" => "", "drucken" => "");
 
@@ -22,7 +25,7 @@ $allestyles = array("layout" => "", "mobil" => "", "hell" => "", "dunkel" => "",
 * @param string $modul Das Modul
 */
 function modulKeimen($modul) {
-  global $globseitenliste, $DSH_MODULE, $dbs, $allestyles;
+  global $globseitenliste, $globangebote, $DSH_MODULE, $dbs, $allestyles;
   echo "Modul »{$modul}« keimen lassen<br>\n";
   $config = YAML::loader(file_get_contents("$DSH_MODULE/$modul/modul.yml"));
   $config = $config["modul"];
@@ -78,6 +81,15 @@ function modulKeimen($modul) {
     $modulEinstellungen = $modulEinstellungen["einstellungen"];
     file_put_contents("$DSH_MODULE/$modul/funktionen/einstellungen.core", serialize($modulEinstellungen));
   }
+
+  // Angebote keimen lassen
+  $angeboteliste = "$DSH_MODULE/$modul/angebote/angebote.yml";
+  if(file_exists($angeboteliste)) {
+    $modulAngebote = YAML::loader($angeboteliste);
+    $modulAngebote = $modulAngebote["angebote"];
+    $globangebote[$modul] = $modulAngebote;
+  }
+
 
   file_put_contents("$DSH_MODULE/$modul/modul.core", serialize($config));
 
@@ -176,6 +188,18 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   }
 
   file_put_contents("$DSH_CORE/seitenliste.core", serialize($seiten));
+  echo "Seitenliste gespeichert.<br>\n";
+
+  $platzangebote = array();
+  foreach($globangebote as $modul => $plaetze) {
+    foreach($plaetze as $platz => $angebot) {
+      $platzangebote[$platz] = $platzangebote[$platz] ?? array();
+      $platzangebote[$platz][$modul] = $angebot;
+    }
+  }
+
+  file_put_contents("$DSH_CORE/angebote.core", serialize($platzangebote));
+  echo "Angebote gespeichert.<br>\n";
 
   // Styles keimen lassen
   file_put_contents(__DIR__."/css/layout.css",      $allestyles["layout"]);
@@ -184,6 +208,7 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   file_put_contents(__DIR__."/css/dunkel.css",      $allestyles["dunkel"]);
   file_put_contents(__DIR__."/css/dunkelroh.css",   $allestyles["dunkelroh"]);
   file_put_contents(__DIR__."/css/drucken.css",     $allestyles["drucken"]);
+  echo "Styles gespeichert.<br>\n";
 
 } else {
   echo "<a href=\"?keimen=ja\">Keimen</a>";

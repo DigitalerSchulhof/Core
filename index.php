@@ -44,6 +44,7 @@ echo "<html>";
 		echo js("js/laden.js");
 		echo modulJs("Kern");
 		echo modulJs("UI");
+    echo "<title>Seite wird geladen...</title>";
 	echo "</head>";
 	echo "<body>";
 		echo "<div id=\"dshKopfzeileO\">";
