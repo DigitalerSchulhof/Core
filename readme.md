@@ -18,7 +18,8 @@ Mit `// MOBIL;` wird der Mobil-Sektor begonnen. Sämtlicher CSS-Code, der bis zu
 Mit `// FARBEN;` wird der Farb-Sektor begonnen. Sämtlicher CSS-Code, der bis zum nächsten Sektor oder Dateiende folgt, wird in die globalen Dateien `/css/hell.css`, `/css/dunkel.css` und `/css/dunkelroh.css` geschrieben. Der CSS-Code wird von je keinem, `@media` für Geräte mit dem Dunkelmodus und keinem umklammert. Ist vom Nutzer der helle oder dunkle Anstrich gewählt (Cookie), wird entsprechend nur `/css/hell.css` bzw. `/css/dunkelroh.css` eingebunden. Ist diese Präferenz nicht gesetzt, wird `/css/hell.css` und `/css/dunkel.css` eingebunden, sodass der Browser entscheidet, welcher Anstrich gewählt wird. Inhalte der Variablen für `/css/hell.css` werden vom hellen Anstrich gewählt, für `/css/dunkel.css` und `/css/dunkelroh.css` wird der dunkle Anstrich gewählt. Ist kein dunkler Wert definiert, wird auf den hellen zurückgefallen.
 ##### // DRUCKEN;<span id="ModulTechnikStylesheetsDrucken"></span>
 Mit `// DRUCKEN;` wird der Drunk-Sektor begonnen. Sämtlicher CSS-Code, der bis zum nächsten Sektor oder Dateiende folgt, wird in die globale Datei `/css/drucken.css` geschrieben und **nur** bei der Druckansicht eingebunden. Inhalte der Variablen werden vom hellen Anstrich genommen.
-
+#### Angebote
+Module haben die Möglichkeit, so genannte "Angebote" zu sammeln. Dabei stellen diese einen Platz bereit, in welchen andere Module eigene Elemente einbinden können. (Beispiel: Icons in der Aktionszeile. Das Modul *Kern* stellt den Platz *Kern/Aktionsicons* bereit, und Module registrieren eigene Icons.) Angebote sind in der Datei 
 ## Styleguide<span id="Styleguide"></span>
 ### Allgemeines<span id="StyleguideAllgemeines"></span>
 Einrückungen betragen 2 Leerzeichen. Datien sind mit der Zeilenendung LF (`\n`) enkodiert. *Windows-CLRF ist doof und untersagt :)* Ein Zeilenvorschub ist nicht zulässig.

@@ -1,5 +1,4 @@
 <?php
-namespace Core;
 
 $DSH_URLGANZ = $_GET["URL"] ?? "";
 $DSH_URL = explode("/", $DSH_URLGANZ);
@@ -9,17 +8,20 @@ $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()
 $DSH_DATENBANKEN = array();
 
 include __DIR__."/core/funktionen.php";
+include __DIR__."/core/angebote.php";
 include __DIR__."/core/check.php";
 include __DIR__."/core/include.php";
-aktuellesModulBestimmen();
-modulLaden("Kern", true, false);
-modulLaden("UI", true, false);
 
-use UI;
+use Core\Einbinden;
+
+Einbinden::modulLaden("UI", true, false);
+Einbinden::modulLaden("Kern", true, false);
 
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
+    echo "<base href=\"/\">";
+    echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
 		echo style("css/layout.css");
 		if(/* app */ false) {
 			echo style("css/app.css");
@@ -54,11 +56,11 @@ echo "<html>";
 				echo "<ul class=\"dshKopfnavigation\">";
 					echo "<li>";
 						echo "<div class=\"dshSuche\">";
-              $suche = new UI\Elemente\Textfeld("dshSuchePcSuchbegriff");
+              $suche = new UI\Textfeld("dshSuchePcSuchbegriff");
               $suche->getAktionen()->addFunktion("onkeyup", "dshSucheSuchen('dshSuche_pc_suchbegriff', 'dshSuchePcErgebnisse')");
               echo $suche->setPlatzhalter("Suchen...")->self();
 							echo "<div id=\"dshSuchePcErgebnisse\">";
-                $schliessen = new UI\Elemente\MiniIconKnopf(new UI\Icon(Ui\Konstanten::SCHLIESSEN), "Schließen", "Fehler", "UL");
+                $schliessen = new UI\MiniIconKnopf(new UI\Icon(Ui\Konstanten::SCHLIESSEN), "Schließen", "Fehler", "UL");
                 $schliessen->getAktionen()->addFunktion("onclick", "dhsWebsucheSchliessen('dshSuchePcSuchbegriff', 'dshSuchePcErgebnisse')");
                 $schliessen->setID("dshSuchePcSchliessen");
                 echo $schliessen;
@@ -69,21 +71,25 @@ echo "<html>";
 						echo "</div>";
 					echo "</li>";
 					echo "<li>";
-            $optWebsite = new UI\Elemente\Toggleoption("dshKopfnaviWebsite");
+            $wert = "website";
+
+            $optWebsite = new UI\Toggleoption("dshKopfnaviWebsite");
             $optWebsite->setText("Website");
             $optWebsite->setWert("website");
             $optWebsite->getAktionen()->addFunktion("href", "Website");
+            $optWebsite->getAktionen()->addFunktion("onclick", "core.navigationAnpassen('$wert')");
 
-            $optSchulhof = new UI\Elemente\Toggleoption("dshKopfnaviSchulhof");
+            $optSchulhof = new UI\Toggleoption("dshKopfnaviSchulhof");
             $optSchulhof->setText("Schulhof");
             $optSchulhof->setWert("schulhof");
             $optSchulhof->getAktionen()->addFunktion("href", "Schulhof");
+            $optSchulhof->getAktionen()->addFunktion("onclick", "core.navigationAnpassen('$wert')");
 
-            $kopfnavi = new UI\Elemente\Togglegruppe("dshKopfnavi");
+            $kopfnavi = new UI\Togglegruppe("dshKopfnavi");
             $kopfnavi->addOption($optWebsite);
             $kopfnavi->addOption($optSchulhof);
             // @TODO: Wert der aktuellen Seite eintragen
-            $kopfnavi->setWert("website");
+            $kopfnavi->setWert($wert);
             echo $kopfnavi;
 					echo "</li>";
 				echo "</ul>";
@@ -92,20 +98,12 @@ echo "<html>";
 		echo "</div>";
 		echo "<div id=\"dshPlatzhalter\"></div>";
 		echo "<div id=\"dshHauptteilO\">";
-			echo "<div id=\"dshHauptteilI\">";
-				echo new UI\Elemente\Datumfeld("dshDemoDatumfeld");
-				echo new UI\Elemente\Uhrzeitfeld("dshDemoUhrzeitfeld");
-				echo new UI\Elemente\Schieber("dshDemoSchieber");
-				echo new UI\Elemente\Textfeld("dshDemoTextfeld");
-				echo new UI\Elemente\Zahlenfeld("dshDemoZahlenfeld");
-				echo new UI\Elemente\Farbfeld("dshDemoFarbfeld");
-				echo new UI\Elemente\Passwortfeld("dshDemoPasswortfeld");
-				echo new UI\Elemente\Mailfeld("dshDemoMailfeld");
-				echo new UI\Elemente\Textarea("dshDemoTextrea");
-        echo "<br><br><br>";
-        foreach(UI\Elemente\Meldung::ARTEN as $art) {
-          echo new UI\Elemente\Meldung($art, "<p>$art ist sehr schön.</p>", $art);
-        }
+			echo "<div id=\"dshHauptteilI\" class=\"dshSeiteLaedt\">";
+        echo "<div id=\"dshSeite\"></div>";
+        echo "<div class=\"dshSeiteLaden\">";
+          echo new UI\Ladesymbol();
+          echo "<p>Die Seite wird geladen...</p>";
+        echo "</div>";
 			echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";
@@ -114,7 +112,7 @@ echo "<html>";
 		echo "</div>";
 		echo "<script>";
 			echo "window.onload = () => {";
-				echo "core.seiteLaden('$DSH_URLGANZ');";
+				echo "core.seiteLaden('$DSH_URLGANZ', false);";
 			echo "}";
 		echo "</script>";
 	echo "</body>";

@@ -21,12 +21,12 @@ class Anfrage {
    * @param  string ...$var Werte
    */
   public static function post($fehler = true, ...$vars) {
-    if(count($vars) === 0) {
+    if(($fehler === true || $fehler === false) && count($vars) === 0) {
       return;
     }
 
     // Wenn werder true noch false
-    if($fehler !== true || $fehler !== false) {
+    if($fehler !== true && $fehler !== false) {
       array_unshift($vars, $fehler);
       $fehler = true;
     }
@@ -48,6 +48,7 @@ $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()
 $DSH_DATENBANKEN = array();
 
 include_once(__DIR__."/core/check.php");
+include_once(__DIR__."/core/angebote.php");
 include_once(__DIR__."/core/funktionen.php");
 include_once(__DIR__."/core/include.php");
 
@@ -57,6 +58,9 @@ $fehler 		= $fehler || !isset($_POST);
 $fehler 		= $fehler || !isset($_POST["modul"]);
 $fehler 		= $fehler || !preg_match("/^[A-Za-z0-9]{1,16}$/", $_POST["modul"]);
 $moduldir 	= __DIR__."/module/{$_POST["modul"]}";
+if($_POST["modul"] === "Core") {
+  $moduldir = __DIR__."/core";
+}
 $fehler 		= $fehler || !is_dir($moduldir);
 
 if($fehler) {
@@ -75,7 +79,9 @@ $ZIELE = array();
 if(!file_exists("$moduldir/anfragen/ziele.php")) {
   Anfrage::fehler(3);
 }
-Core\modulLaden($_POST["modul"], true, false);
+if($_POST["modul"] !== "Core") {
+  Core\modulLaden($_POST["modul"], true, false);
+}
 include("$moduldir/anfragen/ziele.php");
 if(!isset($ZIELE[$_POST["ziel"]])) {
   Anfrage::fehler(4);

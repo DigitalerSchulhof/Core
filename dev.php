@@ -30,9 +30,9 @@ function modulKeimen($modul) {
   $standard = array(
     "seitenPrio"      => 0,
     "speicher"        => "dateien/$modul",
-    "datenbanken"      => array("schulhof"),
+    "datenbanken"     => array("schulhof"),
     "benötigt"        => array(),
-    "erweitert"        => array()
+    "erweitert"       => array()
   );
 
 
@@ -60,12 +60,12 @@ function modulKeimen($modul) {
   if(file_exists($seitenliste)) {
     $modulSeiten = YAML::loader($seitenliste);
     $modulSeiten = $modulSeiten["seiten"];
-    array_push($globseitenliste[$seitenprio], ...$modulSeiten);
+    $globseitenliste[$seitenprio] = array_merge(($globseitenliste[$seitenprio] ?? array()), $modulSeiten);
   }
 
   // Rechte keimen lassen
   $rechteliste = "$DSH_MODULE/$modul/funktionen/rechte.yml";
-  if(file_exists($seitenliste)) {
+  if(file_exists($rechteliste)) {
     $modulRechte = YAML::loader($rechteliste);
     $modulRechte = $modulRechte["rechte"];
     file_put_contents("$DSH_MODULE/$modul/funktionen/rechte.core", serialize($modulRechte));
@@ -73,7 +73,7 @@ function modulKeimen($modul) {
 
   // Einstelungen keimen lassen
   $einstellungenliste = "$DSH_MODULE/$modul/funktionen/einstellungen.yml";
-  if(file_exists($seitenliste)) {
+  if(file_exists($einstellungenliste)) {
     $modulEinstellungen = YAML::loader($einstellungenliste);
     $modulEinstellungen = $modulEinstellungen["einstellungen"];
     file_put_contents("$DSH_MODULE/$modul/funktionen/einstellungen.core", serialize($modulEinstellungen));
@@ -172,7 +172,7 @@ if($_GET["keimen"] ?? "nein" == "ja") {
 
   $seiten = array();
   foreach($globseitenliste as $s) {
-    array_push($seiten, ...$s);
+    $seiten = array_merge($seiten, $s);
   }
 
   file_put_contents("$DSH_CORE/seitenliste.core", serialize($seiten));
