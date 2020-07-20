@@ -80,7 +80,7 @@ if(!file_exists("$moduldir/anfragen/ziele.php")) {
   Anfrage::fehler(3);
 }
 if($_POST["modul"] !== "Core") {
-  Core\modulLaden($_POST["modul"], true, false);
+  Core\Einbinden::modulLaden($_POST["modul"], true, false);
 }
 include("$moduldir/anfragen/ziele.php");
 if(!isset($ZIELE[$_POST["ziel"]])) {

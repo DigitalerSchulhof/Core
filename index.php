@@ -46,7 +46,7 @@ echo "<html>";
 		echo modulJs("UI");
     echo "<title>Seite wird geladen...</title>";
 	echo "</head>";
-	echo "<body>";
+	echo "<body class=\"dshSeiteP\">"; // TODO: Gerät
 		echo "<div id=\"dshKopfzeileO\">";
 			echo "<div id=\"dshKopfzeileI\">";
 				echo "<img id=\"dshLogoBild\" src=\"dateien/schulspezifisch/logo.png\">";
