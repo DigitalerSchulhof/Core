@@ -20,7 +20,7 @@ Einbinden::modulLaden("Kern", true, false);
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
-    echo "<base href=\"/\">";
+    echo "<base href=\"/Websites/Core/\">";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
 		echo style("css/layout.css");
 		if(/* app */ false) {
@@ -101,7 +101,7 @@ echo "<html>";
 		echo "<div id=\"dshPlatzhalter\"></div>";
 		echo "<div id=\"dshHauptteilO\">";
 			echo "<div id=\"dshHauptteilI\">";
-			echo "</div>";
+      echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";
 			echo "<div id=\"dshFusszeileI\">";
