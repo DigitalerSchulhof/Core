@@ -134,6 +134,9 @@ function modulKeimen($modul) {
       }
       if(preg_match("/^[\\s\\t]*\/\//", $zeile) !== 1) {  // Kommentare weglassen
         $zeile = preg_replace("/\\t*/", "", $zeile);
+        $zeile = preg_replace("/\\n*/", "", $zeile);
+        $zeile = preg_replace("/\\r*/", "", $zeile);
+        $zeile = preg_replace("/\\s\\s+/", "", $zeile);
         $modus .= $zeile;
       }
     }
