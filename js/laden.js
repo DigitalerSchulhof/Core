@@ -63,11 +63,11 @@ core.seiteladebalken = {
   },
   update: () => {
     let b = core.seiteladebalken.balken;
-    b.style.width = core.seiteladebalken.fortschritt+"%";
+    b.style.width = Math.min(core.seiteladebalken.fortschritt, 92)+"%";
     core.seiteladebalken.timeout = setTimeout(() => {
-      core.seiteladebalken.fortschritt += 2;
+      core.seiteladebalken.fortschritt += Math.floor(Math.random() * 4);
       core.seiteladebalken.update();
-    }, 300);
+    }, Math.floor(100 + (Math.random()*200)));
   },
   aus: () => {
     let b = core.seiteladebalken.balken;

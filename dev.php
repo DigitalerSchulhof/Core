@@ -132,7 +132,7 @@ function modulKeimen($modul) {
         $modus = &$drucken;
         continue;
       }
-      if(substr($zeile, 0, 2) !== "//") {  // Kommentare weglassen
+      if(preg_match("/^[\\s\\t]*\/\//", $zeile) !== 1) {  // Kommentare weglassen
         $zeile = preg_replace("/\\t*/", "", $zeile);
         $modus .= $zeile;
       }
@@ -141,11 +141,11 @@ function modulKeimen($modul) {
     $hell   = $farben;
     $dunkel = $farben;
 
-    $layout   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $layout);
-    $mobil    = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $mobil);
-    $hell     = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $hell);
-    $dunkel   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][1] ?? $styles[$match[1]][0];}, $dunkel);
-    $drucken  = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {return $styles[$match[1]][0];}, $drucken);
+    $layout   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][0] ?? ${$match[1]};}, $layout);
+    $mobil    = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][0] ?? ${$match[1]};}, $mobil);
+    $hell     = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][0] ?? ${$match[1]};}, $hell);
+    $dunkel   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][1] ?? $styles[$match[1]][0] ?? ${$match[1]};}, $dunkel);
+    $drucken  = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][0] ?? ${$match[1]};}, $drucken);
 
     $layout   = preg_replace("/;}/", "}",   $layout);
     $mobil    = preg_replace("/;}/", "}",   $mobil);
