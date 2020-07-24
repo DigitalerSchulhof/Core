@@ -125,6 +125,8 @@ function modulKeimen($modul) {
 
     foreach(array_diff(scandir($styledir), array(".", "..")) as $style) {
       echo "Style: module/$modul/styles/$style<br>\n";
+      ob_flush();
+      flush();
 
       ob_start();
       echo "// LAYOUT;";
@@ -172,23 +174,24 @@ function modulKeimen($modul) {
       $dunkel   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 1);}, $dunkel);
       $drucken  = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $drucken);
 
-      $layout   = preg_replace("/;}/", "}",           $layout);
-      $mobil    = preg_replace("/;}/", "}",           $mobil);
-      $hell     = preg_replace("/;}/", "}",           $hell);
-      $dunkel   = preg_replace("/;}/", "}",           $dunkel);
-      $drucken  = preg_replace("/;}/", "}",           $drucken);
+      $kurz = array(
+        "\\s*{\\s*" => "{",
+        "\\s*}\\s*" => "}",
+        "\\s*:\\s*" => ":",
+        ";}"        => "}",
+        "\\s+!"     => "!",
+        "}\\s+\\."  => "}.",
+        "}\\s+#"    => "}#",
+        "\\s*,\\s*" => ",",
+      );
 
-      $layout   = preg_replace("/}\\s*\\./", "}.",    $layout);
-      $mobil    = preg_replace("/}\\s*\\./", "}.",    $mobil);
-      $hell     = preg_replace("/}\\s*\\./", "}.",    $hell);
-      $dunkel   = preg_replace("/}\\s*\\./", "}.",    $dunkel);
-      $drucken  = preg_replace("/}\\s*\\./", "}.",    $drucken);
-
-      $layout   = preg_replace("/}\\s*#/", "}#",      $layout);
-      $mobil    = preg_replace("/}\\s*#/", "}#",      $mobil);
-      $hell     = preg_replace("/}\\s*#/", "}#",      $hell);
-      $dunkel   = preg_replace("/}\\s*#/", "}#",      $dunkel);
-      $drucken  = preg_replace("/}\\s*#/", "}#",      $drucken);
+      foreach($kurz as $rx => $r) {
+        $layout   = preg_replace("/$rx/", "$r",           $layout);
+        $mobil    = preg_replace("/$rx/", "$r",           $mobil);
+        $hell     = preg_replace("/$rx/", "$r",           $hell);
+        $dunkel   = preg_replace("/$rx/", "$r",           $dunkel);
+        $drucken  = preg_replace("/$rx/", "$r",           $drucken);
+      }
 
       $mlayout    .= $layout;
       $mmobil     .= $mobil;
@@ -205,6 +208,8 @@ function modulKeimen($modul) {
     $allestyles["drucken"]    .= $mdrucken;
   }
   echo "Modul »{$modul}« ausgewachsen<br>\n<br>\n";
+  ob_flush();
+  flush();
 }
 
 // Module scannen
