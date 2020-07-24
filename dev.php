@@ -101,74 +101,108 @@ function modulKeimen($modul) {
     while($anfrage->werte($bezeichnung, $wert_h, $wert_d)) {
       $styles[$bezeichnung] = array($wert_h, $wert_d);
     }
+    $wert = function($wert, $styleindex) use ($styles) {
+      if(isset($styles[$wert][$styleindex])) {
+        return $styles[$wert][$styleindex];
+      }
+      if(isset($styles[$wert][0])) {
+        return $styles[$wert][0];
+      }
+      global $$wert;
+      if(isset($$wert)) {
+        return $$wert;
+      }
+      trigger_error("Der Wert »{$wert}« [$styleindex] ist nicht definiert!", E_USER_WARNING);
+      return "FEHLENDER_WERT";
+    };
 
-    ob_start();
+    $mlayout    = "";
+    $mmobil     = "";
+    $mhell      = "";
+    $mdunkel    = "";
+    $mdunkelroh = "";
+    $mdrucken   = "";
+
     foreach(array_diff(scandir($styledir), array(".", "..")) as $style) {
-      include "$DSH_MODULE/$modul/styles/$style";
-      echo "\n";
+      echo "Style: module/$modul/styles/$style<br>\n";
+
+      ob_start();
+      echo "// LAYOUT;";
+      include "$styledir/$style";
+      $ob = ob_get_contents();
+      ob_end_clean();
+
+      $layout = "";
+      $mobil = "";
+      $farben = "";
+      $drucken = "";
+      $modus = &$layout;
+      foreach(explode("\n", $ob) as $zeile) {
+        if(substr($zeile, 0, strlen("// LAYOUT;")) === "// LAYOUT;") {
+          $modus = &$layout;
+          continue;
+        }
+        if(substr($zeile, 0, strlen("// MOBIL;")) === "// MOBIL;") {
+          $modus = &$mobil;
+          continue;
+        }
+        if(substr($zeile, 0, strlen("// FARBEN;")) === "// FARBEN;") {
+          $modus = &$farben;
+          continue;
+        }
+        if(substr($zeile, 0, strlen("// DRUCKEN;")) === "// DRUCKEN;") {
+          $modus = &$drucken;
+          continue;
+        }
+        if(preg_match("/^[\\s\\t]*\/\//", $zeile) !== 1) {  // Kommentare weglassen
+          $zeile = preg_replace("/\\t*/", "", $zeile);
+          $zeile = preg_replace("/\\n*/", "", $zeile);
+          $zeile = preg_replace("/\\r*/", "", $zeile);
+          $zeile = preg_replace("/\\s\\s+/", "", $zeile);
+          $modus .= $zeile;
+        }
+      }
+
+      $hell   = $farben;
+      $dunkel = $farben;
+
+      $layout   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $layout);
+      $mobil    = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $mobil);
+      $hell     = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $hell);
+      $dunkel   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 1);}, $dunkel);
+      $drucken  = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $drucken);
+
+      $layout   = preg_replace("/;}/", "}",           $layout);
+      $mobil    = preg_replace("/;}/", "}",           $mobil);
+      $hell     = preg_replace("/;}/", "}",           $hell);
+      $dunkel   = preg_replace("/;}/", "}",           $dunkel);
+      $drucken  = preg_replace("/;}/", "}",           $drucken);
+
+      $layout   = preg_replace("/}\\s*\\./", "}.",    $layout);
+      $mobil    = preg_replace("/}\\s*\\./", "}.",    $mobil);
+      $hell     = preg_replace("/}\\s*\\./", "}.",    $hell);
+      $dunkel   = preg_replace("/}\\s*\\./", "}.",    $dunkel);
+      $drucken  = preg_replace("/}\\s*\\./", "}.",    $drucken);
+
+      $layout   = preg_replace("/}\\s*#/", "}#",      $layout);
+      $mobil    = preg_replace("/}\\s*#/", "}#",      $mobil);
+      $hell     = preg_replace("/}\\s*#/", "}#",      $hell);
+      $dunkel   = preg_replace("/}\\s*#/", "}#",      $dunkel);
+      $drucken  = preg_replace("/}\\s*#/", "}#",      $drucken);
+
+      $mlayout    .= $layout;
+      $mmobil     .= $mobil;
+      $mhell      .= $hell;
+      $mdunkel    .= $dunkel;
+      $mdrucken   .= $drucken;
     }
-    $ob = ob_get_contents();
-    ob_end_clean();
 
-    $layout = "";
-    $mobil = "";
-    $farben = "";
-    $drucken = "";
-    $modus = &$layout;
-    foreach(explode("\n", $ob) as $zeile) {
-      if(substr($zeile, 0, strlen("// LAYOUT;")) === "// LAYOUT;") {
-        $modus = &$layout;
-        continue;
-      }
-      if(substr($zeile, 0, strlen("// MOBIL;")) === "// MOBIL;") {
-        $modus = &$mobil;
-        continue;
-      }
-      if(substr($zeile, 0, strlen("// FARBEN;")) === "// FARBEN;") {
-        $modus = &$farben;
-        continue;
-      }
-      if(substr($zeile, 0, strlen("// DRUCKEN;")) === "// DRUCKEN;") {
-        $modus = &$drucken;
-        continue;
-      }
-      if(preg_match("/^[\\s\\t]*\/\//", $zeile) !== 1) {  // Kommentare weglassen
-        $zeile = preg_replace("/\\t*/", "", $zeile);
-        $zeile = preg_replace("/\\n*/", "", $zeile);
-        $zeile = preg_replace("/\\r*/", "", $zeile);
-        $zeile = preg_replace("/\\s\\s+/", "", $zeile);
-        $modus .= $zeile;
-      }
-    }
-
-    $hell   = $farben;
-    $dunkel = $farben;
-
-    $layout   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][0] ?? ${$match[1]};}, $layout);
-    $mobil    = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][0] ?? ${$match[1]};}, $mobil);
-    $hell     = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][0] ?? ${$match[1]};}, $hell);
-    $dunkel   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][1] ?? $styles[$match[1]][0] ?? ${$match[1]};}, $dunkel);
-    $drucken  = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($styles) {global ${$match[1]}; return $styles[$match[1]][0] ?? ${$match[1]};}, $drucken);
-
-    $layout   = preg_replace("/;}/", "}",   $layout);
-    $mobil    = preg_replace("/;}/", "}",   $mobil);
-    $hell     = preg_replace("/;}/", "}",   $hell);
-    $dunkel   = preg_replace("/;}/", "}",   $dunkel);
-    $drucken  = preg_replace("/;}/", "}",   $drucken);
-
-    $layout       = "$layout";
-    $mobil        = "$mobil";
-    $hell         = "$hell";
-    $dunkelroh    = "$dunkel";
-    $dunkel       = "@media (prefers-color-scheme: dark) { $dunkel }";
-    $drucken      = "@media print { $drucken }";
-
-    $allestyles["layout"]     .= $layout;
-    $allestyles["mobil"]      .= $mobil;
-    $allestyles["hell"]       .= $hell;
-    $allestyles["dunkel"]     .= $dunkel;
-    $allestyles["dunkelroh"]  .= $dunkelroh;
-    $allestyles["drucken"]    .= $drucken;
+    $allestyles["layout"]     .= $mlayout;
+    $allestyles["mobil"]      .= $mmobil;
+    $allestyles["hell"]       .= $mhell;
+    $allestyles["dunkel"]     .= $mdunkel;
+    $allestyles["dunkelroh"]  .= $mdunkelroh;
+    $allestyles["drucken"]    .= $mdrucken;
   }
   echo "Modul »{$modul}« ausgewachsen<br>\n<br>\n";
 }
@@ -205,6 +239,15 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   echo "Angebote gespeichert.<br>\n";
 
   // Styles keimen lassen
+  extract($allestyles);
+
+  $layout       = "$layout";
+  $mobil        = "$mobil";
+  $hell         = "$hell";
+  $dunkelroh    = "$dunkel";
+  $dunkel       = "@media (prefers-color-scheme: dark) { $dunkel }";
+  $drucken      = "@media print { $drucken }";
+
   file_put_contents(__DIR__."/css/layout.css",      $allestyles["layout"]);
   file_put_contents(__DIR__."/css/mobil.css",       $allestyles["mobil"]);
   file_put_contents(__DIR__."/css/hell.css",        $allestyles["hell"]);
