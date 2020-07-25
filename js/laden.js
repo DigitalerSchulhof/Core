@@ -19,9 +19,6 @@ core.seiteLaden = (seite, push) => {
         erfolg(anfrage.responseText);
       }
     }
-    anfrage.onprogress = (e) => {
-      console.log(e.loaded, e.total, e.loaded/e.total, e.loaded+"/"+e.total, e);
-    }
     anfrage.open("POST", "anfrage.php", true);
     anfrage.send(daten);
     core.seiteladebalken.an();
@@ -85,7 +82,7 @@ core.seiteladebalken = {
 }
 
 
-core.navigationAendern = (ziel) => {
+core.navigationAnpassen = (ziel) => {
   if(ziel === $("#dshKopfnavi").value) {
     return;
   }
@@ -101,6 +98,9 @@ window.addEventListener("click", (e) => {
     if(ziel.hasAttribute("href")) {
       if(!ziel.classList.contains("extern")) {
         core.seiteLaden(ziel.getAttribute("href"));
+        if(ziel.getAttribute("onhref") !== undefined) {
+          new Function(ziel.getAttribute("onhref")).call(ziel);
+        }
         e.preventDefault();
       }
     }

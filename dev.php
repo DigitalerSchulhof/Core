@@ -247,18 +247,18 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   extract($allestyles);
 
   $layout       = "$layout";
-  $mobil        = "$mobil";
+  $mobil        = "@media (max-width: 1024px) { $mobil }";
   $hell         = "$hell";
   $dunkelroh    = "$dunkel";
   $dunkel       = "@media (prefers-color-scheme: dark) { $dunkel }";
   $drucken      = "@media print { $drucken }";
 
-  file_put_contents(__DIR__."/css/layout.css",      $allestyles["layout"]);
-  file_put_contents(__DIR__."/css/mobil.css",       $allestyles["mobil"]);
-  file_put_contents(__DIR__."/css/hell.css",        $allestyles["hell"]);
-  file_put_contents(__DIR__."/css/dunkel.css",      $allestyles["dunkel"]);
-  file_put_contents(__DIR__."/css/dunkelroh.css",   $allestyles["dunkelroh"]);
-  file_put_contents(__DIR__."/css/drucken.css",     $allestyles["drucken"]);
+  file_put_contents(__DIR__."/css/layout.css",    $layout);
+  file_put_contents(__DIR__."/css/mobil.css",     $mobil);
+  file_put_contents(__DIR__."/css/hell.css",      $hell);
+  file_put_contents(__DIR__."/css/dunkel.css",    $dunkel);
+  file_put_contents(__DIR__."/css/dunkelroh.css", $dunkelroh);
+  file_put_contents(__DIR__."/css/drucken.css",   $drucken);
   echo "Styles gespeichert.<br>\n";
 
 } else {

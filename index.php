@@ -22,17 +22,9 @@ echo "<html>";
 	echo "<head>";
     echo "<base href=\"/Websites/Core/\">";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
-    echo "<link href=\"https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
     echo "<link href=\"https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
-    echo "<link href=\"https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
-    echo "<link href=\"https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
-    echo "<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
-    echo "<link href=\"https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
-    echo "<link href=\"https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
 		echo style("css/layout.css");
-		if(/* app */ false) {
-			echo style("css/app.css");
-		}
+		echo style("css/mobil.css");
 		if(isset($_COOKIE["dunkelmodus"])) {
 			if($_COOKIE["dunkelmodus"] == "ja") {
 				echo style("css/dunkelroh.css");
@@ -53,7 +45,7 @@ echo "<html>";
 		echo modulJs("UI");
     echo "<title>Seite wird geladen...</title>";
 	echo "</head>";
-	echo "<body class=\"dshSeiteP\">"; // TODO: Gerät
+	echo "<body>";
     echo "<div id=\"dshSeiteladenO\"><div id=\"dshSeiteladenI\"></div></div>";
 		echo "<div id=\"dshKopfzeileO\">";
 			echo "<div id=\"dshKopfzeileI\">";
@@ -86,13 +78,15 @@ echo "<html>";
             $optWebsite->setText("Website");
             $optWebsite->setWert("website");
             $optWebsite->getAktionen()->addFunktion("href", "Website");
-            $optWebsite->getAktionen()->addFunktion("onclick", "core.navigationAnpassen('$wert')");
+            $optWebsite->getAktionen()->addFunktion("onhref", "core.navigationAnpassen('$wert')");
+            $optWebsite->getAktionen()->addFunktion("onhref", "this.blur()");
 
             $optSchulhof = new UI\Toggleoption("dshKopfnaviSchulhof");
             $optSchulhof->setText("Schulhof");
             $optSchulhof->setWert("schulhof");
             $optSchulhof->getAktionen()->addFunktion("href", "Schulhof");
-            $optSchulhof->getAktionen()->addFunktion("onclick", "core.navigationAnpassen('$wert')");
+            $optSchulhof->getAktionen()->addFunktion("onhref", "core.navigationAnpassen('$wert')");
+            $optSchulhof->getAktionen()->addFunktion("onhref", "this.blur()");
 
             $kopfnavi = new UI\Togglegruppe("dshKopfnavi");
             $kopfnavi->addOption($optWebsite);
@@ -115,9 +109,7 @@ echo "<html>";
 			echo "</div>";
 		echo "</div>";
 		echo "<script>";
-			echo "window.onload = () => {";
-				echo "core.seiteLaden('$DSH_URLGANZ', false);";
-			echo "}";
+			echo "window.onload = () => core.seiteLaden('$DSH_URLGANZ', false);";
 		echo "</script>";
 	echo "</body>";
 echo "</html>";
