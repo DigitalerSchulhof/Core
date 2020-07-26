@@ -22,7 +22,6 @@ echo "<html>";
 	echo "<head>";
     echo "<base href=\"/Websites/Core/\">";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
-    echo "<link href=\"https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
 		echo style("css/layout.css");
 		echo style("css/mobil.css");
 		if(isset($_COOKIE["dunkelmodus"])) {
