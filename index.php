@@ -20,7 +20,7 @@ Einbinden::modulLaden("Kern", true, false);
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
-    echo "<base href=\"/Websites/Core/\">";
+    echo "<base href=\"/Websites/Core/\">"; // @TODO: -> DB
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
 		echo style("css/layout.css");
 		echo style("css/mobil.css");

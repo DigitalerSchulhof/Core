@@ -108,5 +108,5 @@ window.addEventListener("click", (e) => {
 });
 
 window.addEventListener("popstate", (e) => {
-  core.seiteLaden(document.location.pathname.substring(1), false);
+  core.seiteLaden(document.location.pathname.substring($("base").getAttribute("href").length), false);
 });
