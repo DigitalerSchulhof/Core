@@ -20,9 +20,8 @@ Einbinden::modulLaden("Kern", true, false);
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
-    echo "<base href=\"/Websites/Core/\">";
+    echo "<base href=\"/Websites/Core/\">"; // @TODO: -> DB
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
-    echo "<link href=\"https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">";
 		echo style("css/layout.css");
 		echo style("css/mobil.css");
 		if(isset($_COOKIE["dunkelmodus"])) {
@@ -45,7 +44,7 @@ echo "<html>";
 		echo modulJs("UI");
     echo "<title>Seite wird geladen...</title>";
 	echo "</head>";
-	echo "<body>";
+	echo "<body class=\"dshSeiteP\">";
     echo "<div id=\"dshSeiteladenO\"><div id=\"dshSeiteladenI\"></div></div>";
 		echo "<div id=\"dshKopfzeileO\">";
 			echo "<div id=\"dshKopfzeileI\">";
@@ -102,6 +101,8 @@ echo "<html>";
 		echo "<div id=\"dshPlatzhalter\"></div>";
 		echo "<div id=\"dshHauptteilO\">";
 			echo "<div id=\"dshHauptteilI\">";
+      echo new Kern\Aktionszeile(true, false);
+      echo UI\Zeile::standard((new UI\Meldung("Kompatibilität prüfen", "JavaScript ist deaktiviert! Diese Seite kann nur mit aktiviertem JavaScript angezeigt werden.", "Fehler"))->setTag("noscript"));
       echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";

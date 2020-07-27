@@ -31,22 +31,6 @@ function modulJs($modul) {
   return "";
 }
 
-function istZahl($x) {
-	return preg_match("/^[0-9]+$/", $x) === 1;
-}
-
-function fuehrendeNull($x) {
-	if (istZahl($x)) {
-		if (strlen($x) < 2) {
-			return "0".$x;
-		} else {
-			return $x;
-		}
-	} else {
-		return false;
-	}
-}
-
 /**
  * Rekursiv alle .php einbinden
  * @param  string $dir Ordner
