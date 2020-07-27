@@ -183,6 +183,7 @@ function modulKeimen($modul) {
         "}\\s+\\."  => "}.",
         "}\\s+#"    => "}#",
         "\\s*,\\s*" => ",",
+        ":0px"      => ":0",
       );
 
       foreach($kurz as $rx => $r) {
