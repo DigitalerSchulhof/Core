@@ -80,7 +80,7 @@ class Einbinden {
   }
 
   /** @var array Geladene Module */
-  static $geladeneModule = array();
+  static $geladeneModule = [];
 
   /**
   * Lädt das Modul und dessen Abhängigkeiten

@@ -41,6 +41,27 @@ core.seiteLaden = (seite, push) => {
     }
     document.title = rueck["daten"]["seitentitel"];
     $("#dshHauptteilI").innerHTML = rueck["seite"];
+
+    // Script austauschen
+    var r = (n) => {
+      if(n.tagName === "SCRIPT") {
+        var c  = document.createElement("script");
+        c.text = n.innerHTML;
+        for(let i = 0; i < n.attributes.length; i++) {
+          c.setAttribute(n.attributes[i].name, n.attributes[i].value);
+        }
+        n.parentNode.replaceChild(c, n);
+      } else {
+        for(let i = 0; i < n.childNodes.length; i++) {
+          r(n.childNodes[i]);
+        }
+      }
+    }
+    r($("body"));
+    for(let a of $("a.extern:not([target])", true)) {
+      a.setAttribute("target", "_blank");
+    }
+    window.dispatchEvent(new Event("dshSeiteGeladen"));
   });
 }
 

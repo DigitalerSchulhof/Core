@@ -19,20 +19,55 @@ if($fehler) {
 	header("Content-Type: application/javascript");
 	$jsdir = "$moduldir/js";
 
-  if(file_exists("$jsdir/objekt.js")) {
-    echo file_get_contents("$jsdir/objekt.js")."\n";
-  }
 
 	$scan = function($dir) use (&$scan) {
+    $dirs = [];
+    if(file_exists("$dir/objekt.js")) {
+      $c = file_get_contents("$dir/objekt.js");
+      foreach(explode("\n", $c) as $l) {
+        if(preg_match("/^[\\s\\t]*\/\//", $l) !== 1) {
+          echo $l;
+        }
+      }
+    }
 		foreach(array_diff(scandir($dir), array(".", "..", "objekt.js")) as $js) {
 			if(is_dir("$dir/$js")) {
-				$scan("$dir/$js");
+				$dirs[] = "$dir/$js";
 			} else if(substr($js, -3) === ".js") {
-				echo file_get_contents("$dir/$js")."\n";
+				$c = file_get_contents("$dir/$js");
+        foreach(explode("\n", $c) as $l) {
+          if(preg_match("/^[\\s\\t]*\/\//", $l) !== 1) {
+            echo $l;
+          }
+        }
 			}
 		}
+    foreach($dirs as $dir) {
+      $scan($dir);
+    }
 	};
 
+  ob_start();
 	$scan($jsdir);
+  $js = ob_get_contents();
+  ob_end_clean();
+  $kurz = array(
+    "\\s*=\\s*" => "=",
+    "\\s*{\\s*" => "{",
+    "\\s*}\\s*" => "}",
+    "\\s*>\\s*" => ">",
+    "\\s*<\\s*" => "<",
+    ";}"        => "}",
+    ",}"        => "}",
+    "\\s*,\\s*" => ",",
+    "\\s\\s+"   => "",
+    ";\\n"      => ";",
+    ":\\s*"     => ":",
+  );
+
+  foreach($kurz as $rx => $r) {
+    $js = preg_replace("/$rx/", "$r", $js);
+  }
+  echo $js;
 }
 ?>

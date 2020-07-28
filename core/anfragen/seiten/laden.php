@@ -7,7 +7,7 @@
   Einbinden::modulLaden("UI", true, false);
   Einbinden::modulLaden("Kern", true, false);
 
-  $rueck = array();
+  $rueck = [];
 
   $urls = Einbinden::seiteBestimmen($seite);
   $DSH_URL = $urls["url"];

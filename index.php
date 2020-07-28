@@ -5,7 +5,7 @@ $DSH_URL = explode("/", $DSH_URLGANZ);
 $DSH_MODULE = __DIR__."/module";
 $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()_]{3,}";
 
-$DSH_DATENBANKEN = array();
+$DSH_DATENBANKEN = [];
 
 include __DIR__."/core/funktionen.php";
 include __DIR__."/core/angebote.php";
@@ -101,8 +101,12 @@ echo "<html>";
 		echo "<div id=\"dshPlatzhalter\"></div>";
 		echo "<div id=\"dshHauptteilO\">";
 			echo "<div id=\"dshHauptteilI\">";
-      echo new Kern\Aktionszeile(true, false);
-      echo UI\Zeile::standard((new UI\Meldung("Kompatibilität prüfen", "JavaScript ist deaktiviert! Diese Seite kann nur mit aktiviertem JavaScript angezeigt werden.", "Fehler"))->setTag("noscript"));
+        echo new Kern\Aktionszeile(true, false);
+        $hier = new UI\IconKnopf(new UI\Icon(UI\Konstanten::LINKEXT), "hier");
+        $hier->addKlasse("extern");
+        $hier->addFunktion("href", "https://www.enable-javascript.com/de/");
+        $hier->setAttribut("target", "_blank");
+        echo UI\Zeile::standard((new UI\Meldung("Inkompatibel", "JavaScript ist deaktiviert! Um den Digitalen Schulof zu nutzen, muss JavaScript aktiv sein.<br>Wie Sie dieses aktivieren, erfahren Sie $hier.", "Fehler"))->setTag("noscript"));
       echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";

@@ -45,7 +45,7 @@ class Anfrage {
 $MODUL = "Core";
 $DSH_MODULE = __DIR__."/module";
 $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()_]{3,}";
-$DSH_DATENBANKEN = array();
+$DSH_DATENBANKEN = [];
 
 include_once(__DIR__."/core/check.php");
 include_once(__DIR__."/core/angebote.php");
@@ -74,7 +74,7 @@ if($fehler) {
   Anfrage::fehler(2);
 }
 
-$ZIELE = array();
+$ZIELE = [];
 
 if(!file_exists("$moduldir/anfragen/ziele.php")) {
   Anfrage::fehler(3);

@@ -11,9 +11,9 @@ class Angebote {
     $angebote = unserialize(file_get_contents(__DIR__."/angebote.core"));
 
     if(!isset($angebote[$platz])) {
-      return array();
+      return [];
     }
-    $geboten = array();
+    $geboten = [];
     $angebote = $angebote[$platz];
     $ANGEBOT = null;
     foreach($angebote as $modul => $angebot) {

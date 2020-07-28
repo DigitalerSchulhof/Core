@@ -12,10 +12,10 @@ $DSH_CORE = __DIR__."/core";
 $DSH_MODULE = __DIR__."/module";
 
 /** @var array Priorität => Seitenliste */
-$globseitenliste = array();
+$globseitenliste = [];
 
 /** @var array Angbote als [Modul][Platz][Angebot]*/
-$globangebote = array();
+$globangebote = [];
 
 /** @var array Alle Styles, die es gibt */
 $allestyles = array("layout" => "", "mobil" => "", "hell" => "", "dunkel" => "", "dunkelroh" => "", "drucken" => "");
@@ -34,8 +34,8 @@ function modulKeimen($modul) {
     "seitenPrio"      => 0,
     "speicher"        => "dateien/$modul",
     "datenbanken"     => array("schulhof"),
-    "benötigt"        => array(),
-    "erweitert"       => array()
+    "benötigt"        => [],
+    "erweitert"       => []
   );
 
 
@@ -63,7 +63,7 @@ function modulKeimen($modul) {
   if(file_exists($seitenliste)) {
     $modulSeiten = YAML::loader($seitenliste);
     $modulSeiten = $modulSeiten["seiten"];
-    $globseitenliste[$seitenprio] = array_merge(($globseitenliste[$seitenprio] ?? array()), $modulSeiten);
+    $globseitenliste[$seitenprio] = array_merge(($globseitenliste[$seitenprio] ?? []), $modulSeiten);
   }
 
   // Rechte keimen lassen
@@ -97,7 +97,7 @@ function modulKeimen($modul) {
   $styledir = "$DSH_MODULE/$modul/styles";
   if(is_dir($styledir)) {
     $anfrage = $dbs->anfrage("SELECT s.bezeichnung, IFNULL(s.wert_h, ah.wert_h), IFNULL(s.wert_d, ad.wert_d) FROM kern_styles as s LEFT JOIN dsh_module as m ON m.id = s.modul OR s.modul = 0 LEFT JOIN kern_styles as ah ON ah.id = s.alias_h LEFT JOIN kern_styles as ad ON ad.id = s.alias_d WHERE m.name = ? ORDER BY s.modul ASC", "s", $modul);
-    $styles = array();
+    $styles = [];
     while($anfrage->werte($bezeichnung, $wert_h, $wert_d)) {
       $styles[$bezeichnung] = array($wert_h, $wert_d);
     }
@@ -225,7 +225,7 @@ if($_GET["keimen"] ?? "nein" == "ja") {
 
   krsort($globseitenliste);
 
-  $seiten = array();
+  $seiten = [];
   foreach($globseitenliste as $s) {
     $seiten = array_merge($seiten, $s);
   }
@@ -233,10 +233,10 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   file_put_contents("$DSH_CORE/seitenliste.core", serialize($seiten));
   echo "Seitenliste gespeichert.<br>\n";
 
-  $platzangebote = array();
+  $platzangebote = [];
   foreach($globangebote as $modul => $plaetze) {
     foreach($plaetze as $platz => $angebot) {
-      $platzangebote[$platz] = $platzangebote[$platz] ?? array();
+      $platzangebote[$platz] = $platzangebote[$platz] ?? [];
       $platzangebote[$platz][$modul] = $angebot;
     }
   }

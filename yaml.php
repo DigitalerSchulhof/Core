@@ -65,7 +65,7 @@ class Yaml
     private $path;
     private $result;
     private $LiteralPlaceHolder = '___YAML_Literal_Block___';
-    private $SavedGroups = array();
+    private $SavedGroups = [];
     private $indent;
 
     /**
@@ -73,7 +73,7 @@ class Yaml
      *
      * @var array
      */
-    private $delayedPath = array();
+    private $delayedPath = [];
 
     /**
      * #@+
@@ -257,7 +257,7 @@ class Yaml
 
         if (\is_array($value)) {
             if (empty($value)) {
-                return $this->_dumpNode($key, array(), $indent, $previous_key, $first_key, $source_array);
+                return $this->_dumpNode($key, [], $indent, $previous_key, $first_key, $source_array);
             }
 
             // It has children.  What to do?
@@ -329,7 +329,7 @@ class Yaml
             $value = $this->_doFolding($value, $indent);
         }
 
-        if ($value === array()) {
+        if ($value === []) {
             $value = '[ ]';
         }
 
@@ -505,7 +505,7 @@ class Yaml
      */
     private static function getTranslations(array $words)
     {
-        $result = array();
+        $result = [];
         foreach ($words as $i) {
             $result = \array_merge($result, array(\ucfirst($i), \strtoupper($i), \strtolower($i)));
         }
@@ -530,16 +530,16 @@ class Yaml
     private function loadWithSource($Source)
     {
         if (empty($Source)) {
-            return array();
+            return [];
         }
 
         if ($this->setting_use_yaml_is_possible && \function_exists('yaml_load')) {
             $array = \yaml_load(\implode("\n", $Source));
-            return \is_array($array) ? $array : array();
+            return \is_array($array) ? $array : [];
         }
 
-        $this->path = array();
-        $this->result = array();
+        $this->path = [];
+        $this->result = [];
 
         $cnt = \count($Source);
         for ($i = 0; $i < $cnt; $i++) {
@@ -592,7 +592,7 @@ class Yaml
                 $this->path[$indent] = $delayedPath;
             }
 
-            $this->delayedPath = array();
+            $this->delayedPath = [];
 
         }
         return $this->result;
@@ -625,15 +625,15 @@ class Yaml
     private function _parseLine($line)
     {
         if (!$line) {
-            return array();
+            return [];
         }
 
         $line = \trim($line);
         if (!$line) {
-            return array();
+            return [];
         }
 
-        $array = array();
+        $array = [];
 
         $group = $this->nodeContainsGroup($line);
         if ($group) {
@@ -709,12 +709,12 @@ class Yaml
             // Take out strings sequences and mappings
             $innerValue = \trim(\substr($value, 1, -1));
             if ($innerValue === '') {
-                return array();
+                return [];
             }
 
             $explode = $this->_inlineEscape($innerValue);
             // Propagate value array
-            $value = array();
+            $value = [];
             foreach ($explode as $v) {
                 $value[] = $this->_toType($v);
             }
@@ -733,14 +733,14 @@ class Yaml
         if ($first_character == '{' && $last_character == '}') {
             $innerValue = \trim(\substr($value, 1, -1));
             if ($innerValue === '') {
-                return array();
+                return [];
             }
 
             // Inline Mapping
             // Take out strings sequences and mappings
             $explode = $this->_inlineEscape($innerValue);
             // Propagate value array
-            $array = array();
+            $array = [];
             foreach ($explode as $v) {
                 $SubArr = $this->_toType($v);
                 if (empty($SubArr)) {
@@ -803,10 +803,10 @@ class Yaml
         // pure mappings and mappings with sequences inside can't go very
         // deep.  This needs to be fixed.
 
-        $sequence = array();
-        $maps = array();
-        $saved_strings = array();
-        $saved_empties = array();
+        $sequence = [];
+        $maps = [];
+        $saved_strings = [];
+        $saved_empties = [];
 
         // Check for empty strings
         $regex = '/("")|(\'\')/';
@@ -1000,7 +1000,7 @@ class Yaml
             return;
         }
 
-        $history = array();
+        $history = [];
         // Unfolding inner array tree.
         $history[] = $_arr = $this->result;
         foreach ($this->path as $k) {
@@ -1014,7 +1014,7 @@ class Yaml
 
         // Adding string or numeric key to the innermost level or $this->arr.
         if (\is_string($key) && $key == '<<') {
-            if (!\is_array($_arr)) {$_arr = array();}
+            if (!\is_array($_arr)) {$_arr = [];}
 
             $_arr = \array_merge($_arr, $value);
         } else if ($key || $key === '' || $key === '0') {
@@ -1056,7 +1056,7 @@ class Yaml
 
     private static function startsLiteralBlock($line)
     {
-        $matches = array();
+        $matches = [];
         if (!\preg_match('`(>|\|)[\d+-]?$`', $line, $matches)) {
             return false;
         }
@@ -1141,7 +1141,7 @@ class Yaml
     private function getParentPathByIndent($indent)
     {
         if ($indent == 0) {
-            return array();
+            return [];
         }
 
         $linePath = $this->path;
@@ -1159,7 +1159,7 @@ class Yaml
     private function clearBiggerPathValues($indent)
     {
         if ($indent == 0) {
-            $this->path = array();
+            $this->path = [];
         }
 
         if (empty($this->path)) {
@@ -1263,9 +1263,9 @@ class Yaml
 
     private function returnMappedSequence($line)
     {
-        $array = array();
+        $array = [];
         $key = self::unquote(\trim(\substr($line, 1, -1)));
-        $array[$key] = array();
+        $array[$key] = [];
         $this->delayedPath = array(\strpos($line, $key) + $this->indent => $key);
         return array($array);
     }
@@ -1282,7 +1282,7 @@ class Yaml
     private function returnMappedValue($line)
     {
         $this->checkKeysInValue($line);
-        $array = array();
+        $array = [];
         $key = self::unquote(\trim(\substr($line, 0, -1)));
         $array[$key] = '';
         return $array;
@@ -1305,7 +1305,7 @@ class Yaml
 
     private function returnKeyValuePair($line)
     {
-        $array = array();
+        $array = [];
         $key = '';
         if (\strpos($line, ': ')) {
             // It's a key/value pair most likely
@@ -1336,10 +1336,10 @@ class Yaml
     private function returnArrayElement($line)
     {
         if (\strlen($line) <= 1) {
-            return array(array());
+            return array([]);
         }
         // Weird %)
-        $array = array();
+        $array = [];
         $value = \trim(\substr($line, 1));
         $value = $this->_toType($value);
         if ($this->isArrayElement($value)) {
