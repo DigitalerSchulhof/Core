@@ -62,6 +62,7 @@ core.seiteLaden = (seite, push) => {
       a.setAttribute("target", "_blank");
     }
     window.dispatchEvent(new Event("dshSeiteGeladen"));
+    window.dispatchEvent(new Event("resize"));
   });
 }
 
