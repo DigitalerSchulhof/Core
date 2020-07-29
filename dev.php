@@ -18,7 +18,7 @@ $globseitenliste = [];
 $globangebote = [];
 
 /** @var array Alle Styles, die es gibt */
-$allestyles = array("layout" => "", "mobil" => "", "hell" => "", "dunkel" => "", "dunkelroh" => "", "drucken" => "");
+$allestyles = array("layout" => "", "hell" => "", "dunkel" => "", "dunkelroh" => "", "drucken" => "");
 
 /**
 * Erzeugt die serialized-Version der YAML-Modulkonfiguration
@@ -117,7 +117,6 @@ function modulKeimen($modul) {
     };
 
     $mlayout    = "";
-    $mmobil     = "";
     $mhell      = "";
     $mdunkel    = "";
     $mdunkelroh = "";
@@ -135,17 +134,12 @@ function modulKeimen($modul) {
       ob_end_clean();
 
       $layout = "";
-      $mobil = "";
       $farben = "";
       $drucken = "";
       $modus = &$layout;
       foreach(explode("\n", $ob) as $zeile) {
         if(substr($zeile, 0, strlen("// LAYOUT;")) === "// LAYOUT;") {
           $modus = &$layout;
-          continue;
-        }
-        if(substr($zeile, 0, strlen("// MOBIL;")) === "// MOBIL;") {
-          $modus = &$mobil;
           continue;
         }
         if(substr($zeile, 0, strlen("// FARBEN;")) === "// FARBEN;") {
@@ -169,7 +163,6 @@ function modulKeimen($modul) {
       $dunkel = $farben;
 
       $layout   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $layout);
-      $mobil    = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $mobil);
       $hell     = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $hell);
       $dunkel   = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 1);}, $dunkel);
       $drucken  = preg_replace_callback("/@((?!media|font|page|-moz-document|keyframes|-webkit-keyframes|import)[\\w_\\-ÄÖÜäöüß]+)/", function($match) use ($wert) {return $wert($match[1], 0);}, $drucken);
@@ -188,21 +181,18 @@ function modulKeimen($modul) {
 
       foreach($kurz as $rx => $r) {
         $layout   = preg_replace("/$rx/", "$r",           $layout);
-        $mobil    = preg_replace("/$rx/", "$r",           $mobil);
         $hell     = preg_replace("/$rx/", "$r",           $hell);
         $dunkel   = preg_replace("/$rx/", "$r",           $dunkel);
         $drucken  = preg_replace("/$rx/", "$r",           $drucken);
       }
 
       $mlayout    .= $layout;
-      $mmobil     .= $mobil;
       $mhell      .= $hell;
       $mdunkel    .= $dunkel;
       $mdrucken   .= $drucken;
     }
 
     $allestyles["layout"]     .= $mlayout;
-    $allestyles["mobil"]      .= $mmobil;
     $allestyles["hell"]       .= $mhell;
     $allestyles["dunkel"]     .= $mdunkel;
     $allestyles["dunkelroh"]  .= $mdunkelroh;
@@ -248,14 +238,12 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   extract($allestyles);
 
   $layout       = "$layout";
-  $mobil        = "@media (max-width: 1024px) { $mobil }";
   $hell         = "$hell";
   $dunkelroh    = "$dunkel";
   $dunkel       = "@media (prefers-color-scheme: dark) { $dunkel }";
   $drucken      = "@media print { $drucken }";
 
   file_put_contents(__DIR__."/css/layout.css",    $layout);
-  file_put_contents(__DIR__."/css/mobil.css",     $mobil);
   file_put_contents(__DIR__."/css/hell.css",      $hell);
   file_put_contents(__DIR__."/css/dunkel.css",    $dunkel);
   file_put_contents(__DIR__."/css/dunkelroh.css", $dunkelroh);

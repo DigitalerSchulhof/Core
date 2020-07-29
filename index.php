@@ -114,7 +114,7 @@ echo "<html>";
 			echo "</div>";
 		echo "</div>";
 		echo "<script>";
-			echo "window.onload = () => core.seiteLaden('$DSH_URLGANZ', false);";
+			echo "window.onload=()=>core.seiteLaden('$DSH_URLGANZ', false);";
 		echo "</script>";
 	echo "</body>";
 echo "</html>";
