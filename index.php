@@ -1,5 +1,7 @@
 <?php
 
+$DSH_VERSION = "1.0";
+
 $DSH_URLGANZ = $_GET["URL"] ?? "";
 $DSH_URL = explode("/", $DSH_URLGANZ);
 $DSH_MODULE = __DIR__."/module";
@@ -90,7 +92,7 @@ echo "<html>";
             $kopfnavi = new UI\Togglegruppe("dshKopfnavi");
             $kopfnavi->addOption($optWebsite);
             $kopfnavi->addOption($optSchulhof);
-            // @TODO: Wert der aktuellen Seite eintragen
+            // @TODO: Wert der aktuellen Seite eintragen (AUCH: Netzcheck)
             $kopfnavi->setWert($wert);
             echo $kopfnavi;
 					echo "</li>";
@@ -113,11 +115,15 @@ echo "<html>";
 			echo "<div id=\"dshFusszeileI\">";
 			echo "</div>";
 		echo "</div>";
+    echo "<div id=\"dshNetzcheck\">";
+      echo "<a style=\"font-family: inherit; color: inherit; font-size: inherit;\" target=\"_blank\" class=\"extern\" href=\"https://github.com/DigitalerSchulhof\">Digitaler Schulhof – Version $DSH_VERSION – Website – Schulhof"./**" – Lehrerzimmer"*/"</a>";
+      echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
+    echo "</div>";
 		echo "<script>";
 			echo "window.onload=()=>core.seiteLaden('$DSH_URLGANZ', false);";
 		echo "</script>";
 	echo "</body>";
 echo "</html>";
 ?>
-<!-- Digitaler Schulhof - Version 1.0 -->
+<!-- Digitaler Schulhof - Version <?php echo $DSH_VERSION?> -->
 <!-- 🍪 -->
