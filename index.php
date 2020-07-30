@@ -113,7 +113,7 @@ echo "<html>";
 			echo "</div>";
 		echo "</div>";
     echo "<div id=\"dshNetzcheck\">";
-      echo "<a style=\"font-family: inherit; color: inherit; font-size: inherit;\" target=\"_blank\" class=\"extern\" href=\"https://github.com/DigitalerSchulhof\">Digitaler Schulhof – Version $DSH_VERSION – Website – Schulhof"./**" – Lehrerzimmer"*/"</a>";
+      echo "<a style=\"font-family: inherit; color: inherit; font-size: inherit;\" target=\"_blank\" class=\"dshExtern\" href=\"https://github.com/DigitalerSchulhof\">Digitaler Schulhof – Version $DSH_VERSION – Website – Schulhof"./**" – Lehrerzimmer"*/"</a>";
       echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
     echo "</div>";
 		echo "<script>";
