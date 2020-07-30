@@ -1,0 +1,7 @@
+datenbanken:
+  schueler:
+    host: localhost
+    db: dsh_schulhof
+    benutzer: root
+    passwort: ""
+    key:
