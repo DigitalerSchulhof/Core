@@ -22,6 +22,7 @@ core.seiteLaden = (seite, push) => {
     anfrage.open("POST", "anfrage.php", true);
     anfrage.send(daten);
     core.seiteladebalken.an();
+    core.seiteladebalken.seite = seite;
 
   }).then((r) => {
     core.seiteladebalken.aus();
@@ -70,6 +71,7 @@ core.seiteladebalken = {
   balken: $("#dshSeiteladenI"),
   fortschritt: 12,
   timeout: null,
+  seite: null,
   an: () => {
     let b = core.seiteladebalken.balken;
     b.style.width = core.seiteladebalken.fortschritt+"%";
@@ -82,6 +84,11 @@ core.seiteladebalken = {
   },
   update: () => {
     let b = core.seiteladebalken.balken;
+
+    if(core.seiteladebalken.fortschritt > 200) {
+      window.location.href = core.seiteladebalken.seite;
+    }
+
     b.style.width = Math.min(core.seiteladebalken.fortschritt, 92)+"%";
     core.seiteladebalken.timeout = setTimeout(() => {
       core.seiteladebalken.fortschritt += Math.floor(Math.random() * 4);

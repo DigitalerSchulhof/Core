@@ -1,15 +1,26 @@
 <?php
 
+  function einbinden($seite) {
+    global $CODE, $DSH_TITEL, $DSH_URL, $DSH_URLGANZ;
+
+    $urls = Core\Einbinden::seiteBestimmen($seite);
+    $DSH_URL = $urls["url"];
+    $DSH_URLGANZ = $urls["urlganz"];
+
+    $DSH_TITEL = "$seite";
+    $CODE = "";
+
+    Core\Einbinden::seiteEinbinden(explode("/", $seite));
+  }
+
   Anfrage::post("seite");
 
-  use Core\Einbinden;
-
-  Einbinden::modulLaden("UI", true, false);
-  Einbinden::modulLaden("Kern", true, false);
+  Core\Einbinden::modulLaden("UI", true, false);
+  Core\Einbinden::modulLaden("Kern", true, false);
 
   $rueck = [];
 
-  $urls = Einbinden::seiteBestimmen($seite);
+  $urls = Core\Einbinden::seiteBestimmen($seite);
   $DSH_URL = $urls["url"];
   $DSH_URLGANZ = $urls["urlganz"];
 
@@ -17,7 +28,7 @@
   $CODE = "";
 
   ob_start();
-  Einbinden::seiteEinbinden(explode("/", $seite));
+  Core\Einbinden::seiteEinbinden(explode("/", $seite));
 
   $CODE = ob_get_contents().$CODE;
   ob_end_clean();

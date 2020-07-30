@@ -25,7 +25,6 @@ echo "<html>";
     echo "<base href=\"/Websites/Core/\">"; // @TODO: -> DB
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
 		echo style("css/layout.css");
-		echo style("css/mobil.css");
 		if(isset($_COOKIE["dunkelmodus"])) {
 			if($_COOKIE["dunkelmodus"] == "ja") {
 				echo style("css/dunkelroh.css");
@@ -103,12 +102,12 @@ echo "<html>";
 		echo "<div id=\"dshPlatzhalter\"></div>";
 		echo "<div id=\"dshHauptteilO\">";
 			echo "<div id=\"dshHauptteilI\">";
-        echo new Kern\Aktionszeile(true, false);
         $hier = new UI\IconKnopf(new UI\Icon(UI\Konstanten::LINKEXT), "hier");
         $hier->addKlasse("extern");
         $hier->addFunktion("href", "https://www.enable-javascript.com/de/");
         $hier->setAttribut("target", "_blank");
-        echo UI\Zeile::standard((new UI\Meldung("Inkompatibel", "JavaScript ist deaktiviert! Um den Digitalen Schulof zu nutzen, muss JavaScript aktiv sein.<br>Wie Sie dieses aktivieren, erfahren Sie $hier.", "Fehler"))->setTag("noscript"));
+        echo UI\Zeile::standard((new UI\Meldung("Inkompatibel", "JavaScript ist deaktiviert! Um den Digitalen Schulof zu nutzen, muss JavaScript aktiv sein.<br>Wie Sie dieses aktivieren, erfahren Sie $hier.", "Fehler")))->setTag("noscript");
+        echo UI\Zeile::standard((new UI\Meldung("Bitte warten", "Der Digitale Schulhof wird geladen...", "Arbeit")))->setID("dshMeldungInitial")->setStyle("display", "none");
       echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";
@@ -120,7 +119,7 @@ echo "<html>";
       echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
     echo "</div>";
 		echo "<script>";
-			echo "window.onload=()=>core.seiteLaden('$DSH_URLGANZ', false);";
+			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false);$('#dshMeldungInitial').style.display='';}";
 		echo "</script>";
 	echo "</body>";
 echo "</html>";
