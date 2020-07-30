@@ -9,6 +9,7 @@ $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()
 
 $DSH_DATENBANKEN = [];
 
+include __DIR__."/core/config.php";
 include __DIR__."/core/funktionen.php";
 include __DIR__."/core/angebote.php";
 include __DIR__."/core/check.php";
@@ -22,7 +23,7 @@ Einbinden::modulLaden("Kern", true, false);
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
-    echo "<base href=\"/Websites/Core/\">"; // @TODO: -> DB
+    echo "<base href=\"{$EINSTELLUNGEN["Base"]}\">";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
 		echo style("css/layout.css");
 		if(isset($_COOKIE["dunkelmodus"])) {
@@ -73,27 +74,25 @@ echo "<html>";
 						echo "</div>";
 					echo "</li>";
 					echo "<li>";
-            $wert = "website";
-
             $optWebsite = new UI\Toggleoption("dshKopfnaviWebsite");
             $optWebsite->setText("Website");
             $optWebsite->setWert("website");
             $optWebsite->getAktionen()->addFunktion("href", "Website");
-            $optWebsite->getAktionen()->addFunktion("onhref", "core.navigationAnpassen('$wert')");
+            $optWebsite->getAktionen()->addFunktion("onhref", "core.navigationAnpassen('website')");
             $optWebsite->getAktionen()->addFunktion("onhref", "this.blur()");
 
             $optSchulhof = new UI\Toggleoption("dshKopfnaviSchulhof");
             $optSchulhof->setText("Schulhof");
             $optSchulhof->setWert("schulhof");
             $optSchulhof->getAktionen()->addFunktion("href", "Schulhof");
-            $optSchulhof->getAktionen()->addFunktion("onhref", "core.navigationAnpassen('$wert')");
+            $optSchulhof->getAktionen()->addFunktion("onhref", "core.navigationAnpassen('schulhof')");
             $optSchulhof->getAktionen()->addFunktion("onhref", "this.blur()");
 
             $kopfnavi = new UI\Togglegruppe("dshKopfnavi");
             $kopfnavi->addOption($optWebsite);
             $kopfnavi->addOption($optSchulhof);
-            // @TODO: Wert der aktuellen Seite eintragen (AUCH: Netzcheck)
-            $kopfnavi->setWert($wert);
+
+            $kopfnavi->setWert(strtolower($DSH_URL[0]));
             echo $kopfnavi;
 					echo "</li>";
 				echo "</ul>";

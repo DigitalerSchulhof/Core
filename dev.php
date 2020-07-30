@@ -4,7 +4,7 @@ include __DIR__."/module/Kern/klassen/db/DB.php";
 include __DIR__."/module/Kern/klassen/db/Anfrage.php";
 use \DB\DB;
 
-$dbs = new DB("localhost", "root", "", "dsh_schulhof", "MeinPasswortIstSicher");
+$dbs = new DB("localhost", 3306, "root", "", "dsh_schulhof", "MeinPasswortIstSicher");
 
 use Async\YAML;
 
