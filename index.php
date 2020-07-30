@@ -38,6 +38,7 @@ echo "<html>";
 		if(/** drucken */ false) {
 			echo style("css/drucken.css");
 		}
+    echo js("js/eQuery.js");
 		echo js("js/core.js");
 		echo js("js/ajax.js");
 		echo js("js/laden.js");
@@ -119,7 +120,7 @@ echo "<html>";
       echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
     echo "</div>";
 		echo "<script>";
-			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false);$('#dshMeldungInitial').style.display='';}";
+			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false);$('#dshMeldungInitial').her();}";
 		echo "</script>";
 	echo "</body>";
 echo "</html>";

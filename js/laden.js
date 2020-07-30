@@ -33,7 +33,7 @@ core.seiteLaden = (seite, push) => {
       r = r.replace(/</g, "&lt");
       r = r.replace(/>/g, "&gt");
       console.error("Fehler beim Laden der Seite " + seite, r);
-      ui.meldung.fehler("Beim Laden der Seite ist ein Fehler aufgetreten!", "<pre style=\"white-space:pre-wrap\">"+r+"</pre>").then((r) => $("#dshSeite").innerHTML = r);
+      ui.meldung.fehler("Beim Laden der Seite ist ein Fehler aufgetreten!", "<pre style=\"white-space:pre-wrap\">"+r+"</pre>").then((r) => $("#dshSeite").html(r));
       document.title = "Fehler";
       return;
     }
@@ -41,27 +41,27 @@ core.seiteLaden = (seite, push) => {
       window.history.pushState({}, rueck["daten"]["seitentitel"], seite);
     }
     document.title = rueck["daten"]["seitentitel"];
-    $("#dshHauptteilI").innerHTML = rueck["seite"];
+    $("#dshHauptteilI").html(rueck["seite"]);
 
     // Script austauschen
     var r = (n) => {
-      if(n.tagName === "SCRIPT") {
+      if(n.is("script")) {
         var c  = document.createElement("script");
-        c.text = n.innerHTML;
-        for(let i = 0; i < n.attributes.length; i++) {
-          c.setAttribute(n.attributes[i].name, n.attributes[i].value);
+        c.text = n.html();
+        for(let i = 0; i < n[0].attributes.length; i++) {
+          c.setAttribute(n[0].attributes[i].name, n[0].attributes[i].value);
         }
-        n.parentNode.replaceChild(c, n);
+        n.parent()[0].replaceChild(c, n[0]);
       } else {
-        for(let i = 0; i < n.childNodes.length; i++) {
-          r(n.childNodes[i]);
+        for(let i = 0; i < n.children().length; i++) {
+          r($(n.children()[i]));
         }
       }
     }
     r($("body"));
-    for(let a of $("a.extern:not([target])", true)) {
-      a.setAttribute("target", "_blank");
-    }
+
+    $("a.extern:not([target])").attr("target", "_blank");
+
     window.dispatchEvent(new Event("dshSeiteGeladen"));
     window.dispatchEvent(new Event("resize"));
   });
@@ -74,9 +74,8 @@ core.seiteladebalken = {
   seite: null,
   an: () => {
     let b = core.seiteladebalken.balken;
-    b.style.width = core.seiteladebalken.fortschritt+"%";
+    b.css({width: core.seiteladebalken.fortschritt + "%", opacity: "1"});
     core.seiteladebalken.fortschritt = 12;
-    b.style.opacity = "1";
     core.seiteladebalken.timeout = setTimeout(() => {
       core.seiteladebalken.fortschritt += 2;
       core.seiteladebalken.update();
@@ -89,7 +88,7 @@ core.seiteladebalken = {
       window.location.href = core.seiteladebalken.seite;
     }
 
-    b.style.width = Math.min(core.seiteladebalken.fortschritt, 92)+"%";
+    b.css("width", Math.min(core.seiteladebalken.fortschritt, 92)+"%");
     core.seiteladebalken.timeout = setTimeout(() => {
       core.seiteladebalken.fortschritt += Math.floor(Math.random() * 4);
       core.seiteladebalken.update();
@@ -98,11 +97,11 @@ core.seiteladebalken = {
   aus: () => {
     let b = core.seiteladebalken.balken;
     core.seiteladebalken.fortschritt = 100;
-    b.style.width = core.seiteladebalken.fortschritt+"%";
+    b.css("width", core.seiteladebalken.fortschritt+"%");
     setTimeout(() => {
-      b.style.opacity = "0";
+      b.css("opacity", "0");
       setTimeout(() => {
-        b.style.width = "0%";
+        b.css("width", "0%");
         core.seiteladebalken.fortschritt = 0;
       }, 300);
     }, 400);
@@ -112,7 +111,7 @@ core.seiteladebalken = {
 
 
 core.navigationAnpassen = (ziel) => {
-  if(ziel === $("#dshKopfnavi").value) {
+  if(ziel === $("#dshKopfnavi").wert()) {
     return;
   }
 }
@@ -122,20 +121,17 @@ window.addEventListener("load", () => {
 });
 
 window.addEventListener("click", (e) => {
-  var ziel = e.target;
-  if(ziel.tagName === "A") {
-    if(ziel.hasAttribute("href")) {
-      if(!ziel.classList.contains("extern")) {
-        core.seiteLaden(ziel.getAttribute("href"));
-        if(ziel.getAttribute("onhref") !== undefined) {
-          new Function(ziel.getAttribute("onhref")).call(ziel);
-        }
-        e.preventDefault();
-      }
+  var ziel = $(e.target);
+
+  if(ziel.is("a[href]:not(.extern)")) {
+    core.seiteLaden(ziel.attr("href"));
+    if(ziel.is("[onhref]")) {
+      new Function(ziel.attr("onhref")).call(ziel[0]);
     }
+    e.preventDefault();
   }
 });
 
 window.addEventListener("popstate", (e) => {
-  core.seiteLaden(document.location.pathname.substring($("base").getAttribute("href").length), false);
+  core.seiteLaden(document.location.pathname.substring($("base").attr("href").length), false);
 });
