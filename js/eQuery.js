@@ -45,10 +45,27 @@ var $ = (...arguments) => {
       }
       return el;
     },
-    her: ()               => el.each(o => o.style.display = ""),
+    her: (d)               => {
+      if (d === undefined) {
+        el.each(o => o.style.display = "");
+      }
+      else {
+        el.each(o => o.style.display = d);
+      }
+    },
     weg: ()               => el.each(o => o.style.display = "none"),
-    html: (c)             => c === undefined ? el[0].innerHTML        : el.each(o => o.innerHTML = c),
-    attr: (k, v)          => v === undefined ? el[0].getAttribute(k)  : el.each(o => o.setAttribute(k, v)),
+    html: (c)             => {
+      if (c === undefined) {
+        return el[0].innerHTML;
+      }
+      return el.each(o => o.innerHTML = c);
+    },
+    attr: (k, v)          => {
+      if (v === undefined) {
+        return el[0].getAttribute(k);
+      }
+      return el.each(o => o.setAttribute(k, v));
+    },
     css: (k, v)           => {
       if(typeof k === "object") {
         for(let kk in k) {
@@ -61,13 +78,28 @@ var $ = (...arguments) => {
       }
       return el.each(o => o.style[k] = v);
     },
-    wert: (v)             => v === undefined ? el[0].value            : el.each(o => o.value = v),
+    wert: (v)             => {
+      if (v === undefined) {
+        return el[0].value;
+      }
+      return el.each(o => o.value = v);
+    },
     removeKlasse: (...k)  => el.each(o => o.classList.remove(...k)),
     addKlasse: (...k)     => el.each(o => o.classList.add(...k)),
-    setKlasse: (b, ...k)  => b ? el.addKlasse(...k) : el.removeKlasse(...k),
+    setKlasse: (b, ...k)  => {
+      if (b) {
+        return el.addKlasse(...k);
+      }
+      return el.removeKlasse(...k);
+    },
     is: (s)               => el[0].matches(s),
     parent: ()            => $(el[0].parentNode),
-    children: (s)         => s === undefined ? $(...el[0].childNodes) : $(...el[0].querySelectorAll(">".s)),
+    children: (s)         => {
+      if (s === undefined) {
+        return $(...el[0].childNodes);
+      }
+      return $(...el[0].querySelectorAll(">".s));
+    },
     find: (s)             => $(...el[0].querySelectorAll(s)),
   };
   el.__proto__ = proto;
