@@ -60,7 +60,7 @@ core.seiteLaden = (seite, push) => {
     }
     r($("body"));
 
-    $("a.extern:not([target])").attr("target", "_blank");
+    $("a.dshExtern:not([target])").attr("target", "_blank");
 
     window.dispatchEvent(new Event("dshSeiteGeladen"));
     window.dispatchEvent(new Event("resize"));
@@ -122,8 +122,10 @@ window.addEventListener("load", () => {
 
 window.addEventListener("click", (e) => {
   var ziel = $(e.target);
-
-  if(ziel.is("a[href]:not(.extern)")) {
+  while(!ziel.is("html") && !ziel.is("a")) {
+    ziel = ziel.parent();
+  }
+  if(ziel.is("a[href]:not(.dshExtern)")) {
     core.seiteLaden(ziel.attr("href"));
     if(ziel.is("[onhref]")) {
       new Function(ziel.attr("onhref")).call(ziel[0]);
