@@ -116,7 +116,7 @@ echo "<html>";
       echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
     echo "</div>";
 		echo "<script>";
-			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false);$('#dshMeldungInitial').her();}";
+			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false);$('#dshMeldungInitial').einblenden();}";
 		echo "</script>";
 	echo "</body>";
 echo "</html>";
