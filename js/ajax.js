@@ -67,7 +67,7 @@ core.multiajax = (modul, ziel, laden, arrays, statisch, host) => {
       ui.laden.an(laden[0], laden[1]);
     }
   } else {
-    // HINTERGRUNF
+    // HINTERGRUND
   }
 
   return new Promise((erfolg) => {
@@ -77,4 +77,12 @@ core.multiajax = (modul, ziel, laden, arrays, statisch, host) => {
 
     anfrage(0);
   });
+}
+
+core.anfrageAuswerten = (rueckgabe) => {
+  console.log(rueckgabe);
+  werte = JSON.parse(rueckgabe);
+  if (werte.typ == "FEHLER") {
+    ui.laden.an(werte.titel, werte.inhalt);
+  }
 }

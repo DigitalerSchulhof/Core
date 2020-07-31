@@ -1,17 +1,108 @@
 <?php
+include_once(__DIR__."/yaml.php");
+use Async\YAML;
+
+class Fehler {
+  /** @var int id */
+  private $id;
+
+  /** @var string modul */
+  private $modul;
+
+  /**
+   * Erstellt einen neuen Fehler
+   * @param int $id    :)
+   * @param string $modul :)
+   */
+  public function __construct($id, $modul = null) {
+    if ($modul === null) {
+      global $MODUL;
+      $modul = $MODUL;
+    }
+    $this->id = $id;
+    $this->modul = $modul;
+  }
+
+  /**
+   * Gibt den Fehler aus
+   * @return string :)
+   */
+  public function __toString() : string {
+    return "<span class=\"dshUiFehlermeldung\"><span class=\"dshUiModul\">{$this->modul}</span><span class=\"dshUiFehlercode\">{$this->id}</span></span>";
+  }
+
+  /**
+   * Gibt die ID des Fehlers zurück
+   * @return int :)
+   */
+  public function getId() : int {
+    return $this->id;
+  }
+
+  /**
+   * Gibt das Modul des Fehlers zurück
+   * @return string :)
+   */
+  public function getModul() : string {
+    return $this->modul;
+  }
+
+}
 
 class Anfrage {
   /**
    * Anfrage beenden und Fehlercode ausgeben
-   * @param  integer $num Fehlercode
-   *
+   * @param integer $num Fehlercode
+   * @param bool $die Auswertung, ob Fehler vorliegen und ggf. Abbruch
    *
    * Reservierte Fehlercodes:
    * 0: Anfragewert nicht übergeben
    */
-  public static function fehler($num) {
-    global $MODUL;
-    echo "{$MODUL}FEHLER".dechex($num);
+  public static function addFehler($nr, $die = false) {
+    global $FEHLER, $MODUL;
+    $FEHLER[] = new Fehler($nr, $MODUL);
+    if ($die) {
+      Anfrage::hatFehler();
+    }
+  }
+
+  /**
+   * Prüft ob Fehler vorliegen und
+   * gibt diese gegebenenfalls aus und
+   * bricht das Skript ab
+   */
+  public static function hatFehler() {
+    global $MODUL, $FEHLER;
+    if (count($FEHLER) > 0) {
+      $fehlerdateien = [];
+
+      if (file_exists(__DIR__."/fehlercodes.yml")) {
+        $fehlerdateien["Core"] = YAML::loader(file_get_contents(__DIR__."/fehlercodes.yml"));
+      } else {
+        Anfrage::antwort("Fehler", "Es sind Fehler aufgetreten ...", new UI\Meldung("Es sind Fehler aufgetreten", "Die Aufgetretenen Fehler konnten nicht ausgelesen werden.", "Fehler"));
+      }
+
+      $inhalt = "";
+      foreach ($FEHLER as $f) {
+        $fmodul = $f->getModul();
+        if (!isset($fehlerdateien[$fmodul])) {
+          if (file_exists(__DIR__."/module/$fmodul/fehlercodes.yml")) {
+            $fehlerdateien[$fmodul] = YAML::loader(file_get_contents(__DIR__."/module/$fmodul/fehlercodes.yml"));
+          } else {
+            $FEHLER[] = new Fehler(6, "Core");
+          }
+        }
+
+        $inhalt .= new UI\Absatz($fehlerdateien[$fmodul][$f->getId()]["beschreibung"]." ".(new Fehler($f->getId(), $f->getModul())));
+      }
+
+      $meldung = new UI\Meldung("Es sind Fehler aufgetreten", $inhalt, "Fehler");
+      Anfrage::antwort("Fehler", "Es sind Fehler aufgetreten ...", $meldung->__toString());
+    }
+  }
+
+  public static function antwort($typ, $titel, $inhalt) {
+    echo json_encode(array("typ" => $typ, "titel" => $titel, "inhalt" => $inhalt));
     die();
   }
 
@@ -33,7 +124,7 @@ class Anfrage {
 
     foreach($vars as $var) {
       if(!isset($_POST[$var]) && $fehler) {
-        Anfrage::fehler(0);
+        Anfrage::addFehler(0);
       } else {
         global $$var;
         $$var = $_POST[$var];
@@ -41,6 +132,8 @@ class Anfrage {
     }
   }
 }
+
+$FEHLER = [];
 
 $MODUL = "Core";
 $DSH_MODULE = __DIR__."/module";
@@ -65,31 +158,33 @@ if($_POST["modul"] === "Core") {
 $fehler 		= $fehler || !is_dir($moduldir);
 
 if($fehler) {
-  Anfrage::fehler(1);
+  Anfrage::addFehler(1, true);
 }
 
 $fehler 		= $fehler || !isset($_POST["ziel"]);
 $fehler 		= $fehler || (!is_numeric($_POST["ziel"]) || intval($_POST["ziel"]) < 0);
 
 if($fehler) {
-  Anfrage::fehler(2);
+  Anfrage::addFehler(2, true);
 }
 
 $ZIELE = [];
 
 if(!file_exists("$moduldir/anfragen/ziele.php")) {
-  Anfrage::fehler(3);
+  Anfrage::addFehler(3, true);
 }
+Core\Einbinden::modulLaden("UI", true, false);
+Core\Einbinden::modulLaden("Kern", true, false);
 if($_POST["modul"] !== "Core") {
   Core\Einbinden::modulLaden($_POST["modul"], true, false);
 }
 include("$moduldir/anfragen/ziele.php");
 if(!isset($ZIELE[$_POST["ziel"]])) {
-  Anfrage::fehler(4);
+  Anfrage::addFehler(4, true);
 }
 
 if(!file_exists("$moduldir/{$ZIELE[$_POST["ziel"]]}")) {
-  Anfrage::fehler(5);
+  Anfrage::addFehler(5, true);
 }
 
 $MODUL = $_POST["modul"];

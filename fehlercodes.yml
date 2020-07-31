@@ -1,0 +1,21 @@
+0:
+  ort: anfragen.php
+  beschreibung: Es fehlen Informationen, um die Anfrage zu verarbeiten.
+1:
+  ort: anfragen.php
+  beschreibung: Um diese Anfrage zu verarbeiten, muss ein zugehöriges Modul angegeben sein.
+2:
+  ort: anfragen.php
+  beschreibung: Das Ziel dieser Anfrage wurde nicht übergeben.
+3:
+  ort: anfragen.php
+  beschreibung: Die Datei der Modulziele wurde nicht fegunden.
+4:
+  ort: anfragen.php
+  beschreibung: Das angegebene Ziel ist in den Modulzielen nicht aufgeführt.
+5:
+  ort: anfragen.php
+  beschreibung: Die Zieldatei der Anfrage existiert nicht.
+6:
+  ort: anfragen.php
+  beschreibung: Die Fehlerdatei eines Moduls konnte nicht gefunden werden.
