@@ -113,8 +113,12 @@ class Anfrage {
 
   public static function antwort($typ, $titel, $inhalt, $aktionen = []) {
     $aktionscode = "";
-    foreach ($aktionen as $a) {
-      $aktionscode .= $a;
+    if (is_array($aktionen)) {
+      foreach ($aktionen as $a) {
+        $aktionscode .= $a;
+      }
+    } else {
+      $aktionscode = $aktionen;
     }
     echo json_encode(array("typ" => $typ, "titel" => $titel, "inhalt" => $inhalt, "aktionen" => $aktionscode));
     die();

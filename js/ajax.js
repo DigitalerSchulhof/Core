@@ -81,9 +81,13 @@ core.multiajax = (modul, ziel, laden, arrays, statisch, host) => {
 }
 
 core.anfrageAuswerten = (rueckgabe) => {
-  console.log(rueckgabe);
-  werte = JSON.parse(rueckgabe);
-  if (werte.typ == "Meldung") {
-    ui.laden.aendern(null, werte.inhalt, werte.aktionen);
+  try {
+    werte = JSON.parse(rueckgabe);
+    if (werte.typ == "Meldung") {
+      ui.laden.aendern(null, werte.inhalt, werte.aktionen);
+    }
+  }
+  catch(err) {
+    console.log(rueckgabe);
   }
 }
