@@ -36,6 +36,18 @@ var $ = (...arguments) => {
       return el.each(o => o.style[k] = v);
     },
     getCss: (property)    => el[0].style[property],
+    // toggleCss: nimmt eine CSS-Property und zwei Werte, zwischen welchen abgewechselt wird. Beträgt die Property a, so wird diese auf b gesetzt, und anders herum
+    toggleCss: (property, a, b) => {
+      b = b||"";
+      return el.each(o => {
+        o = $(o);
+        if(o.getCss(property) === a) {
+          o.setCss(property, b);
+        } else {
+          o.setCss(property, a);
+        }
+      });
+    },
     setWert: (val)        => el.each(o => o.value = val),
     getWert: ()           => el[0].value,
     removeKlasse: (...k)  => el.each(o => o.classList.remove(...k)),
@@ -48,13 +60,9 @@ var $ = (...arguments) => {
     },
     ist: (s)              => el[0].matches(s),
     parent: ()            => $(el[0].parentNode),
-    children: (s)         => {
-      if (s === undefined) {
-        return $(...el[0].childNodes);
-      }
-      return $(...el[0].querySelectorAll(">".s));
-    },
-    find: (s)             => $(...el[0].querySelectorAll(s)),
+    kinder: ()            => $(...el[0].childNodes),
+    kinderSelector: (s)   => $(...el[0].querySelectorAll(">".s)),
+    finde: (s)            => $(...el[0].querySelectorAll(s)),
   };
   el.__proto__ = proto;
   el.length = l;

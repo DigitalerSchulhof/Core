@@ -53,8 +53,8 @@ core.seiteLaden = (seite, push) => {
         }
         n.parent()[0].replaceChild(c, n[0]);
       } else {
-        for(let i = 0; i < n.children().length; i++) {
-          r($(n.children()[i]));
+        for(let i = 0; i < n.kinder().length; i++) {
+          r($(n.kinder()[i]));
         }
       }
     }
@@ -125,6 +125,9 @@ window.addEventListener("click", (e) => {
   var ziel = $(e.target);
   while(!ziel.ist("html") && !ziel.ist("a")) {
     ziel = ziel.parent();
+    if(ziel.length === 0) {
+      return;
+    }
   }
   if(ziel.ist("a[href]:not(.dshExtern)")) {
     core.seiteLaden(ziel.getAttr("href"));

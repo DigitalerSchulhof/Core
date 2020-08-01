@@ -1,21 +1,24 @@
+-1:
+  ort: anfrage.php
+  beschreibung: Die Fehlerdatei des Moduls »Core« konnte nicht gefunden werden.
 0:
-  ort: anfragen.php
+  ort: anfrage.php
   beschreibung: Es fehlen Informationen, um die Anfrage zu verarbeiten.
 1:
-  ort: anfragen.php
+  ort: anfrage.php
   beschreibung: Um diese Anfrage zu verarbeiten, muss ein zugehöriges Modul angegeben sein.
 2:
-  ort: anfragen.php
+  ort: anfrage.php
   beschreibung: Das Ziel dieser Anfrage wurde nicht übergeben.
 3:
-  ort: anfragen.php
-  beschreibung: Die Datei der Modulziele wurde nicht fegunden.
+  ort: anfrage.php
+  beschreibung: Die Datei der Modulziele wurde nicht gefunden.
 4:
-  ort: anfragen.php
+  ort: anfrage.php
   beschreibung: Das angegebene Ziel ist in den Modulzielen nicht aufgeführt.
 5:
-  ort: anfragen.php
+  ort: anfrage.php
   beschreibung: Die Zieldatei der Anfrage existiert nicht.
 6:
-  ort: anfragen.php
+  ort: anfrage.php
   beschreibung: Die Fehlerdatei eines Moduls konnte nicht gefunden werden.

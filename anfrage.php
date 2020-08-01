@@ -82,7 +82,7 @@ class Anfrage {
       if (file_exists(__DIR__."/fehlercodes.yml")) {
         $fehlerdateien["Core"] = YAML::loader(file_get_contents(__DIR__."/fehlercodes.yml"));
       } else {
-        Anfrage::antwort("Fehler", "Es sind Fehler aufgetreten ...", new UI\Meldung("Es sind Fehler aufgetreten", "Die Aufgetretenen Fehler konnten nicht ausgelesen werden.", "Fehler"));
+        Anfrage::antwort("Fehler", "Fehler", new UI\Meldung("Unbekannter Fehler", "Bei der Bearbeitung der Anfrage ist ein unbekannter Fehler aufgetreten. Fehlercode: ".(new Fehler(-1, "Core")), "Fehler"));
       }
 
       $inhalt = "";
@@ -107,7 +107,7 @@ class Anfrage {
       $abbrechen = new UI\Knopf("OK");
       $abbrechen->addFunktion("onclick", "ui.laden.aus()");
 
-      Anfrage::antwort("Meldung", null, $meldung->__toString(), $abbrechen->__toString());
+      Anfrage::antwort("Meldung", null, (string) $meldung, (string) $abbrechen);
     }
   }
 
