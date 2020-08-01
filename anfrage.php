@@ -94,7 +94,7 @@ class Anfrage {
 
     // »Titel«    entweder String oder <code>null</code>. Bei String: Der Titel der offnen Blende wird auf Titel gesetzt. Bei null: Der Titel der Blende bleibt unverändert.
     // »Meldung«  gültiger HTML-Code einer Meldung (Siehe: UI\Meldung::__toString()), welcher in den Körper der offnenen Blende geladen wird.
-    // »Knöpfe«   Array [Knopfcode : string] an HTML-Code der Knöpfe (Siehe: UI\Knopf::__toString()) für die offene Blende. Ist das Array leer, wird automatisch ein dshUiKnopfStandard mit dem Inhalt »OK« und der onclick-Aktion »ui.laden.aus()()« übergeben. Ist der Wert <code>null</code>, so wird nichts zurückgegeben.
+    // »Knöpfe«   Array [Knopfcode : string] an HTML-Code der Knöpfe (Siehe: UI\Knopf::__toString()) für die offene Blende. Ist das Array leer, wird automatisch ein dshUiKnopfStandard mit dem Inhalt »OK« und der onclick-Aktion »ui.laden.aus()« übergeben. Ist der Wert <code>null</code>, so wird nichts zurückgegeben.
     //
     // In JSON:
     // »Knöpfe«   HTML-Code der Knöpfe. <b>Nicht</b> mit Leerzeichen getrennt.
@@ -238,7 +238,7 @@ class Anfrage {
           $titel = "Es ist folgender Fehler aufgetreten:";
         }
         $knopfOk = new UI\Knopf("OK");
-        $knopfOk->addFunktion("onclick", "ui.laden.aus()()");
+        $knopfOk->addFunktion("onclick", "ui.laden.aus()");
 
         $ausgabe["Typ"]     = "Meldung";
         $ausgabe["Titel"]   = null;
@@ -251,7 +251,7 @@ class Anfrage {
           $knoepfe = [];
         } else if(count($knoepfe) === 0) {
           $knopfOk = new UI\Knopf("OK");
-          $knopfOk->addFunktion("onclick", "ui.laden.aus()()");
+          $knopfOk->addFunktion("onclick", "ui.laden.aus()");
 
           $knoepfe = [$knopfOk];
         }
