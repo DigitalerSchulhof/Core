@@ -60,7 +60,10 @@ class Anfrage {
    */
   public static function addFehler($nr, $die = false) {
     global $FEHLER, $MODUL;
-    $FEHLER[] = new Fehler($nr, $MODUL);
+    $neu = new Fehler($nr, $MODUL);
+    if (!in_array($neu, $FEHLER)) {
+      $FEHLER[] = $neu;
+    }
     if ($die) {
       Anfrage::hatFehler();
     }
@@ -84,7 +87,11 @@ class Anfrage {
 
       $inhalt = "";
       foreach ($FEHLER as $f) {
-        $fmodul = $f->getModul();
+        if ($f->getId() == 0) {
+          $fmodul = "Core";
+        } else {
+          $fmodul = $f->getModul();
+        }
         if (!isset($fehlerdateien[$fmodul])) {
           if (file_exists(__DIR__."/module/$fmodul/fehlercodes.yml")) {
             $fehlerdateien[$fmodul] = YAML::loader(file_get_contents(__DIR__."/module/$fmodul/fehlercodes.yml"));
@@ -100,12 +107,16 @@ class Anfrage {
       $abbrechen = new UI\Knopf("OK");
       $abbrechen->addFunktion("onclick", "ui.laden.aus()");
 
-      Anfrage::antwort("Fehler", "Es sind Fehler aufgetreten ...", $meldung->__toString(), $abbrechen->__toString());
+      Anfrage::antwort("Meldung", null, $meldung->__toString(), $abbrechen->__toString());
     }
   }
 
   public static function antwort($typ, $titel, $inhalt, $aktionen = []) {
-    echo json_encode(array("typ" => $typ, "titel" => $titel, "inhalt" => $inhalt, "aktionen" => $aktionen));
+    $aktionscode = "";
+    foreach ($aktionen as $a) {
+      $aktionscode .= $a;
+    }
+    echo json_encode(array("typ" => $typ, "titel" => $titel, "inhalt" => $inhalt, "aktionen" => $aktionscode));
     die();
   }
 
@@ -128,9 +139,12 @@ class Anfrage {
     foreach($vars as $var) {
       if(!isset($_POST[$var]) && $fehler) {
         Anfrage::addFehler(0);
-      } else {
+      } else if (isset($_POST[$var])) {
         global $$var;
         $$var = $_POST[$var];
+      } else {
+        global $$var;
+        $$var = null;
       }
     }
   }
