@@ -80,8 +80,8 @@ class Anfrage {
     if (count($FEHLER) > 0) {
       $fehlerdateien = [];
 
-      if (file_exists(__DIR__."/fehlercodes.yml")) {
-        $fehlerdateien["Core"] = YAML::loader(file_get_contents(__DIR__."/fehlercodes.yml"));
+      if (file_exists(__DIR__."/core/fehlercodes.yml")) {
+        $fehlerdateien["Core"] = YAML::loader(file_get_contents(__DIR__."/core/fehlercodes.yml"));
       } else {
         Anfrage::antwort("Fehler", "Fehler", new UI\Meldung("Unbekannter Fehler", "Bei der Bearbeitung der Anfrage ist ein unbekannter Fehler aufgetreten. Fehlercode: ".(new Fehler(-1, "Core")), "Fehler"));
       }
