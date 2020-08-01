@@ -32,16 +32,16 @@ core.seiteLaden = (seite, push) => {
       r = r.replace(/&/g, "&amp");
       r = r.replace(/</g, "&lt");
       r = r.replace(/>/g, "&gt");
-      console.error("Fehler beim Laden der Seite " + seite, r);
-      ui.meldung.fehler("Beim Laden der Seite ist ein Fehler aufgetreten!", "<pre style=\"white-space:pre-wrap\">"+r+"</pre>").then((r) => $("#dshSeite").setHTML(r));
+      ui.laden.aus();
+      ui.meldungen.fehler("Beim Laden der Seite ist ein Fehler aufgetreten!", "<pre style=\"white-space:pre-wrap\">"+r+"</pre>").then((r) => $("#dshHauptteilI").setHTML(r));
       document.title = "Fehler";
       return;
     }
     if(push) {
-      window.history.pushState({}, rueck["daten"]["seitentitel"], seite);
+      window.history.pushState({}, rueck["Titel"], seite);
     }
-    document.title = rueck["daten"]["seitentitel"];
-    $("#dshHauptteilI").setHTML(rueck["seite"]);
+    document.title = rueck["Titel"];
+    $("#dshHauptteilI").setHTML(rueck["Code"]);
 
     // Script austauschen
     var r = (n) => {

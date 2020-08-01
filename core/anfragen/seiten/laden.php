@@ -33,12 +33,7 @@
   $CODE = ob_get_contents().$CODE;
   ob_end_clean();
 
-  $rueck["seite"] = (string) $CODE;
-  $rueck["daten"] = array(
-    "seitentitel" => $DSH_TITEL
-  );
-  $r = json_encode($rueck);
-  $ln = strlen($r);
-  header("Content-length: $ln");
-  echo $r;
+  Anfrage::setTyp("Seite");
+  Anfrage::setRueck("Titel", $DSH_TITEL);
+  Anfrage::setRueck("Code", (string) $CODE);
 ?>

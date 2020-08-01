@@ -49,8 +49,17 @@ core.ajax = (modul, ziel, laden, daten, host) => {
 		var anfrage = new XMLHttpRequest();
 		anfrage.onreadystatechange = () => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
-        core.anfrageAuswerten(anfrage.responseText);
-				erfolg(anfrage.responseText);
+        try {
+          let r = JSON.parse(anfrage.responseText);
+          console.log(r);
+          if (r.Typ == "Meldung") {
+            ui.laden.aendern(null, r.Meldung, r["Knöpfe"]);
+          }
+          erfolg(r);
+        }
+        catch(err) {
+          console.log("Fehler bei AJAX-Anfrage", anfrage.responseText);
+        }
 			}
 		};
 		anfrage.open("POST",host+"anfrage.php", true);
@@ -78,16 +87,4 @@ core.multiajax = (modul, ziel, laden, arrays, statisch, host) => {
 
     anfrage(0);
   });
-}
-
-core.anfrageAuswerten = (rueckgabe) => {
-  try {
-    werte = JSON.parse(rueckgabe);
-    if (werte.typ == "Meldung") {
-      ui.laden.aendern(null, werte.inhalt, werte.aktionen);
-    }
-  }
-  catch(err) {
-    console.log(rueckgabe);
-  }
 }
