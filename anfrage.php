@@ -106,6 +106,9 @@ class Anfrage {
     //  »Titel«   String, der im Browser als Titel angezeigt wird
     //  »Code«    HTML-Code der anzuzeigenden Seite
     "Seite"   => ["Titel", "Code"],
+
+    //  »Ziel«    Interne URL auf die weitergeleitet werden soll
+    "Weiterleitung" => ["Ziel"]
   );
 
   /**
@@ -266,6 +269,9 @@ class Anfrage {
       case "Seite":
         $ausgabe["Titel"]   = (string) $rueck["Titel"];
         $ausgabe["Code"]    = (string) $rueck["Code"];
+        break;
+      case "Weiterleitung":
+        $ausgabe["Ziel"]   = (string) $rueck["Ziel"];
         break;
       default:
         trigger_error("Unbekannter Rückgabetyp: $typ", E_USER_ERROR);

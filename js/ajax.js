@@ -51,9 +51,12 @@ core.ajax = (modul, ziel, laden, daten, host) => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
         try {
           let r = JSON.parse(anfrage.responseText);
-          console.log(r);
           if (r.Typ == "Meldung") {
             ui.laden.aendern(null, r.Meldung, r["Knöpfe"]);
+          }
+          else if (r.Typ == "Weiterleitung") {
+            core.seiteLaden(r.Ziel);
+            ui.laden.aus();
           }
           erfolg(r);
         }
