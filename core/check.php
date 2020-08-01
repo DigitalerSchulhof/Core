@@ -42,8 +42,26 @@ class Check {
   	return !$fehler;
   }
 
+  public static function istLatein($x, $min = 1, $max = null) {
+    if (preg_match("/^[-_0-9a-zA-Z]+$/", $x) !== 1) {
+      return false;
+    }
+    $fehler = false;
+    if ($min !== null) {
+      if (strlen($x) < $min) {
+        $fehler = true;
+      }
+    }
+    if ($max !== null) {
+      if (strelan($x) > $max) {
+        $fehler = true;
+      }
+    }
+  	return !$fehler;
+  }
+
   public static function istText($x, $min = 1, $max = null) {
-    if (preg_match("/^[_-äöüÄÖÜß0-9a-zA-Z]+$/", $x) !== 1) {
+    if (preg_match("/^[-_äöüÄÖÜß0-9a-zA-Z]+$/", $x) !== 1) {
       return false;
     }
     $fehler = false;
@@ -71,6 +89,24 @@ class Check {
   	} else {
   		return false;
   	}
+  }
+
+  public static function boese($string) {
+  	// onevent
+  	if (preg_match("/ [oO][nN][a-zA-Z]* *=[^\\\\]*/", $string)) {return true;}
+  	// <script>
+  	if (preg_match("/<[sS][cC][rR][iI][pP][tT].*>/", $string)) {return true;}
+  	// data:
+  	if (preg_match("/=['\"]?data:(application\\/(javascript|octet-stream|zip|x-shockwave-flash)|image\\/(svg\+xml)|text\\/(javascript|x-scriptlet|html)|data\\/(javascript))[;,]/", $string)) {
+  		return true;
+  	}
+  	preg_match_all("/(.[^ ])*[jJ](&.*;)*[aA](&.*;)*[vV](&.*;)*[aA](&.*;)*[sS](&.*;)*[cC](&.*;)*[rR](&.*;)*[iI](&.*;)*[pP](&.*;)*[tT](&.*;)*(:|;[cC][oO][lL][oO][nN])/", $string, $matchjs);
+  	preg_match_all("/javascript:cms_download\('([-a-zA-Z0-9]+\/)*[\-\_a-zA-Z0-9]{1,244}\.((tar\.gz)|([a-zA-Z0-9]{2,10}))'\)/", $string, $matchdown);
+
+  	if (count($matchjs[0]) != count($matchdown[0])) {
+  		return true;
+  	}
+  	return false;
   }
 }
 
