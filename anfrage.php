@@ -273,19 +273,6 @@ class Anfrage {
     echo json_encode($ausgabe);
   }
 
-  public static function antwort($typ, $titel, $inhalt, $aktionen = []) {
-    $aktionscode = "";
-    if (is_array($aktionen)) {
-      foreach ($aktionen as $a) {
-        $aktionscode .= $a;
-      }
-    } else {
-      $aktionscode = $aktionen;
-    }
-    echo json_encode(array("typ" => $typ, "titel" => $titel, "inhalt" => $inhalt, "aktionen" => $aktionscode));
-    die();
-  }
-
   /**
    * Lädt die gegebenen Werte von $_POST in die entsprechenden Variablen
    * @param  boolean|string $fehler Wenn <code>true</code> oder <code>false</code>: Ob ein Fehler auftritt, wenn der Wert nicht übergeben wurde. Ansonsten: Erster Wert von ...$vars
