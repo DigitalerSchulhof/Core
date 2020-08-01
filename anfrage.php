@@ -28,7 +28,8 @@ class Fehler {
    * @return string :)
    */
   public function __toString() : string {
-    return "<span class=\"dshUiFehlermeldung\"><span class=\"dshUiModul\">{$this->modul}</span><span class=\"dshUiFehlercode\">{$this->id}</span></span>";
+    $hexid = strtoupper(dechex($this->id));
+    return "<span class=\"dshUiFehlermeldung\"><span class=\"dshUiModul\">{$this->modul}</span><span class=\"dshUiFehlercode\">$hexid</span></span>";
   }
 
   /**
