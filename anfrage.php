@@ -108,7 +108,10 @@ class Anfrage {
     "Seite"   => ["Titel", "Code"],
 
     //  »Ziel«    Interne URL auf die weitergeleitet werden soll
-    "Weiterleitung" => ["Ziel"]
+    "Weiterleitung" => ["Ziel"],
+
+    //  »Funktion« JS-Funktion die nach der Bearbeitung der Anfrage ausgeführt werden soll  
+    "Fortsetzen" => ["Funktion"]
   );
 
   /**
@@ -272,6 +275,9 @@ class Anfrage {
         break;
       case "Weiterleitung":
         $ausgabe["Ziel"]   = (string) $rueck["Ziel"];
+        break;
+      case "Fortsetzen":
+        $ausgabe["Funktion"]   = (string) $rueck["Funktion"];
         break;
       default:
         trigger_error("Unbekannter Rückgabetyp: $typ", E_USER_ERROR);

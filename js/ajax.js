@@ -58,6 +58,10 @@ core.ajax = (modul, ziel, laden, daten, host) => {
             core.seiteLaden(r.Ziel);
             ui.laden.aus();
           }
+          else if (r.Typ == "Fortsetzen") {
+            eval(r.Funktion);
+            ui.laden.aus();
+          }
           erfolg(r);
         }
         catch(err) {
