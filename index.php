@@ -115,6 +115,14 @@ echo "<html>";
       echo "<a style=\"font-family: inherit; color: inherit; font-size: inherit;\" target=\"_blank\" class=\"dshExtern\" href=\"https://github.com/DigitalerSchulhof\">Digitaler Schulhof – Version $DSH_VERSION – Website – Schulhof"./**" – Lehrerzimmer"*/"</a>";
       echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
     echo "</div>";
+
+    echo "<div id=\"dshBlende\">";
+      echo "<div id=\"dshBlendeI\">";
+        $laden = new UI\Fenster("dshLaden", "WIRD ÜBERSCHRIEBEN", "BLA");
+        $laden->setSchliessen(false);
+        echo $laden;
+      echo "</div>";
+    echo "</div>";
 		echo "<script>";
 			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false);$('#dshMeldungInitial').einblenden();}";
 		echo "</script>";

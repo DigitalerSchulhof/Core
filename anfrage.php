@@ -97,12 +97,15 @@ class Anfrage {
       }
 
       $meldung = new UI\Meldung("Es sind Fehler aufgetreten", $inhalt, "Fehler");
-      Anfrage::antwort("Fehler", "Es sind Fehler aufgetreten ...", $meldung->__toString());
+      $abbrechen = new UI\Knopf("OK");
+      $abbrechen->addFunktion("onclick", "ui.laden.aus()");
+
+      Anfrage::antwort("Fehler", "Es sind Fehler aufgetreten ...", $meldung->__toString(), $abbrechen->__toString());
     }
   }
 
-  public static function antwort($typ, $titel, $inhalt) {
-    echo json_encode(array("typ" => $typ, "titel" => $titel, "inhalt" => $inhalt));
+  public static function antwort($typ, $titel, $inhalt, $aktionen = []) {
+    echo json_encode(array("typ" => $typ, "titel" => $titel, "inhalt" => $inhalt, "aktionen" => $aktionen));
     die();
   }
 

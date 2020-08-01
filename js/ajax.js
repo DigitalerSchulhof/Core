@@ -49,6 +49,7 @@ core.ajax = (modul, ziel, laden, daten, host) => {
 		var anfrage = new XMLHttpRequest();
 		anfrage.onreadystatechange = () => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
+        core.anfrageAuswerten(anfrage.responseText);
 				erfolg(anfrage.responseText);
 			}
 		};
@@ -80,9 +81,8 @@ core.multiajax = (modul, ziel, laden, arrays, statisch, host) => {
 }
 
 core.anfrageAuswerten = (rueckgabe) => {
-  console.log(rueckgabe);
   werte = JSON.parse(rueckgabe);
-  if (werte.typ == "FEHLER") {
-    ui.laden.an(werte.titel, werte.inhalt);
+  if (werte.typ == "Fehler") {
+    ui.laden.aendern(null, werte.inhalt, werte.aktionen);
   }
 }
