@@ -60,7 +60,6 @@ core.ajax = (modul, ziel, laden, daten, host) => {
           }
           else if (r.Typ == "Fortsetzen") {
             eval(r.Funktion);
-            ui.laden.aus();
           }
           erfolg(r);
         }
