@@ -115,6 +115,9 @@ class Check {
    */
   public static function angemeldet() : bool {
     global $DSH_BENUTZER;
+    if(session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
     $angemeldet = false;
     if (isset($_SESSION["Benutzer"])) {
       $DSH_BENUTZER = $_SESSION["Benutzer"];

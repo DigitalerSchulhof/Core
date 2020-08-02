@@ -7,36 +7,10 @@ core.seiteLaden = (seite, push) => {
     push = true;
   }
 
-  new Promise((erfolg) => {
-    var daten = new FormData();
-    daten.append("modul", "Core");
-    daten.append("ziel", 0);
-    daten.append("seite", seite);
-
-    var anfrage = new XMLHttpRequest();
-    anfrage.onreadystatechange = () => {
-      if (anfrage.readyState == 4 && anfrage.status == 200) {
-        erfolg(anfrage.responseText);
-      }
-    }
-    anfrage.open("POST", "anfrage.php", true);
-    anfrage.send(daten);
-    core.seiteladebalken.an();
-    core.seiteladebalken.seite = seite;
-
-  }).then((r) => {
+  core.seiteladebalken.an();
+  core.seiteladebalken.seite = seite;
+  core.ajax("Core", 0, null, {seite: seite}).then((rueck) => {
     core.seiteladebalken.aus();
-    try {
-		    var rueck = JSON.parse(r);
-    } catch(e) {
-      r = r.replace(/&/g, "&amp");
-      r = r.replace(/</g, "&lt");
-      r = r.replace(/>/g, "&gt");
-      ui.laden.aus();
-      ui.meldungen.fehler("Beim Laden der Seite ist ein Fehler aufgetreten!", "<pre style=\"white-space:pre-wrap\">"+r+"</pre>").then((r) => $("#dshHauptteilI").setHTML(r));
-      document.title = "Fehler";
-      return;
-    }
     if(push) {
       window.history.pushState({}, rueck["Titel"], seite);
     }

@@ -60,6 +60,7 @@ var $ = (...arguments) => {
     },
     ist: (s)              => el[0].matches(s),
     parent: ()            => $(el[0].parentNode),
+    parentSelector: (s)   => $(el[0].closest(s)),
     kinder: ()            => $(...el[0].childNodes),
     kinderSelector: (s)   => $(...el[0].querySelectorAll(">".s)),
     finde: (s)            => $(...el[0].querySelectorAll(s)),
