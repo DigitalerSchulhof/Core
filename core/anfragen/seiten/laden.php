@@ -33,7 +33,9 @@
   $CODE = ob_get_contents().$CODE;
   ob_end_clean();
 
-  Anfrage::setTyp("Seite");
-  Anfrage::setRueck("Titel", $DSH_TITEL);
-  Anfrage::setRueck("Code", (string) $CODE);
+  if(Anfrage::getTyp() === null) {
+    Anfrage::setTyp("Seite");
+    Anfrage::setRueck("Titel", $DSH_TITEL);
+    Anfrage::setRueck("Code", (string) $CODE);
+  }
 ?>

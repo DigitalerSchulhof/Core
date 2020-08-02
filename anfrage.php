@@ -74,7 +74,7 @@ class Anfrage {
    *  - Code:     Die Rückgabe enthält HTML-Code, der Client-Side benötigt wird
    *  - Seite:    Tritt beim Laden einer Seite auf
    */
-  public static $TYP = "Meldung";
+  public static $TYP = null;
 
   /** @var [Rückgabefeld : string] => [Rückgabewert : mixed]
    *  Benötigte Felder nach Rückgabetyp: Siehe Anfrage::RUECKGABEFELDER
@@ -126,7 +126,7 @@ class Anfrage {
    * Gibt den Typ der Rückgabe zurück
    * @return string
    */
-  public static function getTyp() : string {
+  public static function getTyp() : ?string {
     return self::$TYP;
   }
 
@@ -221,7 +221,7 @@ class Anfrage {
     $ben = self::RUECKGABEFELDER[$typ];
     foreach($ben as $b) {
       if(!isset($rueck[$b])) {
-        trigger_error("Ein Rückgabefeld ist nicht gesetzt worden.", E_USER_ERROR);
+        trigger_error("Das Rückgabefeld »{$b}« für den Typ »{$typ}« ist nicht gesetzt worden.", E_USER_ERROR);
       }
     }
 
