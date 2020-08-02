@@ -110,7 +110,7 @@ class Anfrage {
     //  »Ziel«    Interne URL auf die weitergeleitet werden soll
     "Weiterleitung" => ["Ziel"],
 
-    //  »Funktion« JS-Funktion die nach der Bearbeitung der Anfrage ausgeführt werden soll  
+    //  »Funktion« JS-Funktion die nach der Bearbeitung der Anfrage ausgeführt werden soll
     "Fortsetzen" => ["Funktion"]
   );
 
@@ -238,7 +238,7 @@ class Anfrage {
           $beschreibung = $fc[2];
           $fehlerCode  .= new UI\Absatz("$beschreibung <span class=\"dshFehlercode\" title=\"$modul\">$code</span>");
         }
-        if(count($fehlercodes) > 0) {
+        if(count($fehlercodes) > 1) {
           $titel = "Es sind folgende Fehler aufgetreten:";
         } else {
           $titel = "Es ist folgender Fehler aufgetreten:";
