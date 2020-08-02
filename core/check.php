@@ -108,6 +108,20 @@ class Check {
   	}
   	return false;
   }
+
+  /**
+   * Prüft ob die Person im Session-Cookie angemeldet ist
+   * @return bool true wenn angemeldet, false sonst
+   */
+  public static function angemeldet() : bool {
+    global $DSH_BENUTZER;
+    $angemeldet = false;
+    if (isset($_SESSION["Benutzer"])) {
+      $DSH_BENUTZER = $_SESSION["Benutzer"];
+      $angemeldet = $DSH_BENUTZER->angemeldet();
+    }
+    return $angemeldet;
+  }
 }
 
 ?>

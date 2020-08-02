@@ -71,7 +71,7 @@ class Einbinden {
   * @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
   */
   static function seiteFinden($return = false) {
-  	global $DSH_MODULE, $aktuellesModul, $DSH_TITEL, $CODE;
+  	global $DSH_MODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER;
   	if($return) {
   		return Einbinden::$aktuellesModul["gefunden"];
   	}
