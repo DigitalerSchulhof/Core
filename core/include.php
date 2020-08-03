@@ -9,16 +9,7 @@ class Einbinden {
   static function seiteEinbinden($url) {
   	global $DSH_MODULE;
 
-  	$gefunden = false;
-  	if(count($url) == 2 && $url[0] == "Schulhof" && $url[1] == "Verwaltung") {
-  		// Verwaltungsbereich
-  		$gefunden = true;
-  		include_once __DIR__."/seiten/verwaltungsbereich.php";
-  	}
-
-   	if(!$gefunden) {
-  		Einbinden::seiteFinden();
-  	}
+		Einbinden::seiteFinden();
   }
 
   /** @var array Daten über das aktuelle Modul */

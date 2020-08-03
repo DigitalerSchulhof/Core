@@ -49,8 +49,16 @@ core.ajax = (modul, ziel, laden, daten, host) => {
 		var anfrage = new XMLHttpRequest();
 		anfrage.onreadystatechange = () => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
+        let fehler = false;
+        let r;
         try {
-          let r = JSON.parse(anfrage.responseText);
+          r = JSON.parse(anfrage.responseText);
+        }
+        catch(err) {
+          console.log("Fehler bei AJAX-Anfrage", anfrage.responseText);
+          fehler = true;
+        }
+        if(!fehler) {
           if (r.Typ == "Meldung") {
             ui.laden.aendern(null, r.Meldung, r["Knöpfe"]);
           }
@@ -62,9 +70,6 @@ core.ajax = (modul, ziel, laden, daten, host) => {
             eval(r.Funktion);
           }
           erfolg(r);
-        }
-        catch(err) {
-          console.log("Fehler bei AJAX-Anfrage", anfrage.responseText);
         }
 			}
 		};
