@@ -125,6 +125,87 @@ class Check {
     }
     return $angemeldet;
   }
+
+  /**
+   * Erstellt aus einem Float-Wert einen Prozentstring
+   * @param  float $wert :)
+   * @return array ["wert"] enthält den Wert, ["anzeige"] enthält den String, ["style"] enthält den Wert mit %-Zeichen
+   */
+  public static function prozent($teil, $ganz) : array {
+    $rueckgabe = [];
+    $rueckgabe["wert"] = ($teil/$ganz)*100;
+    $rueckgabe["anzeige"] = str_replace(".", ",", round($rueckgabe["wert"], 2))." %";
+    $rueckgabe["style"] = "{$rueckgabe["wert"]}%";
+    return $rueckgabe;
+  }
+
+  /**
+   * Gibt den Speicher in der größtmöglichen Einheit aus
+   * @param  int    $bytes :)
+   * @return string        :)
+   */
+  public static function speicher ($bytes) : string {
+    if ($bytes/1000 >= 1) {
+      $bytes = $bytes/1000;
+      if ($bytes/1000 >= 1) {
+        $bytes = $bytes/1000;
+        if ($bytes/1000 >= 1) {
+          $bytes = $bytes/1000;
+          if ($bytes/1000 >= 1) {
+            $bytes = $bytes/1000;
+            if ($bytes/1000 >= 1) {
+              $bytes = $bytes/1000;
+              if ($bytes/1000 >= 1) {
+                $bytes = $bytes/1000;
+                $bytes = str_replace('.', ',', round($bytes, 2));
+                return $bytes." EB";
+              }
+              $bytes = str_replace('.', ',', round($bytes, 2));
+              return $bytes." PB";
+            }
+            $bytes = str_replace('.', ',', round($bytes, 2));
+            return $bytes." TB";
+          }
+          $bytes = str_replace('.', ',', round($bytes, 2));
+          return $bytes." GB";
+        }
+        $bytes = str_replace('.', ',', round($bytes, 2));
+        return $bytes." MB";
+      }
+      $bytes = str_replace('.', ',', round($bytes, 2));
+      return $bytes." KB";
+    }
+    return $bytes." B";
+  }
+
+  /**
+   * Gibt die Zeit in der größtmöglichen Einheit aus
+   * @param  int    $bytes :)
+   * @return string        :)
+   */
+  public static function zeit ($sekunden) : string {
+    if ($sekunden < 60) {
+      return "weniger als eine Minute";
+    }
+    if ($sekunden / 60 > 1) {
+      $minuten = $sekunden / 60;
+      if ($minuten / 60 > 1) {
+        $stunden = $minuten / 60;
+        // Stunden ausgeben
+        if (floor($stunden) == 1) {
+          return "eine Stunde";
+        } else {
+          return floor($stunden)." Stunde";
+        }
+      }
+      // MINUTEN AUSGEBEN
+      if (floor($minuten) == 1) {
+        return "eine Minute";
+      } else {
+        return floor($minuten)." Minuten";
+      }
+    }
+  }
 }
 
 ?>
