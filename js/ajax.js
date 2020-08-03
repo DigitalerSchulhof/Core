@@ -58,7 +58,14 @@ core.ajax = (modul, ziel, laden, daten, host) => {
           console.log("Fehler bei AJAX-Anfrage", anfrage.responseText);
           fehler = true;
         }
-        if(!fehler) {
+        if(fehler) {
+          $("#dshMeldungInitial").ausblenden();
+          $("#dshFehlerbox").einblenden();
+          meld = anfrage.responseText;
+          $("#dshFehlerbox pre").setHTML(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
+          ui.laden.aus();
+        } else {
+          $("#dshFehlerbox").ausblenden();
           if (r.Typ == "Meldung") {
             ui.laden.aendern(null, r.Meldung, r["Knöpfe"]);
           }

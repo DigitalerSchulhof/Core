@@ -105,6 +105,8 @@ echo "<html>";
         $hier = new UI\Link("hier", "https://www.enable-javascript.com/de/", true);
         echo UI\Zeile::standard((new UI\Meldung("Inkompatibel", "JavaScript ist deaktiviert! Um den Digitalen Schulof zu nutzen, muss JavaScript aktiv sein.<br>Wie Sie dieses aktivieren, erfahren Sie $hier.", "Fehler")))->setTag("noscript");
         echo UI\Zeile::standard((new UI\Meldung("Bitte warten", "Der Digitale Schulhof wird geladen...", "Arbeit")))->setID("dshMeldungInitial")->setStyle("display", "none");
+        echo UI\Zeile::standard((new UI\Meldung("Fehler", "Bei der Anfrage ist ein unbekannter Fehler aufgetreten: <pre></pre", "Fehler")))->setID("dshFehlerbox")->setStyle("display", "none");
+        echo "<div id=\"dshSeite\"></div>";
       echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";

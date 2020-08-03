@@ -9,13 +9,17 @@ core.seiteLaden = (seite, push) => {
 
   core.seiteladebalken.an();
   core.seiteladebalken.seite = seite;
+  if(push) {
+    window.history.pushState({}, "Die Seite wird geladen...", seite);
+  }
   core.ajax("Core", 0, null, {seite: seite}).then((rueck) => {
     core.seiteladebalken.aus();
     if(push) {
-      window.history.pushState({}, rueck["Titel"], seite);
+      window.history.replaceState({}, rueck["Titel"], seite);
     }
     document.title = rueck["Titel"];
-    $("#dshHauptteilI").setHTML(rueck["Code"]);
+    $("#dshSeite").setHTML(rueck["Code"]);
+    $("#dshMeldungInitial", "#dshFehlerbox").ausblenden();
 
     // Script austauschen
     var r = (n) => {
@@ -49,6 +53,9 @@ core.seiteladebalken = {
   seite: null,
   an: () => {
     let b = core.seiteladebalken.balken;
+    b.addKlasse("dshNoTransition");
+    b.setCss({width: "0%", opacity: "0"});
+    b.removeKlasse("dshNoTransition");
     b.setCss({width: core.seiteladebalken.fortschritt + "%", opacity: "1"});
     core.seiteladebalken.fortschritt = 12;
     core.seiteladebalken.timeout = setTimeout(() => {
@@ -76,7 +83,9 @@ core.seiteladebalken = {
     setTimeout(() => {
       b.setCss("opacity", "0");
       setTimeout(() => {
+        b.addKlasse("dshNoTransition");
         b.setCss("width", "0%");
+        b.removeKlasse("dshNoTransition");
         core.seiteladebalken.fortschritt = 0;
       }, 300);
     }, 400);
