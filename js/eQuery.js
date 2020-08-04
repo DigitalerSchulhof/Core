@@ -59,6 +59,7 @@ var $ = (...arguments) => {
       return el.removeKlasse(...k);
     },
     ist: (s)              => el[0].matches(s),
+    istElement: (e)       => el[0].isSameNode(e),
     parent: ()            => $(el[0].parentNode),
     parentSelector: (s)   => $(el[0].closest(s)),
     kinder: ()            => $(...el[0].childNodes),

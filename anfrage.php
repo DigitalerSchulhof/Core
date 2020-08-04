@@ -92,7 +92,6 @@ class Anfrage {
     //    »Beschreibung des Fehlers«  String, welcher die Beschreibung des Fehlercodes (Siehe: fehlercodes.yml eines Moduls), und eventuell den Fehlercode, enthält.
     "Fehler"  => ["Fehler"],
 
-    // »Titel«    entweder String oder <code>null</code>. Bei String: Der Titel der offnen Blende wird auf Titel gesetzt. Bei null: Der Titel der Blende bleibt unverändert.
     // »Meldung«  gültiger HTML-Code einer Meldung (Siehe: UI\Meldung::__toString()), welcher in den Körper der offnenen Blende geladen wird.
     // »Knöpfe«   Array [Knopfcode : string] an HTML-Code der Knöpfe (Siehe: UI\Knopf::__toString()) für die offene Blende. Ist das Array leer, wird automatisch ein dshUiKnopfStandard mit dem Inhalt »OK« und der onclick-Aktion »ui.laden.aus()« übergeben. Ist der Wert <code>null</code>, so wird nichts zurückgegeben.
     //
