@@ -21,7 +21,7 @@ Einbinden::modulLaden("UI", true, false);
 Einbinden::modulLaden("Kern", true, false);
 
 echo "<!DOCTYPE html>";
-echo "<html>";
+echo "<html lang=\"de\">";
 	echo "<head>";
     echo "<base href=\"{$EINSTELLUNGEN["Base"]}\">";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";

@@ -65,6 +65,8 @@ var $ = (...arguments) => {
     kinder: ()            => $(...el[0].childNodes),
     kinderSelector: (s)   => $(...el[0].querySelectorAll(">".s)),
     finde: (s)            => $(...el[0].querySelectorAll(s)),
+    siblingVor: ()        => $(el[0].previousSibling),
+    siblingNach: ()       => $(el[0].nextSibling)
   };
   el.__proto__ = proto;
   el.length = l;
