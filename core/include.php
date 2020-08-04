@@ -21,7 +21,7 @@ class Einbinden {
   * @return string[]
   */
   static function seiteBestimmen($urlganz) {
-  	global $DSH_MODULE;
+  	global $DSH_MODULE, $DSH_LINKMUSTER;
   	$seiten = unserialize(file_get_contents(__DIR__."/seitenliste.core"));
   	$gefunden = false;
   	foreach($seiten as $seite => $datei) {
@@ -62,7 +62,7 @@ class Einbinden {
   * @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
   */
   static function seiteFinden($return = false) {
-  	global $DSH_MODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER;
+  	global $DSH_MODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ;
   	if($return) {
   		return Einbinden::$aktuellesModul["gefunden"];
   	}

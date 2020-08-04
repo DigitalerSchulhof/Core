@@ -41,6 +41,13 @@ core.seiteLaden = (seite, push) => {
     // Target von unvollständigen externen Links korrekt setzen
     $("a.dshExtern:not([target])").setAttr("target", "_blank");
 
+    if($(".autofocus").length > 0) {
+      $(".autofocus")[0].focus();
+      if($(".autofocus").length > 1) {
+        console.warn("Mehr als ein .autofocus gefunden!");
+      }
+    }
+
     window.dispatchEvent(new Event("dshSeiteGeladen"));
     window.dispatchEvent(new Event("resize"));
   });

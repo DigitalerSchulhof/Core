@@ -92,13 +92,12 @@ class Anfrage {
     //    »Beschreibung des Fehlers«  String, welcher die Beschreibung des Fehlercodes (Siehe: fehlercodes.yml eines Moduls), und eventuell den Fehlercode, enthält.
     "Fehler"  => ["Fehler"],
 
-    // »Titel«    entweder String oder <code>null</code>. Bei String: Der Titel der offnen Blende wird auf Titel gesetzt. Bei null: Der Titel der Blende bleibt unverändert.
     // »Meldung«  gültiger HTML-Code einer Meldung (Siehe: UI\Meldung::__toString()), welcher in den Körper der offnenen Blende geladen wird.
     // »Knöpfe«   Array [Knopfcode : string] an HTML-Code der Knöpfe (Siehe: UI\Knopf::__toString()) für die offene Blende. Ist das Array leer, wird automatisch ein dshUiKnopfStandard mit dem Inhalt »OK« und der onclick-Aktion »ui.laden.aus()« übergeben. Ist der Wert <code>null</code>, so wird nichts zurückgegeben.
     //
     // In JSON:
     // »Knöpfe«   HTML-Code der Knöpfe. <b>Nicht</b> mit Leerzeichen getrennt.
-    "Meldung" => ["Titel", "Meldung", "Knöpfe"],
+    "Meldung" => ["Meldung", "Knöpfe"],
 
     // »Code«     HTML-Code, welcher Client-Side für eine Ausgabe benötigt wird, und zuvor mit entsprechenden __toString() - Methoden generiert wurde.
     "Code"    => ["Code"],
@@ -262,7 +261,6 @@ class Anfrage {
           $knoepfe = [$knopfOk];
         }
 
-        $ausgabe["Titel"]   = (string) $rueck["Titel"];
         $ausgabe["Meldung"] = (string) $rueck["Meldung"];
         $ausgabe["Knöpfe"]  = join("", $knoepfe);
         break;
