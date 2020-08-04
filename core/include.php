@@ -118,15 +118,11 @@ class Einbinden {
   		$KLASSEN    = "$DSH_MODULE/$modul/klassen";
   		$geladen    = "$DSH_MODULE/$modul/funktionen/geladen.php";
   		$check      = "$DSH_MODULE/$modul/funktionen/check.php";
-  		$generieren = "$DSH_MODULE/$modul/funktionen/generieren.php";
       if(file_exists($geladen)) {
   			include_once $geladen;
   		}
       if(file_exists($check)) {
   			include_once $check;
-  		}
-      if(file_exists($generieren)) {
-  			include_once $generieren;
   		}
   	}
 
