@@ -119,6 +119,9 @@ class Anfrage {
    * @param  string $typ :)
    */
   public static function setTyp($typ) {
+    if(!in_array($typ, array_keys(self::RUECKGABEFELDER))) {
+      throw new \Exception("Unbekannter Rückgabetyp: »{$typ}«");
+    }
     self::$TYP = $typ;
   }
 
