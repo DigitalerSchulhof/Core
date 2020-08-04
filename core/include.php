@@ -64,6 +64,9 @@ class Einbinden {
   */
   static function seiteFinden($return = false) {
   	global $DSH_MODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ;
+
+    \Check::einwilligung();
+
   	if($return) {
   		return Einbinden::$aktuellesModul["gefunden"];
   	}

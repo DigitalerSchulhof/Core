@@ -79,12 +79,24 @@ class Check {
   }
 
   /**
-   * Gibt zurück, ob ein Datum gültig ist
-   * @param  string $datum :)
+   * Gibt zurück, ob eine Mailadresse gültig ist
+   * @param  string $mail :)
    * @return bool
    */
   public static function istMail($mail) : bool {
     if (preg_match('/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$/', $mail) != 1) {
+  		return false;
+  	}
+  	return true;
+  }
+
+  /**
+   * Gibt zurück, ob der übergebene Wert 0 oder 1 ist
+   * @param  string $wert :)
+   * @return bool
+   */
+  public static function istToggle($wert) : bool {
+    if (preg_match('/^(0|1)$/', $wert) != 1) {
   		return false;
   	}
   	return true;
@@ -216,6 +228,36 @@ class Check {
       } else {
         return floor($minuten)." Minuten";
       }
+    }
+  }
+
+
+  /**
+   * Prüft den Datenschutzcookie
+   * @param  string $typ Typ des Datenschutzcookies
+   * @return bool        true, wenn Datenschutz zugestimmt, sonst false
+   */
+  public static function einwilligung($typ = null) : bool {
+    // Datenschutzcookies verwalten
+    if (!isset($_COOKIE["EinwilligungDSH"])) {
+      echo "BLA";
+      setcookie("EinwilligungDSH", "nein", time()+30*24*60*60);
+    } else {
+      if ($_COOKIE["EinwilligungDSH"] == "ja") {
+        session_start();
+      }
+    }
+    if (!isset($_COOKIE["EinwilligungEXT"])) {
+      setcookie("EinwilligungEXT", "nein", time()+30*24*60*60);
+    }
+
+    $typen = ["DSH", "EXT"];
+    if (!in_array($typ, $typen)) {return false;}
+
+    if ($_COOKIE["Einwilligung{$typ}"] == "ja") {
+      return true;
+    } else {
+      return false;
     }
   }
 }

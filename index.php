@@ -20,6 +20,10 @@ use Core\Einbinden;
 Einbinden::modulLaden("UI", true, false);
 Einbinden::modulLaden("Kern", true, false);
 
+// Datenschutzcookies verwalten
+\Check::einwilligung();
+
+
 echo "<!DOCTYPE html>";
 echo "<html>";
 	echo "<head>";
