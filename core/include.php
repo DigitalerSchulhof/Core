@@ -1,5 +1,6 @@
 <?php
 namespace Core;
+use UI;
 
 class Einbinden {
   /**
@@ -66,8 +67,12 @@ class Einbinden {
   	if($return) {
   		return Einbinden::$aktuellesModul["gefunden"];
   	}
-
-  	return include_once "$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'];
+    if (is_file("$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'])) {
+  	  return include_once "$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'];
+    } else {
+      echo UI\Zeile::standard(new UI\Meldung("Datei fehlt", "Die einzubindende Datei wurde nicht gefunden. Bitte den Administrator informieren.", "Fehler"));
+    }
+    return false;
   }
 
   /** @var array Geladene Module */

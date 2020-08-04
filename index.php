@@ -53,8 +53,9 @@ echo "<html>";
 			echo "<div id=\"dshKopfzeileI\">";
 				echo "<img id=\"dshLogoBild\" src=\"dateien/schulspezifisch/logo.png\">";
 				echo "<span id=\"dshLogoSchrift\">";
-					echo "<span id=\"dshLogoO\">Schulname</span>";
-					echo "<span id=\"dshLogoU\">Schule Ort</span>";	// TODO: Schuldaten
+          $SCHULDATEN = Kern\Einstellungen::ladenAlle("Kern");
+					echo "<span id=\"dshLogoO\">{$SCHULDATEN["Schulname"]}</span>";
+					echo "<span id=\"dshLogoU\">{$SCHULDATEN["Schulort"]}</span>";
 				echo "</span>";
 				echo "<ul class=\"dshKopfnavigation\">";
 					echo "<li>";
