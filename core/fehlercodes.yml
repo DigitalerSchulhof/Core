@@ -1,3 +1,6 @@
+-2:
+  ort: alle Dateien, die angemeldete Benutzer benötigen
+  beschreibung: Aktuell ist kein Benutzer angemeldet.
 -1:
   ort: anfrage.php
   beschreibung: Die Fehlerdatei des Moduls »Core« konnte nicht gefunden werden.

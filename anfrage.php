@@ -184,7 +184,11 @@ class Anfrage {
 
       $fehlerListe = [];
       foreach (self::$FEHLER as $f) {
-        $fmodul = $f->getModul();
+        if ($f->getId() == 0 || $f->getId() == -2) {
+          $fmodul = "Core";
+        } else {
+          $fmodul = $f->getModul();
+        }
         if (!isset($fehlerdateien[$fmodul])) {
           if (file_exists(__DIR__."/module/$fmodul/fehlercodes.yml")) {
             $fehlerdateien[$fmodul] = YAML::loader(file_get_contents(__DIR__."/module/$fmodul/fehlercodes.yml"));
