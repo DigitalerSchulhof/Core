@@ -240,7 +240,6 @@ class Check {
   public static function einwilligung($typ = null) : bool {
     // Datenschutzcookies verwalten
     if (!isset($_COOKIE["EinwilligungDSH"])) {
-      echo "BLA";
       setcookie("EinwilligungDSH", "nein", time()+30*24*60*60, "/");
       $_COOKIE["EinwilligungDSH"] = "nein";
     } else {
