@@ -302,7 +302,7 @@ class Anfrage {
     }
 
     foreach(array_diff(array_keys($rueck), $ben) as $weiterer) {
-      $ausgabe[$weiterer]   = (string) $rueck[$weiterer];  
+      $ausgabe[$weiterer]   = (string) $rueck[$weiterer];
     }
 
     echo json_encode($ausgabe);
@@ -354,16 +354,21 @@ include_once(__DIR__."/core/angebote.php");
 include_once(__DIR__."/core/funktionen.php");
 include_once(__DIR__."/core/include.php");
 
+Core\Einbinden::modulLaden("UI", true, false);
+Core\Einbinden::modulLaden("Kern", true, false);
+
 $fehler = false;
 
 $fehler 		= $fehler || !isset($_POST);
 $fehler 		= $fehler || !isset($_POST["modul"]);
 $fehler 		= $fehler || !preg_match("/^[A-Za-z0-9]{1,16}$/", $_POST["modul"]);
-$moduldir 	= __DIR__."/module/{$_POST["modul"]}";
-if($_POST["modul"] === "Core") {
-  $moduldir = __DIR__."/core";
+if(!$fehler) {
+  $moduldir 	= __DIR__."/module/{$_POST["modul"]}";
+  if($_POST["modul"] === "Core") {
+    $moduldir = __DIR__."/core";
+  }
+  $fehler 		= $fehler || !is_dir($moduldir);
 }
-$fehler 		= $fehler || !is_dir($moduldir);
 
 if($fehler) {
   Anfrage::addFehler(new Fehler(1, "Core"), true);
@@ -381,8 +386,7 @@ $ZIELE = [];
 if(!file_exists("$moduldir/anfragen/ziele.php")) {
   Anfrage::addFehler(new Fehler(3, "Core"), true);
 }
-Core\Einbinden::modulLaden("UI", true, false);
-Core\Einbinden::modulLaden("Kern", true, false);
+
 if($_POST["modul"] !== "Core") {
   Core\Einbinden::modulLaden($_POST["modul"], true);
 }
