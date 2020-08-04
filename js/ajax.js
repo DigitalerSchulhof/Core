@@ -31,7 +31,11 @@ core.ajax = (modul, ziel, laden, daten, host) => {
   var pDaten = daten;
   var daten = new FormData();
   for(let key in pDaten) {
-    daten.append(key, pDaten[key]);
+    if(Array.isArray(pDaten[key])) {
+      daten.append(key, JSON.stringify(pDaten[key]));
+    } else {
+      daten.append(key, pDaten[key]);
+    }
   }
   daten.append("modul", modul);
   daten.append("ziel",  ziel);
