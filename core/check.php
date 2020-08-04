@@ -78,6 +78,18 @@ class Check {
   	return !$fehler;
   }
 
+  /**
+   * Gibt zurück, ob ein Datum gültig ist
+   * @param  string $datum :)
+   * @return bool
+   */
+  public static function istMail($mail) : bool {
+    if (preg_match('/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$/', $mail) != 1) {
+  		return false;
+  	}
+  	return true;
+  }
+
   public static function fuehrendeNull($x) {
     $check = new Check();
   	if ($check->istZahl($x)) {
