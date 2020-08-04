@@ -15,8 +15,9 @@
  * @param {string|boolean} [host=""] Das Netz, in das die Anfrage geht
  */
 core.ajax = (modul, ziel, laden, daten, host) => {
-	var host = host || "";
-
+	host    = host  || "";
+  daten   = daten || {};
+  
 	if(laden !== null) {
 		if(typeof laden === "string") {
 			ui.laden.an(laden, null);
