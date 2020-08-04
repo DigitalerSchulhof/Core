@@ -60,7 +60,10 @@ core.ajax = (modul, ziel, laden, daten, host) => {
         }
         if(!fehler) {
           if (r.Typ == "Meldung") {
-            ui.laden.aendern(null, r.Meldung, r["Knöpfe"]);
+            ui.laden.aendern(null, r.Meldung, r.Knoepfe);
+            if (r.Autoschliessen) {
+              window.setTimeout('ui.laden.aus()', 1500);
+            }
           }
           else if (r.Typ == "Weiterleitung") {
             core.seiteLaden(r.Ziel);

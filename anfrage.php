@@ -98,7 +98,7 @@ class Anfrage {
     //
     // In JSON:
     // »Knöpfe«   HTML-Code der Knöpfe. <b>Nicht</b> mit Leerzeichen getrennt.
-    "Meldung" => ["Titel", "Meldung", "Knöpfe"],
+    "Meldung" => ["Meldung", "Knöpfe"],
 
     // »Code«     HTML-Code, welcher Client-Side für eine Ausgabe benötigt wird, und zuvor mit entsprechenden __toString() - Methoden generiert wurde.
     "Code"    => ["Code"],
@@ -113,6 +113,7 @@ class Anfrage {
     //  »Funktion« JS-Funktion die nach der Bearbeitung der Anfrage ausgeführt werden soll
     "Fortsetzen" => ["Funktion"]
   );
+  // Allen Anfragen können zusätzlich noch Parameter übergeben werden, die ebenfalls weitergereicht werden
 
   /**
    * Setzt den Typ der Rückgabe
@@ -221,7 +222,11 @@ class Anfrage {
     $ben = self::RUECKGABEFELDER[$typ];
     foreach($ben as $b) {
       if(!isset($rueck[$b])) {
-        trigger_error("Das Rückgabefeld »{$b}« für den Typ »{$typ}« ist nicht gesetzt worden.", E_USER_ERROR);
+        if ($b == "Knöpfe") {
+          $rueck[$b] = [];
+        } else {
+          trigger_error("Das Rückgabefeld »{$b}« für den Typ »{$typ}« ist nicht gesetzt worden.", E_USER_ERROR);
+        }
       }
     }
 
@@ -260,11 +265,10 @@ class Anfrage {
           $knopfOk->addFunktion("onclick", "ui.laden.aus()");
 
           $knoepfe = [$knopfOk];
+          $ausgabe["Autoschliessen"] = true;
         }
-
-        $ausgabe["Titel"]   = (string) $rueck["Titel"];
         $ausgabe["Meldung"] = (string) $rueck["Meldung"];
-        $ausgabe["Knöpfe"]  = join("", $knoepfe);
+        $ausgabe["Knoepfe"]  = join("", $knoepfe);
         break;
       case "Code":
         $ausgabe["Code"]    = (string) $rueck["Code"];
@@ -282,6 +286,17 @@ class Anfrage {
       default:
         trigger_error("Unbekannter Rückgabetyp: $typ", E_USER_ERROR);
     }
+
+    // Parameterübergabe
+    if (isset($rueck["Parameter"])) {
+      if (!is_array($rueck["Parameter"])) {
+        trigger_error("Parameterrückgabe ist ungültig.", E_USER_ERROR);
+      }
+      foreach ($rueck["Parameter"] as $k => $r) {
+        $ausgabe[$k] = $r;
+      }
+    }
+
     echo json_encode($ausgabe);
   }
 
