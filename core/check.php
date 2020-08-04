@@ -61,7 +61,25 @@ class Check {
   }
 
   public static function istText($x, $min = 1, $max = null) {
-    if (preg_match("/^[-_äöüÄÖÜß0-9a-zA-Z]+$/", $x) !== 1) {
+    if (preg_match("/^[-_äöüÄÖÜßáéíóúàèìòùÁÉÍÓÚÀÈÌÒÙæÆâêîôûÂÊÎÔÛøØÅÇËÃÏÕãåçëïõÿñ0-9a-zA-Z]+$/", $x) !== 1) {
+      return false;
+    }
+    $fehler = false;
+    if ($min !== null) {
+      if (strlen($x) < $min) {
+        $fehler = true;
+      }
+    }
+    if ($max !== null) {
+      if (strelan($x) > $max) {
+        $fehler = true;
+      }
+    }
+  	return !$fehler;
+  }
+
+  public static function istName($x, $min = 1, $max = null) {
+    if (preg_match("/^[- \._äöüÄÖÜßáéíóúàèìòùÁÉÍÓÚÀÈÌÒÙæÆâêîôûÂÊÎÔÛøØÅÇËÃÏÕãåçëïõÿñ0-9a-zA-Z]+$/", $x) !== 1) {
       return false;
     }
     $fehler = false;
