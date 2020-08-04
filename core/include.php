@@ -70,7 +70,9 @@ class Einbinden {
     if (is_file("$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'])) {
   	  return include_once "$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'];
     } else {
-      echo UI\Zeile::standard(new UI\Meldung("Datei fehlt", "Die einzubindende Datei wurde nicht gefunden. Bitte den Administrator informieren.", "Fehler"));
+      // Gibt den Eindrück, als würde die Seite gesucht werden :)
+      sleep(1);
+      echo UI\Zeile::standard(new UI\Meldung("Datei fehlt", "Die einzubindende Datei wurde nicht gefunden. Bitte den Administrator informieren!", "Fehler"));
     }
     return false;
   }
