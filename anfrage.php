@@ -147,7 +147,7 @@ class Anfrage {
    * Reservierte Fehlercodes:
    * 0: Anfragewert nicht übergeben
    */
-  public static function addFehler($fehler, $die = false) {
+  public static function addFehler($fehler, $die = false, $meldung = true) {
     if(!($fehler instanceof Fehler)) {
       global $MODUL;
       $fehler = new Fehler($fehler, $MODUL);
@@ -162,7 +162,11 @@ class Anfrage {
       self::$FEHLER[] = $fehler;
     }
     if ($die) {
-      Anfrage::checkFehler();
+      if ($meldung) {
+        Anfrage::checkMeldung();
+      } else {
+        Anfrage::checkFehler();
+      }
     }
   }
 
@@ -200,11 +204,50 @@ class Anfrage {
         $fehlerListe[] = [$f->getId(), $f->getModul(), $fehlerdateien[$fmodul][$f->getId()]["beschreibung"]];
       }
 
+      Anfrage::setTyp("Fehler");
+      Anfrage::setRueck("Fehler", $fehlerListe);
+      Anfrage::ausgeben();
+      die();
+    }
+  }
+
+  public static function checkMeldung() {
+    if (count(self::$FEHLER) > 0) {
+      $fehlerdateien = [];
+
+      if (file_exists(__DIR__."/core/fehlercodes.yml")) {
+        $fehlerdateien["Core"] = YAML::loader(file_get_contents(__DIR__."/core/fehlercodes.yml"));
+      } else {
+        Anfrage::setTyp("Fehler");
+        Anfrage::setRueck("Fehler", [[-1, "Core", "Unbekannter Fehler. <b>Bitte melden!</b>"]]);
+        Anfrage::ausgeben();
+        die();
+      }
+
+      $fehlerListe = [];
+      foreach (self::$FEHLER as $f) {
+        if ($f->getId() == 0 || $f->getId() == -2) {
+          $fmodul = "Core";
+        } else {
+          $fmodul = $f->getModul();
+        }
+        if (!isset($fehlerdateien[$fmodul])) {
+          if (file_exists(__DIR__."/module/$fmodul/fehlercodes.yml")) {
+            $fehlerdateien[$fmodul] = YAML::loader(file_get_contents(__DIR__."/module/$fmodul/fehlercodes.yml"));
+          } else {
+            // Stört nicht dass in foreach, weil Modul »Core« schon geladen worden ist
+            self::addFehler(new Fehler(6, "Core"));
+          }
+        }
+        $fehlerListe[] = [$f->getId(), $f->getModul(), $fehlerdateien[$fmodul][$f->getId()]["beschreibung"]];
+      }
+
 
       $knopfOk = new UI\Knopf("OK");
       $knopfOk->addFunktion("onclick", "ui.laden.aus()");
-      Anfrage::setTyp("Fehler");
-      Anfrage::setRueck("Fehler", $fehlerListe);
+      Anfrage::setTyp("Meldung");
+      Anfrage::setRueck("Meldung", $fehlerListe);
+      Anfrage::setRueck("Knöpfe", [$knopfOk]);
       Anfrage::ausgeben();
       die();
     }
@@ -269,6 +312,13 @@ class Anfrage {
 
           $knoepfe = [$knopfOk];
           $ausgabe["Autoschliessen"] = true;
+        }
+        if (is_array($rueck["Meldung"])) {
+          $text = "";
+          foreach ($rueck["Meldung"] as $m) {
+            $text .= new UI\Absatz("{$m[2]} <span class=\"dshFehlercode\" title=\"{$m[1]}\">{$m[0]}</span>");
+          }
+          $rueck["Meldung"] = new UI\Meldung("Es sind Fehler aufgetreten:", $text, "Fehler");
         }
         $ausgabe["Meldung"] = (string) $rueck["Meldung"];
         $ausgabe["Knoepfe"]  = join("", $knoepfe);
@@ -361,20 +411,20 @@ if($_POST["modul"] === "Core") {
 $fehler 		= $fehler || !is_dir($moduldir);
 
 if($fehler) {
-  Anfrage::addFehler(new Fehler(1, "Core"), true);
+  Anfrage::addFehler(new Fehler(1, "Core"), true, false);
 }
 
 $fehler 		= $fehler || !isset($_POST["ziel"]);
 $fehler 		= $fehler || (!is_numeric($_POST["ziel"]) || intval($_POST["ziel"]) < 0);
 
 if($fehler) {
-  Anfrage::addFehler(new Fehler(2, "Core"), true);
+  Anfrage::addFehler(new Fehler(2, "Core"), true, false);
 }
 
 $ZIELE = [];
 
 if(!file_exists("$moduldir/anfragen/ziele.php")) {
-  Anfrage::addFehler(new Fehler(3, "Core"), true);
+  Anfrage::addFehler(new Fehler(3, "Core"), true, false);
 }
 Core\Einbinden::modulLaden("UI", true, false);
 Core\Einbinden::modulLaden("Kern", true, false);
@@ -383,11 +433,11 @@ if($_POST["modul"] !== "Core") {
 }
 include("$moduldir/anfragen/ziele.php");
 if(!isset($ZIELE[$_POST["ziel"]])) {
-  Anfrage::addFehler(new Fehler(4, "Core"), true);
+  Anfrage::addFehler(new Fehler(4, "Core"), true, false);
 }
 
 if(!file_exists("$moduldir/{$ZIELE[$_POST["ziel"]]}")) {
-  Anfrage::addFehler(new Fehler(5, "Core"), true);
+  Anfrage::addFehler(new Fehler(5, "Core"), true, false);
 }
 
 $ROOT  = __DIR__;
