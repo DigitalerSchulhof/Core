@@ -190,7 +190,7 @@ class Anfrage {
 
       $fehlerListe = [];
       foreach (self::$FEHLER as $f) {
-        if ($f->getId() == 0 || $f->getId() == -2) {
+        if ($f->getId() == 0 || $f->getId() == -2 || $f->getId() == -3) {
           $fmodul = "Core";
         } else {
           $fmodul = $f->getModul();
@@ -302,7 +302,7 @@ class Anfrage {
     }
 
     foreach(array_diff(array_keys($rueck), $ben) as $weiterer) {
-      $ausgabe[$weiterer]   = (string) $rueck[$weiterer];  
+      $ausgabe[$weiterer]   = (string) $rueck[$weiterer];
     }
 
     echo json_encode($ausgabe);

@@ -241,14 +241,18 @@ class Check {
     // Datenschutzcookies verwalten
     if (!isset($_COOKIE["EinwilligungDSH"])) {
       echo "BLA";
-      setcookie("EinwilligungDSH", "nein", time()+30*24*60*60);
+      setcookie("EinwilligungDSH", "nein", time()+30*24*60*60, "/");
+      $_COOKIE["EinwilligungDSH"] = "nein";
     } else {
       if ($_COOKIE["EinwilligungDSH"] == "ja") {
-        session_start();
+        if(session_status() === PHP_SESSION_NONE) {
+          session_start();
+        }
       }
     }
     if (!isset($_COOKIE["EinwilligungEXT"])) {
-      setcookie("EinwilligungEXT", "nein", time()+30*24*60*60);
+      setcookie("EinwilligungEXT", "nein", time()+30*24*60*60, "/");
+      $_COOKIE["EinwilligungEXT"] = "nein";
     }
 
     $typen = ["DSH", "EXT"];
