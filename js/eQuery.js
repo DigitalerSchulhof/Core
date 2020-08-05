@@ -23,6 +23,8 @@ var $ = (...arguments) => {
     ausblenden: (d)       => el.each(o => o.style.display = d || "none"),
     getHTML: ()           => el[0].innerHTML,
     setHTML: (html)       => el.each(o => o.innerHTML = html),
+    getText: ()           => el[0].innerText,
+    setText: (text)       => el.each(o => o.innerText = text),
     getAttr: (attr)       => el[0].getAttribute(attr),
     setAttr: (attr, wert) => el.each(o => o.setAttribute(attr, wert)),
     // setCss: Nimmt entweder: ("CSS-Property", "Wert") oder ({CSS-Property: "Wert", CSS-Property2: "Wert", ...})
