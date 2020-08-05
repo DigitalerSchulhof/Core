@@ -79,7 +79,7 @@ class Check {
   }
 
   public static function istTitel($x, $min = 0, $max = null) {
-    if (preg_match("/^[- \._äöüÄÖÜßáéíóúàèìòùÁÉÍÓÚÀÈÌÒÙæÆâêîôûÂÊÎÔÛøØÅÇËÃÏÕãåçëïõÿñ0-9a-zA-Z]+$/", $x) !== 1) {
+    if (preg_match("/^[- \._äöüÄÖÜßáéíóúàèìòùÁÉÍÓÚÀÈÌÒÙæÆâêîôûÂÊÎÔÛøØÅÇËÃÏÕãåçëïõÿñ0-9a-zA-Z]*$/", $x) !== 1) {
       return false;
     }
     $fehler = false;
