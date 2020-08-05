@@ -93,7 +93,7 @@ class Anfrage {
     "Fehler"  => ["Fehler"],
 
     // »Meldung«  gültiger HTML-Code einer Meldung (Siehe: UI\Meldung::__toString()), welcher in den Körper der offnenen Blende geladen wird.
-    // »Knöpfe«   Array [Knopfcode : string] an HTML-Code der Knöpfe (Siehe: UI\Knopf::__toString()) für die offene Blende. Ist das Array leer, wird automatisch ein dshUiKnopfStandard mit dem Inhalt »OK« und der onclick-Aktion »ui.laden.aus()« übergeben. Ist der Wert <code>null</code>, so wird nichts zurückgegeben.
+    // »Knöpfe«   Array [Knopfcode : string] an HTML-Code der Knöpfe (Siehe: UI\Knopf::__toString()) für die offene Blende. Ist das Array leer, wird automatisch ein dshUiKnopfStandard mit dem Inhalt »OK« und der onclick-Aktion »ui.laden.aus()« übergeben. Ist der Wert <code>false</code>, so wird nichts zurückgegeben.
     //
     // In JSON:
     // »Knöpfe«   HTML-Code der Knöpfe. <b>Nicht</b> mit Leerzeichen getrennt.
@@ -228,7 +228,7 @@ class Anfrage {
     $ben = self::RUECKGABEFELDER[$typ];
     foreach($ben as $b) {
       if(!isset($rueck[$b])) {
-        if ($b == "Knöpfe") {
+        if ($b === "Knöpfe") {
           $rueck[$b] = [];
         } else {
           trigger_error("Das Rückgabefeld »{$b}« für den Typ »{$typ}« ist nicht gesetzt worden.", E_USER_ERROR);
@@ -265,7 +265,7 @@ class Anfrage {
         break;
       case "Meldung":
         $knoepfe = $rueck["Knöpfe"];
-        if($knoepfe === null) {
+        if($knoepfe === false) {
           $knoepfe = [];
         } else if(count($knoepfe) === 0) {
           $knopfOk = new UI\Knopf("OK");
@@ -274,14 +274,7 @@ class Anfrage {
           $knoepfe = [$knopfOk];
           $ausgabe["Autoschliessen"] = true;
         }
-        if (is_array($rueck["Meldung"])) {
-          $text = "";
-          foreach ($rueck["Meldung"] as $m) {
-            $text .= new UI\Absatz("{$m[2]} <span class=\"dshFehlercode\" title=\"{$m[1]}\">{$m[0]}</span>");
-          }
-          $rueck["Meldung"] = new UI\Meldung("Es sind Fehler aufgetreten:", $text, "Fehler");
-        }
-        $ausgabe["Meldung"] = (string) $rueck["Meldung"];
+        $ausgabe["Meldung"]  = (string) $rueck["Meldung"];
         $ausgabe["Knoepfe"]  = join("", $knoepfe);
         break;
       case "Code":

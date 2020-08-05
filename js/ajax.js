@@ -76,7 +76,7 @@ core.ajax = (modul, ziel, laden, daten, host) => {
           if (r.Typ == "Meldung") {
             ui.laden.aendern(null, r.Meldung, r.Knoepfe);
             if (r.Autoschliessen) {
-              window.setTimeout('ui.laden.aus()', 1500);
+              ui.laden.autoschliessen = setTimeout('ui.laden.aus()', 2500);
             }
           }
           else if (r.Typ == "Weiterleitung") {
