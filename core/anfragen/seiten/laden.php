@@ -42,11 +42,7 @@
       }
     };
 
-    ob_start();
     Core\Einbinden::seiteEinbinden(explode("/", $seite));
-
-    $CODE = ob_get_contents().$CODE;
-    ob_end_clean();
   }
 
   Anfrage::post("seite");
