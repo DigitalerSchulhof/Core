@@ -8,9 +8,45 @@
     $DSH_URLGANZ = $urls["urlganz"];
 
     $DSH_TITEL = "$seite";
-    $CODE = "";
 
+    // Anonyme Klasse, sodass <code>$CODE[] = $element</code> zu string castet
+    $CODE = new class implements \ArrayAccess {
+      /** @var string Der HTML-Code */
+      private $code = "";
+
+      public function __toString() : string {
+        return $this->code;
+      }
+
+      /*
+       * ArrayAccess Methoden
+       */
+
+      public function offsetSet($o, $v) {
+        if(!is_null($o)) {
+          throw new \Exception("Nicht implementiert!");
+        }
+        $this->code .= (string) $v;
+      }
+
+      public function offsetExists($o) {
+        throw new \Exception("Nicht implementiert!");
+      }
+
+      public function offsetUnset($o) {
+        throw new \Exception("Nicht implementiert!");
+      }
+
+      public function offsetGet($o) {
+        throw new \Exception("Nicht implementiert!");
+      }
+    };
+
+    ob_start();
     Core\Einbinden::seiteEinbinden(explode("/", $seite));
+
+    $CODE = ob_get_contents().$CODE;
+    ob_end_clean();
   }
 
   Anfrage::post("seite");
@@ -20,22 +56,12 @@
 
   $rueck = [];
 
-  $urls = Core\Einbinden::seiteBestimmen($seite);
-  $DSH_URL = $urls["url"];
-  $DSH_URLGANZ = $urls["urlganz"];
-
-  $DSH_TITEL = "$seite";
-  $CODE = "";
-
-  ob_start();
-  Core\Einbinden::seiteEinbinden(explode("/", $seite));
-
-  $CODE = ob_get_contents().$CODE;
-  ob_end_clean();
+  $CODE;
+  einbinden($seite);
 
   if(Anfrage::getTyp() === null) {
     Anfrage::setTyp("Seite");
-    Anfrage::setRueck("Titel", $DSH_TITEL);
-    Anfrage::setRueck("Code", (string) $CODE);
+    Anfrage::setRueck("Titel",  $DSH_TITEL);
+    Anfrage::setRueck("Code",   $CODE);
   }
 ?>

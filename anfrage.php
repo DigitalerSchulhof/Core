@@ -339,6 +339,15 @@ class Anfrage {
       Anfrage::checkFehler();
     }
   }
+
+  /**
+   * Startet die PHP-Session, sofern dies noch nicht geschehen ist
+   */
+  public static function session_start() {
+    if(session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
+  }
 }
 
 $FEHLER = [];

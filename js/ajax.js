@@ -17,7 +17,7 @@
 core.ajax = (modul, ziel, laden, daten, host) => {
 	host    = host  || "";
   daten   = daten || {};
-  
+
 	if(laden !== null) {
 		if(typeof laden === "string") {
 			ui.laden.an(laden, null);
@@ -27,6 +27,8 @@ core.ajax = (modul, ziel, laden, daten, host) => {
 	} else {
 		// HINTERGRUND
 	}
+
+  console.log(daten);
 
   // Daten
   var pDaten = daten;

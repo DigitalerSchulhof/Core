@@ -78,6 +78,11 @@ class Check {
   	return !$fehler;
   }
 
+  public static function istTitel($x, $min = 0, $max = null) {
+    // @TODO: TITEL CHECK
+    return true;
+  }
+
   public static function istName($x, $min = 1, $max = null) {
     if (preg_match("/^[- \._äöüÄÖÜßáéíóúàèìòùÁÉÍÓÚÀÈÌÒÙæÆâêîôûÂÊÎÔÛøØÅÇËÃÏÕãåçëïõÿñ0-9a-zA-Z]+$/", $x) !== 1) {
       return false;
