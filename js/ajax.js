@@ -28,8 +28,6 @@ core.ajax = (modul, ziel, laden, daten, host) => {
 		// HINTERGRUND
 	}
 
-  console.log(daten);
-
   // Daten
   var pDaten = daten;
   var daten = new FormData();

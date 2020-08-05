@@ -254,13 +254,11 @@ class Anfrage {
         } else {
           $titel = "Es ist folgender Fehler aufgetreten:";
         }
-        $knopfOk = new UI\Knopf("OK");
-        $knopfOk->addFunktion("onclick", "ui.laden.aus()");
 
         $ausgabe["Typ"]     = "Meldung";
         $ausgabe["Titel"]   = null;
         $ausgabe["Meldung"] = (string) new UI\Meldung($titel, $fehlerCode, "Fehler");
-        $ausgabe["Knoepfe"] = (string) $knopfOk;
+        $ausgabe["Knoepfe"] = (string) UI\Knopf::ok();
 
         break;
       case "Meldung":
@@ -268,10 +266,8 @@ class Anfrage {
         if($knoepfe === false) {
           $knoepfe = [];
         } else if(count($knoepfe) === 0) {
-          $knopfOk = new UI\Knopf("OK");
-          $knopfOk->addFunktion("onclick", "ui.laden.aus()");
 
-          $knoepfe = [$knopfOk];
+          $knoepfe = [UI\Knopf::ok()];
           $ausgabe["Autoschliessen"] = true;
         }
         $ausgabe["Meldung"]  = (string) $rueck["Meldung"];
