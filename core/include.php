@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 use UI;
+use DB;
 
 class Einbinden {
   /**
@@ -66,6 +67,7 @@ class Einbinden {
   	global $DSH_MODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ;
 
     \Check::einwilligung();
+    DB\DB::log();
 
   	if($return) {
   		return Einbinden::$aktuellesModul["gefunden"];
@@ -132,7 +134,11 @@ class Einbinden {
   	}
 
   	// Nötige Datenbankverbindungen bestimmen
-  	$DSH_DATENBANKEN = array_merge($DSH_DATENBANKEN, $config["datenbanken"]);
+  	foreach($config["datenbanken"] as $db) {
+      if (!in_array($db, $DSH_DATENBANKEN)) {
+        $DSH_DATENBANKEN[] = $db;
+      }
+    }
 
   	if(!$configrueck) {
   		return true;
