@@ -51,7 +51,7 @@ var $ = (...arguments) => {
       });
     },
     setWert: (val)        => el.each(o => o.value = val),
-    getWert: ()           => el[0].value,
+    getWert: ()           => (el[0] || {value: undefined}).value,
     removeKlasse: (...k)  => el.each(o => o.classList.remove(...k)),
     addKlasse: (...k)     => el.each(o => o.classList.add(...k)),
     setKlasse: (b, ...k)  => {
@@ -68,7 +68,8 @@ var $ = (...arguments) => {
     kinderSelector: (s)   => $(...el[0].querySelectorAll(">".s)),
     finde: (s)            => $(...el[0].querySelectorAll(s)),
     siblingVor: ()        => $(el[0].previousSibling),
-    siblingNach: ()       => $(el[0].nextSibling)
+    siblingNach: ()       => $(el[0].nextSibling),
+    existiert: ()         => el.length > 0
   };
   el.__proto__ = proto;
   el.length = l;
