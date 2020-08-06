@@ -1,3 +1,6 @@
+-4:
+  ort: alle Dateien, in denen Aktionen eine Berechtigung erfordern.
+  beschreibung: Für diese Aktion besteht keine Berechtigung!
 -3:
   ort: alle Dateien, in denen Werte geprüft werden, die eigentlich vom System gesetzt werden.
   beschreibung: Du kannst hier schon nen anderen Wert eingeben, aber dann ist es halt kacke...

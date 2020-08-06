@@ -190,7 +190,7 @@ class Anfrage {
 
       $fehlerListe = [];
       foreach (self::$FEHLER as $f) {
-        if ($f->getId() == 0 || $f->getId() == -2 || $f->getId() == -3) {
+        if ($f->getId() == 0 || $f->getId() == -2 || $f->getId() == -3 || $f->getId() == -4) {
           $fmodul = "Core";
         } else {
           $fmodul = $f->getModul();
@@ -355,6 +355,8 @@ include_once(__DIR__."/core/include.php");
 
 Core\Einbinden::modulLaden("UI", true, false);
 Core\Einbinden::modulLaden("Kern", true, false);
+
+DB\DB::log();
 
 $DSH_ALLEMODULE = Core\Einbinden::alleModuleBestimmen();
 

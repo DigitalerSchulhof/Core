@@ -51,7 +51,7 @@ var $ = (...arguments) => {
       });
     },
     setWert: (val)        => el.each(o => o.value = val),
-    getWert: ()           => (el[0] || {value: undefined}).value,
+    getWert: ()           => (el[0] || {value: null}).value,
     removeKlasse: (...k)  => el.each(o => o.classList.remove(...k)),
     addKlasse: (...k)     => el.each(o => o.classList.add(...k)),
     setKlasse: (b, ...k)  => {
