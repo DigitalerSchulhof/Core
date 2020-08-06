@@ -9,8 +9,6 @@ class Einbinden {
   * @param array url Die URL der zu ladenenden Seite
   */
   static function seiteEinbinden($url) {
-  	global $DSH_MODULE;
-
 		Einbinden::seiteFinden();
   }
 
@@ -64,10 +62,12 @@ class Einbinden {
   * @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
   */
   static function seiteFinden($return = false) {
-  	global $DSH_MODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ;
+  	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR;
 
     \Check::einwilligung();
     DB\DB::log();
+
+    $DIR = "$DSH_MODULE/".Einbinden::$aktuellesModul["modul"];
 
   	if($return) {
   		return Einbinden::$aktuellesModul["gefunden"];
@@ -145,6 +145,19 @@ class Einbinden {
   	}
 
   	return $config;
+  }
+
+  /**
+   * Gibt ein Array aller Modul-Ordner zurück zurück
+   * @return array
+   */
+  public static function alleModuleBestimmen() : array {
+    global $DSH_MODULE;
+    $r = [];
+    foreach(array_diff(scandir($DSH_MODULE), [".", "..", ".htaccess"]) as $modul) {
+      $r[] = "$DSH_MODULE/$modul";
+    }
+    return $r;
   }
 }
 ?>

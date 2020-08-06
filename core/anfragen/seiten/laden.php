@@ -1,7 +1,7 @@
 <?php
 
   function einbinden($seite) {
-    global $CODE, $DSH_TITEL, $DSH_URL, $DSH_URLGANZ, $EINSTELLUNGEN;
+    global $CODE, $DSH_TITEL, $DSH_URL, $DSH_URLGANZ;
 
     $urls = Core\Einbinden::seiteBestimmen($seite);
     $DSH_URL = $urls["url"];

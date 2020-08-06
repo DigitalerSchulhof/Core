@@ -346,6 +346,7 @@ $DSH_MODULE = __DIR__."/module";
 $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()_]{3,}";
 $DSH_DATENBANKEN = [];
 
+
 include_once(__DIR__."/core/config.php");
 include_once(__DIR__."/core/check.php");
 include_once(__DIR__."/core/angebote.php");
@@ -354,6 +355,8 @@ include_once(__DIR__."/core/include.php");
 
 Core\Einbinden::modulLaden("UI", true, false);
 Core\Einbinden::modulLaden("Kern", true, false);
+
+$DSH_ALLEMODULE = Core\Einbinden::alleModuleBestimmen();
 
 $fehler = false;
 
