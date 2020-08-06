@@ -75,7 +75,7 @@ echo "<html lang=\"de\">";
                 $schliessen->setID("dshSuchePcSchliessen");
                 echo $schliessen;
 								echo "<div id=\"dshSuchePcErgebnisseInhalt\">";
-									echo "<p class=\"dshNotiz\">Bitte warten...</p>";
+                  echo new UI\Notiz("Bitte warten...");
 								echo "</div>";
 							echo "</div>";
 						echo "</div>";
