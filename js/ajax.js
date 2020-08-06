@@ -67,7 +67,7 @@ core.ajax = (modul, ziel, laden, daten, host) => {
           $("#dshMeldungInitial").ausblenden();
           $("#dshFehlerbox").einblenden();
           meld = anfrage.responseText;
-          $("#dshFehlerbox pre").setText(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
+          $("#dshFehlerbox pre").setHTML(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
           ui.laden.aus();
         } else {
           $("#dshFehlerbox").ausblenden();

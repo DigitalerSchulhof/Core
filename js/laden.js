@@ -113,6 +113,9 @@ window.addEventListener("load", () => {
 
 window.addEventListener("click", (e) => {
   var ziel = $(e.target);
+  if(e.ctrlKey) {
+    return;
+  }
   while(!ziel.ist("html") && !ziel.ist("a")) {
     ziel = ziel.parent();
     if(ziel.length === 0) {

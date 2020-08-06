@@ -70,7 +70,6 @@ function modulKeimen($modul) {
   $rechteliste = "$DSH_MODULE/$modul/funktionen/rechte.yml";
   if(file_exists($rechteliste)) {
     $modulRechte = YAML::loader($rechteliste);
-    $modulRechte = $modulRechte["rechte"];
     file_put_contents("$DSH_MODULE/$modul/funktionen/rechte.core", serialize($modulRechte));
   }
 
