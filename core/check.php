@@ -10,6 +10,50 @@ class Check {
     return self::macheDatum($datum) !== false;
   }
 
+  // Liefert das mögliche System
+  public static function systeminfo() {
+    $info = strtolower($_SERVER['HTTP_USER_AGENT']);
+
+    // Browser finden
+    if (preg_match("/opera/", $info)) {
+      $browser = "Opera";
+    } else if (preg_match("/opr/", $info)) {
+      $browser = "Opera";
+    } elseif (preg_match("/webkit/", $info)) {
+      $browser = "Safari";
+    } elseif (preg_match("/msie/", $info)) {
+      $browser = "Internet Explorer / Edge";
+    } elseif (preg_match("/mozilla/", $info) && !preg_match("/compatible/", $info)) {
+      $browser = "Firefox";
+    } elseif (preg_match("/chrome/", $info)) {
+      $browser = "Chrome";
+    } else {
+      $browser = "Unbekannter Browser";
+    }
+
+    // Browser-Version
+    $version = "";
+    if ($browser != "Unbekannter Browser") {
+      if (preg_match("/.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/", $info, $matches)) {
+        $version = $matches[1];
+      }
+    }
+
+
+    // Betriebssystem
+    if (preg_match("/linux/", $info)) {
+      $os = "Linux";
+    } elseif (preg_match("/macintosh|mac os x/", $info)) {
+      $os = "Mac";
+    } elseif (preg_match("/windows|win32/", $info)) {
+      $os = "Windows";
+    } else {
+      $os = "Unbekanntes OS";
+    }
+
+    return "<span title=\"$info\">$browser $version ($os)</span>";
+  }
+
   /**
    * Gibt mktime eines Datums zurück
    * @param  string $datum :)
@@ -61,7 +105,7 @@ class Check {
   }
 
   public static function istText($x, $min = 1, $max = null) {
-    if (preg_match("/^[-_äöüÄÖÜßáéíóúàèìòùÁÉÍÓÚÀÈÌÒÙæÆâêîôûÂÊÎÔÛøØÅÇËÃÏÕãåçëïõÿñ0-9a-zA-Z]*$/", $x) !== 1) {
+    if (preg_match("/^[-_ \.@äöüÄÖÜßáéíóúàèìòùÁÉÍÓÚÀÈÌÒÙæÆâêîôûÂÊÎÔÛøØÅÇËÃÏÕãåçëïõÿñ0-9a-zA-Z]*$/", $x) !== 1) {
       return false;
     }
     $fehler = false;

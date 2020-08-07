@@ -20,7 +20,7 @@ core.ajax = (modul, ziel, laden, daten, host) => {
 
 	if(laden !== null) {
 		if(typeof laden === "string") {
-			ui.laden.an(laden, null);
+			ui.laden.an(laden, "Bitte warten");
 		} else {
 			ui.laden.an(laden[0], laden[1]);
 		}
