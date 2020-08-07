@@ -12,7 +12,6 @@ $DSH_DATENBANKEN = [];
 include __DIR__."/core/config.php";
 include __DIR__."/core/funktionen.php";
 include __DIR__."/core/angebote.php";
-include __DIR__."/core/check.php";
 include __DIR__."/core/include.php";
 
 use Core\Einbinden;
@@ -23,7 +22,7 @@ Einbinden::modulLaden("Kern", true, false);
 DB\DB::log();
 
 // Datenschutzcookies verwalten
-\Check::einwilligung();
+Kern\Check::einwilligung();
 
 
 echo "<!DOCTYPE html>";

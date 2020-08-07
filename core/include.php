@@ -2,6 +2,7 @@
 namespace Core;
 use UI;
 use DB;
+use Kern;
 
 class Einbinden {
   /**
@@ -64,7 +65,7 @@ class Einbinden {
   static function seiteFinden($return = false) {
   	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR;
 
-    \Check::einwilligung();
+    Kern\Check::einwilligung();
     DB\DB::log();
 
     $DIR = "$DSH_MODULE/".Einbinden::$aktuellesModul["modul"];

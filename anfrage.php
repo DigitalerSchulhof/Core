@@ -348,7 +348,6 @@ $DSH_DATENBANKEN = [];
 
 
 include_once(__DIR__."/core/config.php");
-include_once(__DIR__."/core/check.php");
 include_once(__DIR__."/core/angebote.php");
 include_once(__DIR__."/core/funktionen.php");
 include_once(__DIR__."/core/include.php");
