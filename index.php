@@ -19,7 +19,7 @@ use Core\Einbinden;
 Einbinden::modulLaden("UI", true, false);
 Einbinden::modulLaden("Kern", true, false);
 
-DB\DB::log();
+Kern\DB::log();
 
 // Datenschutzcookies verwalten
 Kern\Check::einwilligung();

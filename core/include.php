@@ -1,7 +1,6 @@
 <?php
 namespace Core;
 use UI;
-use DB;
 use Kern;
 
 class Einbinden {
@@ -66,7 +65,7 @@ class Einbinden {
   	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR;
 
     Kern\Check::einwilligung();
-    DB\DB::log();
+    Kern\DB::log();
 
     $DIR = "$DSH_MODULE/".Einbinden::$aktuellesModul["modul"];
 

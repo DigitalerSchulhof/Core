@@ -355,7 +355,7 @@ include_once(__DIR__."/core/include.php");
 Core\Einbinden::modulLaden("UI", true, false);
 Core\Einbinden::modulLaden("Kern", true, false);
 
-DB\DB::log();
+Kern\DB::log();
 
 $DSH_ALLEMODULE = Core\Einbinden::alleModuleBestimmen();
 
