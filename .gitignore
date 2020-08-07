@@ -3,3 +3,4 @@ ldaplist.php
 ldapanmelden.php
 .tern-project
 core/config.php
+*.core

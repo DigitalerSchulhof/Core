@@ -19,14 +19,16 @@ class Check {
       $browser = "Opera";
     } else if (preg_match("/opr/", $info)) {
       $browser = "Opera";
+    } else if (preg_match("/chromium/", $info)) {
+      $browser = "Chromium";
+    } elseif (preg_match("/chrome/", $info)) {
+      $browser = "Chrome";
     } elseif (preg_match("/webkit/", $info)) {
       $browser = "Safari";
     } elseif (preg_match("/msie/", $info)) {
       $browser = "Internet Explorer / Edge";
     } elseif (preg_match("/mozilla/", $info) && !preg_match("/compatible/", $info)) {
       $browser = "Firefox";
-    } elseif (preg_match("/chrome/", $info)) {
-      $browser = "Chrome";
     } else {
       $browser = "Unbekannter Browser";
     }
