@@ -62,7 +62,7 @@ class Einbinden {
   * @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
   */
   static function seiteFinden($return = false) {
-  	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_TITEL, $CODE, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR;
+  	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR;
 
     Kern\Check::einwilligung();
     Kern\DB::log();
@@ -73,7 +73,9 @@ class Einbinden {
   		return Einbinden::$aktuellesModul["gefunden"];
   	}
     if (is_file("$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'])) {
-  	  return include_once "$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'];
+      $SEITE;
+  	  include_once "$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'];
+      return $SEITE;
     } else {
       // Gibt den Eindrück, als würde die Seite gesucht werden :)
       sleep(1);

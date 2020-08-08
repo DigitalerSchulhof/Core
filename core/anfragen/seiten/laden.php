@@ -9,40 +9,9 @@
 
     $DSH_TITEL = "$seite";
 
-    // Anonyme Klasse, sodass <code>$CODE[] = $element</code> zu string castet
-    $CODE = new class implements \ArrayAccess {
-      /** @var string Der HTML-Code */
-      private $code = "";
-
-      public function __toString() : string {
-        return $this->code;
-      }
-
-      /*
-       * ArrayAccess Methoden
-       */
-
-      public function offsetSet($o, $v) {
-        if(!is_null($o)) {
-          throw new \Exception("Nicht implementiert!");
-        }
-        $this->code .= (string) $v;
-      }
-
-      public function offsetExists($o) {
-        throw new \Exception("Nicht implementiert!");
-      }
-
-      public function offsetUnset($o) {
-        throw new \Exception("Nicht implementiert!");
-      }
-
-      public function offsetGet($o) {
-        throw new \Exception("Nicht implementiert!");
-      }
-    };
-
-    Core\Einbinden::seiteEinbinden(explode("/", $seite));
+    $SEITE = Core\Einbinden::seiteEinbinden(explode("/", $seite));
+    $DSH_TITEL = $SEITE->getTitel();
+    $CODE = (string) $SEITE;
   }
 
   Anfrage::post("seite");
