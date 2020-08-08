@@ -60,6 +60,15 @@ class Einbinden {
   * Bindet die passende PHP-Datei zu einer Seite ein
   * @param bool $return Soll Pfad als Rückgabewert behandelt werden
   * @return bool|string Bei $return = true den Pfad, sonst die Rückgabe von include_once
+  *
+  * Verfügbare Variablen:
+  * $ROOT           - Hauptverzeichnis (/)
+  * $DIR            - Verzeichnis, des aktuellen Moduls (/module/AKTUELLESMODUL)
+  * $DSH_MODULE     - Absoluter Pfad zum Verzeichnis, in welchem die Module liegen (/module)
+  * $DSH_ALLEMODULE - Assoziatives Array aller Module und deren Pfade: [Modul => Absoluter Pfad zum Modul (/module/MODUL)]
+  * $DSH_BENUTZER   - Aktueller Benutzer
+  * $DSH_URL        - URL
+  * $DSH_URLGANZ    - Mit "/" verbundene URL
   */
   static function seiteFinden($return = false) {
   	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR;
@@ -154,9 +163,9 @@ class Einbinden {
    */
   public static function alleModuleBestimmen() : array {
     global $DSH_MODULE;
-    $r = [];
+    $r = array();
     foreach(array_diff(scandir($DSH_MODULE), [".", "..", ".htaccess"]) as $modul) {
-      $r[] = "$DSH_MODULE/$modul";
+      $r[$modul] = "$DSH_MODULE/$modul";
     }
     return $r;
   }
