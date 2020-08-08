@@ -73,7 +73,6 @@ class Einbinden {
   		return Einbinden::$aktuellesModul["gefunden"];
   	}
     if (is_file("$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'])) {
-      $SEITE;
   	  include_once "$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'];
       return $SEITE;
     } else {
