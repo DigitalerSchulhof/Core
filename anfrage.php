@@ -266,9 +266,8 @@ class Anfrage {
         if($knoepfe === false) {
           $knoepfe = [];
         } else if(count($knoepfe) === 0) {
-
           $knoepfe = [UI\Knopf::ok()];
-          $ausgabe["Autoschliessen"] = true;
+          //$ausgabe["Autoschliessen"] = true;
         }
         $ausgabe["Meldung"]  = (string) $rueck["Meldung"];
         $ausgabe["Knoepfe"]  = join("", $knoepfe);

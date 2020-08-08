@@ -63,7 +63,7 @@ core.ajax = (modul, ziel, laden, daten, host) => {
           console.log("Fehler bei AJAX-Anfrage", anfrage.responseText);
           fehler = true;
         }
-        if(fehler) {
+        if (fehler) {
           $("#dshMeldungInitial").ausblenden();
           $("#dshFehlerbox").einblenden();
           meld = anfrage.responseText;

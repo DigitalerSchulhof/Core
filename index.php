@@ -131,6 +131,8 @@ echo "<html lang=\"de\">";
         echo $laden;
       echo "</div>";
     echo "</div>";
+
+    echo "<div id=\"dshFenstersammler\"></div>";
 		echo "<script>";
 			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false);$('#dshMeldungInitial').einblenden();}";
 		echo "</script>";
