@@ -79,7 +79,7 @@ class Einbinden {
     } else {
       // Gibt den Eindrück, als würde die Seite gesucht werden :)
       sleep(1);
-      echo UI\Zeile::standard(new UI\Meldung("Datei fehlt", "Die einzubindende Datei wurde nicht gefunden. Bitte den Administrator informieren!", "Fehler"));
+      $CODE[] = UI\Zeile::standard(new UI\Meldung("Datei fehlt", "Die einzubindende Datei wurde nicht gefunden. Bitte den Administrator informieren!", "Fehler"));
     }
     return false;
   }
