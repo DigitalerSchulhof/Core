@@ -362,7 +362,7 @@ $fehler = false;
 
 $fehler 		= $fehler || !isset($_POST);
 $fehler 		= $fehler || !isset($_POST["modul"]);
-$fehler 		= $fehler || !preg_match("/^[A-Za-z0-9]{1,16}$/", $_POST["modul"]);
+$fehler 		= $fehler || !Kern\Check::istModul($_POST["modul"]);
 if(!$fehler) {
   $moduldir 	= __DIR__."/module/{$_POST["modul"]}";
   if($_POST["modul"] === "Core") {

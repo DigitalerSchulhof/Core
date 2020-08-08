@@ -127,7 +127,7 @@ function modulKeimen($modul) {
       flush();
 
       ob_start();
-      echo "// LAYOUT;";
+      echo "// LAYOUT;\n";
       include "$styledir/$style";
       $ob = ob_get_contents();
       ob_end_clean();
