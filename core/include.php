@@ -9,7 +9,7 @@ class Einbinden {
   * @param array url Die URL der zu ladenenden Seite
   */
   static function seiteEinbinden($url) {
-		Einbinden::seiteFinden();
+		return Einbinden::seiteFinden();
   }
 
   /** @var array Daten über das aktuelle Modul */
