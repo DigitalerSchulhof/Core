@@ -10,14 +10,14 @@ core.seiteLaden = (seite, push) => {
   core.seiteladebalken.an();
   core.seiteladebalken.seite = seite;
   if(push) {
-    window.history.pushState({}, "Die Seite wird geladen...", seite);
+    window.history.pushState({}, "Digitaler Schulhof - Die Seite wird geladen...", seite);
   }
   core.ajax("Core", 0, null, {seite: seite}).then((rueck) => {
     core.seiteladebalken.aus();
     if(push) {
-      window.history.replaceState({}, rueck["Titel"], seite);
+      window.history.replaceState({}, "Digitaler Schulhof - "+rueck["Titel"], seite);
     }
-    document.title = rueck["Titel"];
+    document.title = "Digitaler Schulhof - " + rueck["Titel"];
     $("#dshSeite").setHTML(rueck["Code"]);
     $("#dshMeldungInitial", "#dshFehlerbox").ausblenden();
 
@@ -36,12 +36,12 @@ core.seiteLaden = (seite, push) => {
         }
       }
     }
-    r($("body"));
+    r($("#dshSeite"));
 
     // Target von unvollständigen externen Links korrekt setzen
     $("a.dshExtern:not([target])").setAttr("target", "_blank");
 
-    if($(".autofocus").length > 0) {
+    if($(".autofocus").existiert()) {
       $(".autofocus")[0].focus();
       if($(".autofocus").length > 1) {
         console.warn("Mehr als ein .autofocus gefunden!");

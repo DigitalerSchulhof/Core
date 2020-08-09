@@ -50,7 +50,7 @@ echo "<html lang=\"de\">";
 		echo js("js/laden.js");
 		echo modulJs("Kern");
 		echo modulJs("UI");
-    echo "<title>Seite wird geladen...</title>";
+    echo "<title>Digitaler Schulhof - Seite wird geladen...</title>";
 	echo "</head>";
 	echo "<body class=\"dshSeiteP\">";
     echo "<div id=\"dshSeiteladenO\"><div id=\"dshSeiteladenI\"></div></div>";

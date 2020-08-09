@@ -69,6 +69,7 @@ core.ajax = (modul, ziel, laden, daten, host) => {
           meld = anfrage.responseText;
           $("#dshFehlerbox pre").setHTML(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
           ui.laden.aus();
+          core.seiteladebalken.aus();
         } else {
           $("#dshFehlerbox").ausblenden();
           if (r.Typ == "Meldung") {
