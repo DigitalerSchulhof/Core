@@ -90,27 +90,29 @@ class Anfrage {
     //    »Fehlercode«                String mit dem Fehlercode (Siehe: Fehler::getFehlercodeString())
     //    »Modul des Fehlers«         String, der den Modulnamen des zugehörigen Fehlercodes enthält. I.d.R. stammen alle Fehlercodes aus dem gleichen Modul.
     //    »Beschreibung des Fehlers«  String, welcher die Beschreibung des Fehlercodes (Siehe: fehlercodes.yml eines Moduls), und eventuell den Fehlercode, enthält.
-    "Fehler"  => ["Fehler"],
+    "Fehler"          => ["Fehler"],
 
     // »Meldung«  gültiger HTML-Code einer Meldung (Siehe: UI\Meldung::__toString()), welcher in den Körper der offnenen Blende geladen wird.
     // »Knöpfe«   Array [Knopfcode : string] an HTML-Code der Knöpfe (Siehe: UI\Knopf::__toString()) für die offene Blende. Ist das Array leer, wird automatisch ein dshUiKnopfStandard mit dem Inhalt »OK« und der onclick-Aktion »ui.laden.aus()« übergeben. Ist der Wert <code>false</code>, so wird nichts zurückgegeben.
     //
     // In JSON:
     // »Knöpfe«   HTML-Code der Knöpfe. <b>Nicht</b> mit Leerzeichen getrennt.
-    "Meldung" => ["Meldung", "Knöpfe"],
+    "Meldung"         => ["Meldung", "Knöpfe"],
 
     // »Code«     HTML-Code, welcher Client-Side für eine Ausgabe benötigt wird, und zuvor mit entsprechenden __toString() - Methoden generiert wurde.
-    "Code"    => ["Code"],
+    "Code"            => ["Code"],
 
     //  »Titel«   String, der im Browser als Titel angezeigt wird
     //  »Code«    HTML-Code der anzuzeigenden Seite
-    "Seite"   => ["Titel", "Code"],
+    "Seite"           => ["Titel", "Code"],
 
     //  »Ziel«    Interne URL auf die weitergeleitet werden soll
-    "Weiterleitung" => ["Ziel"],
+    "Weiterleitung"   => ["Ziel"],
 
     //  »Funktion« JS-Funktion die nach der Bearbeitung der Anfrage ausgeführt werden soll
-    "Fortsetzen" => ["Funktion"]
+    "Fortsetzen"      => ["Funktion"],
+
+    "Neuladen"        => []
 
     // !
     // Weitere Rückgabefelder werden unbeachtet weitergegeben
@@ -284,6 +286,8 @@ class Anfrage {
         break;
       case "Fortsetzen":
         $ausgabe["Funktion"]   = (string) $rueck["Funktion"];
+        break;
+      case "Neuladen":
         break;
       default:
         trigger_error("Unbekannter Rückgabetyp: $typ", E_USER_ERROR);

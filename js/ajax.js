@@ -72,18 +72,24 @@ core.ajax = (modul, ziel, laden, daten, host) => {
           core.seiteladebalken.aus();
         } else {
           $("#dshFehlerbox").ausblenden();
-          if (r.Typ == "Meldung") {
-            ui.laden.aendern(null, r.Meldung, r.Knoepfe);
-            if (r.Autoschliessen) {
-              ui.laden.autoschliessen = setTimeout('ui.laden.aus()', 2500);
-            }
-          }
-          else if (r.Typ == "Weiterleitung") {
-            core.seiteLaden(r.Ziel);
-            ui.laden.aus();
-          }
-          else if (r.Typ == "Fortsetzen") {
-            eval(r.Funktion);
+          switch(r.Typ) {
+            case "Meldung":
+              ui.laden.aendern(null, r.Meldung, r.Knoepfe);
+              if (r.Autoschliessen) {
+                ui.laden.autoschliessen = setTimeout('ui.laden.aus()', 2500);
+              }
+              break;
+            case "Weiterleitung":
+              core.seiteLaden(r.Ziel);
+              ui.laden.aus();
+              break;
+            case "Fortsetzen":
+              eval(r.Funktion);
+              break;
+            case "Neuladen":
+              core.seiteLaden(document.location.pathname.substring($("base").getAttr("href").length), false);
+              ui.laden.aus();
+              break;
           }
           erfolg(r);
         }
