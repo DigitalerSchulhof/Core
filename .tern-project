@@ -1,7 +1,9 @@
 {
   "ecmaVersion": 8,
   "libs": [],
-  "loadEagerly": [],
+  "loadEagerly": [
+    "js/eQuery.js"
+  ],
   "dontLoad": [
     "node_modules/**"
   ],
