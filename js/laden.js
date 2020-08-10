@@ -6,7 +6,8 @@ core.seiteLaden = (seite, push) => {
   if(push === undefined) {
     push = true;
   }
-
+  
+  ui.laden.aus();
   core.seiteladebalken.an();
   core.seiteladebalken.seite = seite;
   if(push) {
@@ -52,6 +53,8 @@ core.seiteLaden = (seite, push) => {
     window.dispatchEvent(new Event("resize"));
   });
 }
+
+core.neuladen = () => core.seiteLaden(document.location.pathname.substring($("base").getAttr("href").length), false);
 
 core.seiteladebalken = {
   balken: $("#dshSeiteladenI"),

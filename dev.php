@@ -28,7 +28,6 @@ function modulKeimen($modul) {
   global $globseitenliste, $globangebote, $DSH_MODULE, $dbs, $allestyles;
   echo "Modul »{$modul}« keimen lassen<br>\n";
   $config = YAML::loader(file_get_contents("$DSH_MODULE/$modul/modul.yml"));
-  $config = $config["modul"];
 
   $standard = array(
     "seitenPrio"      => 0,

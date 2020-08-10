@@ -81,14 +81,12 @@ core.ajax = (modul, ziel, laden, daten, host) => {
               break;
             case "Weiterleitung":
               core.seiteLaden(r.Ziel);
-              ui.laden.aus();
               break;
             case "Fortsetzen":
               eval(r.Funktion);
               break;
             case "Neuladen":
-              core.seiteLaden(document.location.pathname.substring($("base").getAttr("href").length), false);
-              ui.laden.aus();
+              core.neuladen();
               break;
           }
           erfolg(r);
