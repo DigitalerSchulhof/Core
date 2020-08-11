@@ -4,3 +4,6 @@
 [submodule "module/UI"]
 	path = module/UI
 	url = https://github.com/DigitalerSchulhof/UI.git
+[submodule "module/Website"]
+	path = module/Website
+	url = https://github.com/DigitalerSchulhof/Website.git
