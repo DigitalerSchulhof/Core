@@ -22,33 +22,35 @@ class Einbinden {
   */
   static function seiteBestimmen($urlganz) {
   	global $DSH_MODULE, $DSH_LINKMUSTER;
-  	$seiten = unserialize(file_get_contents(__DIR__."/seitenliste.core"));
+  	$seitenmodule = unserialize(file_get_contents(__DIR__."/seitenliste.core"));
   	$gefunden = false;
-  	foreach($seiten as $seite => $datei) {
-  		if(substr($seite, 0, 1) == "/") {
-  			// RegEx
-  			if(preg_match(str_replace("{linkmuster}", $DSH_LINKMUSTER, $seite), $urlganz) === 1) {
-  				$gefunden = $datei;
-  				break;
-  			}
-  		} else {
-  			// URL
-  			if($urlganz == $seite) {
-  				$gefunden = $datei;
-  				break;
-  			}
-  		}
+    $modul;
+    foreach($seitenmodule as $modul => $seiten) {
+    	foreach($seiten as $seite => $datei) {
+    		if(substr($seite, 0, 1) == "/") {
+    			// RegEx
+    			if(preg_match(str_replace("{linkmuster}", $DSH_LINKMUSTER, $seite), $urlganz) === 1) {
+    				$gefunden = $datei;
+    				break 2;
+    			}
+    		} else {
+    			// URL
+    			if($urlganz == $seite) {
+    				$gefunden = $datei;
+    				break 2;
+    			}
+    		}
+      }
   	}
 
   	if($gefunden === false) {
   		$urlganz = "Fehler/404";
-  		$gefunden = "Kern/seiten/fehler/404.php";
+  		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
-  	$modul = substr($gefunden, 0, strpos($gefunden, "/"));
 
-  	if($modul != "Kern" && Einbinden::modulLaden($modul) === false) {
+  	if(!in_array($modul, array("Kern", "UI")) && Einbinden::modulLaden($modul) === false) {
   		$urlganz = "Fehler/404";
-  		$gefunden = "Kern/seiten/fehler/404.php";
+  		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
   	Einbinden::$aktuellesModul["gefunden"] = $gefunden;
   	Einbinden::$aktuellesModul["modul"] = $modul;
@@ -81,8 +83,8 @@ class Einbinden {
   	if($return) {
   		return Einbinden::$aktuellesModul["gefunden"];
   	}
-    if (is_file("$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'])) {
-  	  include_once "$DSH_MODULE/".Einbinden::$aktuellesModul['gefunden'];
+    if (is_file("$DIR/seiten/".Einbinden::$aktuellesModul['gefunden'])) {
+  	  include_once "$DIR/seiten/".Einbinden::$aktuellesModul['gefunden'];
       return $SEITE;
     } else {
       // Gibt den Eindrück, als würde die Seite gesucht werden :)

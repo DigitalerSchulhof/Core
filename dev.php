@@ -61,7 +61,7 @@ function modulKeimen($modul) {
   $seitenprio = $config["seitenPrio"];
   if(file_exists($seitenliste)) {
     $modulSeiten = YAML::loader($seitenliste);
-    $modulSeiten = $modulSeiten["seiten"];
+    $modulSeiten = array($modul => $modulSeiten["seiten"]);
     $globseitenliste[$seitenprio] = array_merge(($globseitenliste[$seitenprio] ?? []), $modulSeiten);
   }
 

@@ -216,6 +216,36 @@ class Anfrage {
   }
 
   /**
+   * Prüft, ob der aktuelle Benutzer angemeldet ist, und gibt eine Fehlermeldung aus wenn nicht
+   */
+  public static function checkAngemeldet() {
+    if(!\Kern\Check::angemeldet()) {
+      self::seiteAus("Schulhof/Anmeldung");
+    }
+  }
+
+  /**
+   * Gibt eine Seite aus und beendet das Skript
+   * @param string $seite :)
+   */
+  public static function seiteAus($seite) {
+    global $DSH_TITEL, $CODE;
+    einbinden($seite);
+    self::setTyp("Seite");
+    self::setRueck("Titel",  $DSH_TITEL);
+    self::setRueck("Code",   $CODE);
+    self::ausgeben();
+    die;
+  }
+
+  /**
+   * Gibt eine 404-Fehlermeldung aus
+   */
+  public static function nichtGefunden() {
+    self::seiteAus("Fehler/404");
+  }
+
+  /**
    * Gibt das Resultat der Anfrage aus. Beendet das Skript <b>nicht</b>.
    */
   public static function ausgeben() {
