@@ -83,10 +83,14 @@ class Einbinden {
   	if($return) {
   		return Einbinden::$aktuellesModul["gefunden"];
   	}
+
     if (is_file("$DIR/seiten/".Einbinden::$aktuellesModul['gefunden'])) {
   	  include_once "$DIR/seiten/".Einbinden::$aktuellesModul['gefunden'];
+      echo "ho";
       return $SEITE;
     } else {
+
+        echo "nogo";
       // Gibt den Eindrück, als würde die Seite gesucht werden :)
       sleep(1);
       $CODE[] = UI\Zeile::standard(new UI\Meldung("Datei fehlt", "Die einzubindende Datei wurde nicht gefunden. Bitte den Administrator informieren!", "Fehler"));

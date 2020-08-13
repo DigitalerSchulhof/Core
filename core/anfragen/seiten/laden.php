@@ -8,7 +8,6 @@
     $DSH_URLGANZ = $urls["urlganz"];
 
     $DSH_TITEL = "$seite";
-
     $SEITE = Core\Einbinden::seiteEinbinden(explode("/", $seite));
     $DSH_TITEL = $SEITE->getTitel();
     $CODE = (string) $SEITE;
