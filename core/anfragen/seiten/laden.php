@@ -10,6 +10,10 @@
     $DSH_TITEL = "$seite";
 
     $SEITE = Core\Einbinden::seiteEinbinden(explode("/", $seite));
+    if($SEITE === false) {
+      einbinden("Fehler/404");
+      return;
+    }
     $DSH_TITEL = $SEITE->getTitel();
     $CODE = (string) $SEITE;
   }

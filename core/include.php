@@ -8,7 +8,7 @@ class Einbinden {
   * Bindet die zu $url passende Seite ein
   * @param array url Die URL der zu ladenenden Seite
   */
-  static function seiteEinbinden($url) {
+  static function seiteEinbinden() {
 		return Einbinden::seiteFinden();
   }
 
