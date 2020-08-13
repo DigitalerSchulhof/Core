@@ -62,6 +62,12 @@ function $(...args) {
      */
     setText: (text)       => eQuery.each(o => o.innerText = text),
     /**
+     * Gibt zurück, ob das erste HTMLElements des eQuery-Objekts (explizit) das übergebene Attribut hat
+     * @param  {string} attr Das Attribute
+     * @return {bool}
+     */
+    hatAttr: (attr)       => eQuery.el[0].hasAttribute(attr),
+    /**
      * Gibt den Wert des übergebenen Attributes des ersten HTMLElements des eQuery-Objekts (explizit) zurück
      * @param  {string} attr Das Attribute
      * @return {*}
