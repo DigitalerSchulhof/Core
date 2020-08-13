@@ -8,7 +8,6 @@
     $DSH_URLGANZ = $urls["urlganz"];
 
     $DSH_TITEL = "$seite";
-
     $SEITE = Core\Einbinden::seiteEinbinden(explode("/", $seite));
     if($SEITE === false) {
       einbinden("Fehler/404");
