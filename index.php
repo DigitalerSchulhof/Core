@@ -112,7 +112,8 @@ echo "<html lang=\"de\">";
         echo UI\Zeile::standard((new UI\Meldung("Inkompatibel", "JavaScript ist deaktiviert! Um den Digitalen Schulof zu nutzen, muss JavaScript aktiv sein.<br>Wie Sie dieses aktivieren, erfahren Sie $hier.", "Fehler")))->setTag("noscript");
         echo UI\Zeile::standard((new UI\Meldung("Fehler", "Bei der Anfrage ist ein unbekannter Fehler aufgetreten: <pre></pre", "Fehler")))->setID("dshFehlerbox")->setStyle("display", "none");
         echo "<div id=\"dshSeite\">";
-          echo (new Kern\Aktionszeile(true, false))->setBrotkrumenURL("Digitaler Schuhlhof");
+          echo (new Kern\Aktionszeile(true, false))->setBrotkrumenPfad(array($DSH_URLGANZ => "Digitaler Schuhlhof"));
+          echo "<i></i>"; // Hack, sodass p:last-child nicht greift, und mb fälschlicherweise auf 0 setzt
         echo "</div>";
         echo UI\Zeile::standard((new UI\Meldung("Bitte warten", "Der Digitale Schulhof wird geladen...", "Arbeit")))->setID("dshMeldungInitial")->setStyle("display", "none");
       echo "</div>";

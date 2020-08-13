@@ -6,7 +6,7 @@ core.seiteLaden = (seite, push) => {
   if(push === undefined) {
     push = true;
   }
-  
+
   ui.laden.aus();
   core.seiteladebalken.an();
   core.seiteladebalken.seite = seite;
@@ -58,20 +58,25 @@ core.neuladen = () => core.seiteLaden(document.location.pathname.substring($("ba
 
 core.seiteladebalken = {
   balken: $("#dshSeiteladenI"),
-  fortschritt: 12,
+  fortschritt: 0,
   timeout: null,
   seite: null,
   an: () => {
     let b = core.seiteladebalken.balken;
+
     b.addKlasse("dshNoTransition");
     b.setCss({width: "0%", opacity: "0"});
+    b[0].offsetHeight;  // CSS-Cache leeren
     b.removeKlasse("dshNoTransition");
-    b.setCss({width: core.seiteladebalken.fortschritt + "%", opacity: "1"});
-    core.seiteladebalken.fortschritt = 12;
+    b.setCss({opacity: "1"});
+    core.seiteladebalken.fortschritt = 0;
+
+    clearTimeout(core.seiteladebalken.timeout);
+    
     core.seiteladebalken.timeout = setTimeout(() => {
-      core.seiteladebalken.fortschritt += 2;
+      core.seiteladebalken.fortschritt += 12;
       core.seiteladebalken.update();
-    }, 0);
+    }, 10);
   },
   update: () => {
     let b = core.seiteladebalken.balken;
