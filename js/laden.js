@@ -72,7 +72,7 @@ core.seiteladebalken = {
     core.seiteladebalken.fortschritt = 0;
 
     clearTimeout(core.seiteladebalken.timeout);
-    
+
     core.seiteladebalken.timeout = setTimeout(() => {
       core.seiteladebalken.fortschritt += 12;
       core.seiteladebalken.update();

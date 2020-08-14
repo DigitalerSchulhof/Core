@@ -1,5 +1,5 @@
 <?php
 
-$ZIELE[0] = "anfragen/seiten/laden.php";
+$ZIELE[0] = "seiten/laden.php";
 
 ?>
