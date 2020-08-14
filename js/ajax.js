@@ -12,11 +12,15 @@
  * @param {string} ziel Das Anfrageziel
  * @param {(string|string[]|bool)} laden=["Die Anfrage wird behandelt"] Daten für die Ladenanzeige
  * @param {Object} daten={} Die Anfrageparameter
+ * @param {(number|array)} meldung=null Die Meldung, die geöffnet wird, wenn die Anfrage erfolgreich gewesen ist.
+ * Wenn number: ui.laden.meldung(modul, meldung)
+ * Sonst: ui.laden.meldung(meldung[0], meldung[1]);
  * @param {string|boolean} [host=""] Das Netz, in das die Anfrage geht
  */
-core.ajax = (modul, ziel, laden, daten, host) => {
-	host    = host  || "";
-  daten   = daten || {};
+core.ajax = (modul, ziel, laden, daten, meldung, host) => {
+	host    = host    || "";
+  meldung = meldung || null;
+  daten   = daten   || {};
 
 	if(laden !== null) {
 		if(typeof laden === "string") {
@@ -58,7 +62,14 @@ core.ajax = (modul, ziel, laden, daten, host) => {
           let r = JSON.parse(anfrage.responseText);
           $("#dshFehlerbox").ausblenden();
           if(r.Erfolg) {
-             erfolg(r);
+            if(meldung !== null) {
+              if(Number.isInteger(meldung)) {
+                ui.laden.meldung(modul, meldung);
+              } else {
+                ui.laden.meldung(meldung[0], meldung[1]);
+              }
+            }
+            erfolg(r);
           } else {
             console.error("Fehler: ", r.Fehler);
             core.ajax("Kern", 30, ["Fehler werden geladen", "Bitte warten"], {fehler: r.Fehler}).then((r) => ui.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
