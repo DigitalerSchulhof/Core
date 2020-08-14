@@ -1,7 +1,6 @@
 /**
  * Das eQuery Objekt
  * @param {...(string|HTMLElement)} args Elemente
- * @return {$~eQuery}
  *
  * Fehlt in einer Methodenbeschreibung das <b>Subjekt</b>, ist das eQuery-Objekt gemeint.
  * Wenn in einer Methodenbeschreibung von <i>das eQuery-Objekt</i> die Rede ist, ist, sofern nicht <i>explizit</i> genannt, jedes zugehörige HTMLElement gemeint, nicht das eQuery-Objekt selbst.
@@ -152,9 +151,9 @@ function $(...args) {
      */
     setKlasse: (b, ...k)  => {
      if (b) {
-       return eQuery.el.addKlasse(...k);
+       return eQuery.addKlasse(...k);
      }
-     return eQuery.el.removeKlasse(...k);
+     return eQuery.removeKlasse(...k);
     },
     /**
     * Prüft, ob das erste HTMLElement des eQuery-Objekts (explizit) dem übergebenen Selektor entspricht

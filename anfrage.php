@@ -77,7 +77,10 @@ class Anfrage {
   /**
    * Fehlercode zur Liste hinzufügen
    * @param int $fehler Fehlercode, wenn < 1, wird Modul, sofern nicht explizit mit <code>$modul</code> übergeben, auf "Core" gesetzt
-   * @param string $modul Wenn <code>null</code>: Das aktuelle Modul, wenn <code>true</code>: Der Wert von $die und $modul = null, sonst: das Modul des Fehlers
+   * @param string $modul
+   * Wenn <code>null</code>: Das aktuelle Modul
+   * Wenn <code>true</code>: Der Wert von $die und $modul = null
+   * Sonst: das Modul des Fehlers
    * @param bool $die Check, ob Fehler vorliegen und ggf. Abbruch
    *
    * Reservierte Fehlercodes:
@@ -85,7 +88,7 @@ class Anfrage {
    */
   public static function addFehler($fehler, $modul = null, $die = false) {
     global $MODUL;
-    if($modul === false) {
+    if($modul === true) {
       $die = $modul;
       $modul = null;
     }
@@ -116,42 +119,6 @@ class Anfrage {
       Anfrage::setErfolg(false);
       Anfrage::setRueck("Fehler", self::$FEHLER);
       Anfrage::ausgeben();
-    }
-    return;
-    if (count(self::$FEHLER) > 0) {
-      $fehlerdateien = [];
-
-      if (file_exists(__DIR__."/core/fehlercodes.yml")) {
-        $fehlerdateien["Core"] = YAML::loader(file_get_contents(__DIR__."/core/fehlercodes.yml"));
-      } else {
-        Anfrage::setTyp("Fehler");
-        Anfrage::setRueck("Fehler", [[-1, "Core", "Unbekannter Fehler. <b>Bitte melden!</b>"]]);
-        Anfrage::ausgeben();
-        die();
-      }
-
-      $fehlerListe = [];
-      foreach (self::$FEHLER as $f) {
-        if ($f->getId() == 0 || $f->getId() == -2 || $f->getId() == -3 || $f->getId() == -4) {
-          $fmodul = "Core";
-        } else {
-          $fmodul = $f->getModul();
-        }
-        if (!isset($fehlerdateien[$fmodul])) {
-          if (file_exists(__DIR__."/module/$fmodul/fehlercodes.yml")) {
-            $fehlerdateien[$fmodul] = YAML::loader(file_get_contents(__DIR__."/module/$fmodul/fehlercodes.yml"));
-          } else {
-            // Stört nicht dass in foreach, weil Modul »Core« schon geladen worden ist
-            self::addFehler(new Fehler(6, "Core"));
-          }
-        }
-        $fehlerListe[] = [$f->getId(), $f->getModul(), $fehlerdateien[$fmodul][$f->getId()]["beschreibung"]];
-      }
-
-      Anfrage::setTyp("Fehler");
-      Anfrage::setRueck("Fehler", $fehlerListe);
-      Anfrage::ausgeben();
-      die();
     }
   }
 

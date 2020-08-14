@@ -2,7 +2,11 @@
   "ecmaVersion": 8,
   "libs": [],
   "loadEagerly": [
-    "js/eQuery.js"
+    "js/core.js",
+    "js/ajax.js",
+    "js/laden.js",
+    "module/Kern/js/**/*.js",
+    "module/UI/js/**/*.js"
   ],
   "dontLoad": [
     "node_modules/**"

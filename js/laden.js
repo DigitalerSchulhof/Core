@@ -14,6 +14,9 @@ core.seiteLaden = (seite, push) => {
     window.history.pushState({}, "Digitaler Schulhof - Die Seite wird geladen...", seite);
   }
   core.ajax("Core", 0, null, {seite: seite}).then((rueck) => {
+    if(rueck.Weiterleitung === true) {
+      core.seiteLaden(rueck.Ziel, false);
+    }
     core.seiteladebalken.aus();
     if(push) {
       window.history.replaceState({}, "Digitaler Schulhof - "+rueck["Titel"], seite);

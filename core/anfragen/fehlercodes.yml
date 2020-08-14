@@ -3,7 +3,7 @@
   beschreibung: Für diese Aktion besteht keine Berechtigung!
 -3:
   ort: alle Dateien, in denen Werte geprüft werden, die eigentlich vom System gesetzt werden.
-  beschreibung: Du kannst hier schon nen anderen Wert eingeben, aber dann ist es halt kacke...
+  beschreibung: Du kannst hier schon 'nen anderen Wert eingeben, aber dann ist es halt kacke...
 -2:
   ort: alle Dateien, die angemeldete Benutzer benötigen
   beschreibung: Aktuell ist kein Benutzer angemeldet.
@@ -31,3 +31,6 @@
 6:
   ort: anfrage.php
   beschreibung: Die Fehlerdatei eines Moduls konnte nicht gefunden werden.
+7:
+  ort: fehlermeldung.php
+  beschreibung: Es wurden ungültige Fehler übergeben. Theoretisch kann dieses Meldung nie an Frontend gelangen. Falls doch, und Du das hier siehst, haben wir was big-time verschissen...

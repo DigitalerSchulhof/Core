@@ -10,7 +10,7 @@
  *
  * @param {string} modul Das Modul der Anfrage
  * @param {string} ziel Das Anfrageziel
- * @param {(string|string[]|boolean)} laden=["Die Anfrage wird behandelt"] Daten für die Ladenanzeige
+ * @param {(string|string[]|bool)} laden=["Die Anfrage wird behandelt"] Daten für die Ladenanzeige
  * @param {Object} daten={} Die Anfrageparameter
  * @param {string|boolean} [host=""] Das Netz, in das die Anfrage geht
  */
@@ -32,7 +32,7 @@ core.ajax = (modul, ziel, laden, daten, host) => {
   var pDaten = daten;
   var daten = new FormData();
   for(let key in pDaten) {
-    if(Array.isArray(pDaten[key])) {
+    if(Array.isArray(pDaten[key]) || typeof pDaten[key] === "object") {
       daten.append(key, JSON.stringify(pDaten[key]));
     } else {
       daten.append(key, pDaten[key]);
@@ -61,6 +61,7 @@ core.ajax = (modul, ziel, laden, daten, host) => {
              erfolg(r);
           } else {
             console.error("Fehler: ", r.Fehler);
+            core.ajax("Kern", 30, ["Fehler werden geladen", "Bitte warten"], {fehler: r.Fehler}).then((r) => ui.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
           }
         } catch(err) {
           console.error("Kein gültiges JOSN: ", anfrage.responseText);
