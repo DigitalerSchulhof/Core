@@ -3,139 +3,47 @@ include_once(__DIR__."/yaml.php");
 use Async\YAML;
 
 /*
- * Eine Anfrage gibt (fast) immer JSON-Code zurück. Kommt ungültiges JSON zurück, wird, sofern dies nicht explizit überschrieben wird, eine Fehlermeldung direkt an DSH übermittelt
- * JSON-Rückgaben enthalten den Boolean {Fehler: }, welcher angibt, ob die Anfrage erfolgreich gewesen ist, oder nicht. Außerdem wird ein String {Typ: } zurückgegeben, welcher Angibt, was die Rückgabe enthält (Siehe: Anfrage::$TYP)
- * @TODO: Übermitteln des Fehlers
+ * Eine Anfrage gibt (außer im Falle eines Fehlers) immer JSON-Code zurück. Kommt ungültiges JSON zurück, wird, sofern dies nicht explizit verlangt wird, eine Fehlermeldung direkt an DSH übermittelt.
+ *
+ * JSON-Rückgaben enthalten das Feld {Erfolg: }, welches angibt, ob die Anfrage erfolgreich gewesen ist, oder nicht.
+ * Ist die Anfrage nicht erfolgreich gewesen ({Erfolg: false}), ist das Feld {Fehler: } enthalten, welches ein Array an Fehlercodes und deren zugehörigen Modul entfält. Beispiel: {Erfolg: false, Fehler: [["Core", -3], ["Kern", 4], ["Kern", 6]]}
+ * Ist die Anfrage erfolgreich gewesen ({Erfolg: true}), sind, je nach Anfrage, weitere Rückgabefelder gegeben, welche Frontend entsprechend erwartet und ausgewertet werden. Fehlt eines dieser Felder, eine Fehlermeldung direkt an DSH übermittelt.
+ * @TODO: Übermitteln des Fehlers an DSH
  */
-
-class Fehler {
-  /** @var int id */
-  private $id;
-
-  /** @var string modul */
-  private $modul;
-
-  /**
-   * Erstellt einen neuen Fehler
-   * @param int $id    :)
-   * @param string $modul :)
-   */
-  public function __construct($id, $modul = null) {
-    if ($modul === null) {
-      global $MODUL;
-      $modul = $MODUL;
-    }
-    $this->id = $id;
-    $this->modul = $modul;
-  }
-
-  /**
-   * Gibt den Fehler aus
-   * @return string :)
-   */
-  public function __toString() : string {
-    $hexid = strtoupper(dechex($this->id));
-    $hexid = str_pad($hexid, 3, '0', STR_PAD_LEFT);
-    return "<span class=\"dshUiFehlercode\">$hexid</span></span>";
-  }
-
-  /**
-   * Gibt die ID des Fehlers zurück
-   * @return int :)
-   */
-  public function getId() : int {
-    return $this->id;
-  }
-
-  /**
-   * Gibt das Modul des Fehlers zurück
-   * @return string :)
-   */
-  public function getModul() : string {
-    return $this->modul;
-  }
-
-}
 
 /**
  * Klasse mit statischen Funtionen, die eine Anfrage benötigt
  *
  * Die Klasse hält für die gesamte Anfrage den Typ der Rückgabe als String und Rückgabewerte als Array.
- * Der eigentliche Inhalt des Rückgabearrays variiert je nach Rückgabetyp. Es sind etwa bei einer bloßen »Code«-Rückgabe keine Knöpfe notwendig.
  */
 class Anfrage {
-  /** @var Fehler Liste an Fehler-Objekten, die aufgetreten und auszugeben sind */
-  public static $FEHLER = [];
+  private function __construct() {}
 
-  /** @var String Typ der Rückgabe - Ausschlaggebend für die fernere Verarbeitung der Rückgabe auf Client-Side
-   *  Mögliche Werte:
-   *  - Fehler:   Bei der Anfrage ist einer oder mehrere Fehler aufgetreten.        <b>Wird bei der JSON-Ausgabe auf »Meldung« gesetzt.</b>
-   *  - Meldung:  Blendet "Blende" ein und setzt dessen Inhalt auf eine Meldung
-   *  - Code:     Die Rückgabe enthält HTML-Code, der Client-Side benötigt wird
-   *  - Seite:    Tritt beim Laden einer Seite auf
+  /** @var array Liste an Fehler-IDs und deren Modul, die aufgetreten sind
+   * [[Modul : string, Fehlerid : int], [Modul : string, Fehlerid : int], [Modul : string, Fehlerid : int]]
    */
-  public static $TYP = null;
+  private static $FEHLER = [];
 
-  /** @var [Rückgabefeld : string] => [Rückgabewert : mixed]
-   *  Benötigte Felder nach Rückgabetyp: Siehe Anfrage::RUECKGABEFELDER
-   *  Der Typ von Rückgabewert kann je nach Rückgabefeld variieren und wird in Anfrage::ausgeben() entsprechend verarbeitet
-   */
-  public static $RUECK = [];
+  /** @var bool Ob die Anfrage erfolgreich ist */
+  private static $ERFOLG = true;
 
-  /** @var [Rückgabetyp : string] => [Rückgabefelder... : string]
-   *  Gibt an, welche Rückgabefelder je Rückgabetyp gesetzt sein müssen
-   */
-  const RUECKGABEFELDER = array(
-    //  »Fehler«  Array an Arrays ["Fehlercode", "Modul des Fehlers", "Beschreibung des Fehlers"], welches die gesammelten Fehler enthält.
-    //    »Fehlercode«                String mit dem Fehlercode (Siehe: Fehler::getFehlercodeString())
-    //    »Modul des Fehlers«         String, der den Modulnamen des zugehörigen Fehlercodes enthält. I.d.R. stammen alle Fehlercodes aus dem gleichen Modul.
-    //    »Beschreibung des Fehlers«  String, welcher die Beschreibung des Fehlercodes (Siehe: fehlercodes.yml eines Moduls), und eventuell den Fehlercode, enthält.
-    "Fehler"          => ["Fehler"],
-
-    // »Meldung«  gültiger HTML-Code einer Meldung (Siehe: UI\Meldung::__toString()), welcher in den Körper der offnenen Blende geladen wird.
-    // »Knöpfe«   Array [Knopfcode : string] an HTML-Code der Knöpfe (Siehe: UI\Knopf::__toString()) für die offene Blende. Ist das Array leer, wird automatisch ein dshUiKnopfStandard mit dem Inhalt »OK« und der onclick-Aktion »ui.laden.aus()« übergeben. Ist der Wert <code>false</code>, so wird nichts zurückgegeben.
-    //
-    // In JSON:
-    // »Knöpfe«   HTML-Code der Knöpfe. <b>Nicht</b> mit Leerzeichen getrennt.
-    "Meldung"         => ["Meldung", "Knöpfe"],
-
-    // »Code«     HTML-Code, welcher Client-Side für eine Ausgabe benötigt wird, und zuvor mit entsprechenden __toString() - Methoden generiert wurde.
-    "Code"            => ["Code"],
-
-    //  »Titel«   String, der im Browser als Titel angezeigt wird
-    //  »Code«    HTML-Code der anzuzeigenden Seite
-    "Seite"           => ["Titel", "Code"],
-
-    //  »Ziel«    Interne URL auf die weitergeleitet werden soll
-    "Weiterleitung"   => ["Ziel"],
-
-    //  »Funktion« JS-Funktion die nach der Bearbeitung der Anfrage ausgeführt werden soll
-    "Fortsetzen"      => ["Funktion"],
-
-    "Neuladen"        => []
-
-    // !
-    // Weitere Rückgabefelder werden unbeachtet weitergegeben
-    // !
-  );
+  /** @var [Rückgabefeld : string] => [Rückgabewert : mixed] Rückgabefelder mit deren Inhalt */
+  private static $RUECK = [];
 
   /**
-   * Setzt den Typ der Rückgabe
-   * @param  string $typ :)
+   * Setzt, ob die Anfrage erfolgreich ist
+   * @param bool $typ :)
    */
-  public static function setTyp($typ) {
-    if(!in_array($typ, array_keys(self::RUECKGABEFELDER))) {
-      throw new \Exception("Unbekannter Rückgabetyp: »{$typ}«");
-    }
-    self::$TYP = $typ;
+  public static function setErfolg($erfolg) {
+    self::$ERFOLG = $erfolg;
   }
 
   /**
-   * Gibt den Typ der Rückgabe zurück
-   * @return string
+   * Gibt zurück, ob die Anfrage erfolgreich ist
+   * @return bool
    */
-  public static function getTyp() : ?string {
-    return self::$TYP;
+  public static function getErfolg() : bool {
+    return self::$ERFOLG;
   }
 
   /**
@@ -148,36 +56,68 @@ class Anfrage {
   }
 
   /**
+   * Gibt den Wert eines Rückgabefeldes zurück. <code>null</code> wenn es nicht gesetzt ist.
+   * @param string $feld :)
+   * @return mixed
+   */
+  public static function getRueck($feld) {
+    return self::$RUECK[$feld] ?? null;
+  }
+
+  /**
+   * Leert die Rückgabeparameter
+   * @return array Gesetzte Rückgabeparameter
+   */
+  public static function leereRueck() : array {
+    $r = self::$RUECK;
+    self::$RUECK = [];
+    return $r;
+  }
+
+  /**
    * Fehlercode zur Liste hinzufügen
-   * @param int|Fehler $fehler Wenn <code>int</code>: Fehlercode und Modul ist das aktuelle Modul, wenn <code>Fehler</code>: Fehlerobjekt
-   * @param bool $die Auswertung, ob Fehler vorliegen und ggf. Abbruch
+   * @param int $fehler Fehlercode, wenn < 1, wird Modul, sofern nicht explizit mit <code>$modul</code> übergeben, auf "Core" gesetzt
+   * @param string $modul Wenn <code>null</code>: Das aktuelle Modul, wenn <code>true</code>: Der Wert von $die und $modul = null, sonst: das Modul des Fehlers
+   * @param bool $die Check, ob Fehler vorliegen und ggf. Abbruch
    *
    * Reservierte Fehlercodes:
    * 0: Anfragewert nicht übergeben
    */
-  public static function addFehler($fehler, $die = false) {
-    if(!($fehler instanceof Fehler)) {
-      global $MODUL;
-      $fehler = new Fehler($fehler, $MODUL);
+  public static function addFehler($fehler, $modul = null, $die = false) {
+    global $MODUL;
+    if($modul === false) {
+      $die = $modul;
+      $modul = null;
     }
-    $doppelt = false;
+    if($fehler < 1) {
+      $modul = $modul ?? "Core";
+    }
+    $fehler = [$modul ?? $MODUL, $fehler];
+    $d = false;
     foreach(self::$FEHLER as $f) {
-      if($f->getId() === $fehler->getId()) {
-        $doppelt = true;
+      if($f == $fehler) {
+        $d = true;
       }
     }
-    if(!$doppelt) {
+    if(!$d) {
       self::$FEHLER[] = $fehler;
     }
-    if ($die) {
+    if($die) {
       Anfrage::checkFehler();
     }
   }
 
   /**
-   * Prüft ob Fehler vorliegen und gibt diese gegebenenfalls aus. Bricht das Skript ab, wenn Fehler vorhanden sind.
+   * Prüft ob Fehler vorliegen und gibt diese zusammen mit {Erfolg: false} aus. Bricht das Skript ab, wenn Fehler vorhanden sind.
    */
   public static function checkFehler() {
+    if(count(self::$FEHLER) > 0) {
+      Anfrage::leereRueck();
+      Anfrage::setErfolg(false);
+      Anfrage::setRueck("Fehler", self::$FEHLER);
+      Anfrage::ausgeben();
+    }
+    return;
     if (count(self::$FEHLER) > 0) {
       $fehlerdateien = [];
 
@@ -216,118 +156,11 @@ class Anfrage {
   }
 
   /**
-   * Prüft, ob der aktuelle Benutzer angemeldet ist, und gibt eine Fehlermeldung aus wenn nicht
-   */
-  public static function checkAngemeldet() {
-    if(!\Kern\Check::angemeldet()) {
-      self::seiteAus("Schulhof/Anmeldung");
-    }
-  }
-
-  /**
-   * Gibt eine Seite aus und beendet das Skript
-   * @param string $seite :)
-   */
-  public static function seiteAus($seite) {
-    global $DSH_TITEL, $CODE;
-    einbinden($seite);
-    self::setTyp("Seite");
-    self::setRueck("Titel",  $DSH_TITEL);
-    self::setRueck("Code",   $CODE);
-    self::ausgeben();
-    die;
-  }
-
-  /**
-   * Gibt eine 404-Fehlermeldung aus
-   */
-  public static function nichtGefunden() {
-    self::seiteAus("Fehler/404");
-  }
-
-  /**
-   * Gibt das Resultat der Anfrage aus. Beendet das Skript <b>nicht</b>.
+   * Gibt das Resultat der Anfrage aus und beendet das Skript.
    */
   public static function ausgeben() {
-    $ausgabe  = array();
-    $typ      = self::getTyp();
-    $ausgabe["Fehler"]  = $typ === "Fehler";
-    $ausgabe["Typ"]     = $typ;
-
-    $rueck = self::$RUECK;
-
-    // Benötigte Felder
-    $ben = self::RUECKGABEFELDER[$typ];
-    foreach($ben as $b) {
-      if(!isset($rueck[$b])) {
-        if ($b === "Knöpfe") {
-          $rueck[$b] = [];
-        } else {
-          trigger_error("Das Rückgabefeld »{$b}« für den Typ »{$typ}« ist nicht gesetzt worden.", E_USER_ERROR);
-        }
-      }
-    }
-
-    switch($typ) {
-      case "Fehler":
-        $fehlercodes = $rueck["Fehler"];
-        $fehlerCode = "";
-        foreach($fehlercodes as $fc) {
-          $code         = $fc[0];
-          $code = strtoupper(dechex($code));
-          $code = str_pad($code, 3, '0', STR_PAD_LEFT);
-
-          $modul        = $fc[1];
-          $beschreibung = $fc[2];
-          $fehlerCode  .= new UI\Absatz("$beschreibung <span class=\"dshFehlercode\" title=\"$modul\">$code</span>");
-        }
-        if(count($fehlercodes) > 1) {
-          $titel = "Es sind folgende Fehler aufgetreten:";
-        } else {
-          $titel = "Es ist folgender Fehler aufgetreten:";
-        }
-
-        $ausgabe["Typ"]     = "Meldung";
-        $ausgabe["Titel"]   = null;
-        $ausgabe["Meldung"] = (string) new UI\Meldung($titel, $fehlerCode, "Fehler");
-        $ausgabe["Knoepfe"] = (string) UI\Knopf::ok();
-
-        break;
-      case "Meldung":
-        $knoepfe = $rueck["Knöpfe"];
-        if($knoepfe === false) {
-          $knoepfe = [];
-        } else if(count($knoepfe) === 0) {
-          $knoepfe = [UI\Knopf::ok()];
-          //$ausgabe["Autoschliessen"] = true;
-        }
-        $ausgabe["Meldung"]  = (string) $rueck["Meldung"];
-        $ausgabe["Knoepfe"]  = join("", $knoepfe);
-        break;
-      case "Code":
-        $ausgabe["Code"]    = (string) $rueck["Code"];
-        break;
-      case "Seite":
-        $ausgabe["Titel"]   = (string) $rueck["Titel"];
-        $ausgabe["Code"]    = (string) $rueck["Code"];
-        break;
-      case "Weiterleitung":
-        $ausgabe["Ziel"]    = (string) $rueck["Ziel"];
-        break;
-      case "Fortsetzen":
-        $ausgabe["Funktion"]   = (string) $rueck["Funktion"];
-        break;
-      case "Neuladen":
-        break;
-      default:
-        trigger_error("Unbekannter Rückgabetyp: $typ", E_USER_ERROR);
-    }
-
-    foreach(array_diff(array_keys($rueck), $ben) as $weiterer) {
-      $ausgabe[$weiterer]   = (string) $rueck[$weiterer];
-    }
-
-    echo json_encode($ausgabe);
+    echo json_encode(array_merge(array("Erfolg" => self::$ERFOLG), self::$RUECK));
+    die();
   }
 
   /**
@@ -348,7 +181,7 @@ class Anfrage {
 
     foreach($vars as $var) {
       if(!isset($_POST[$var]) && $fehler) {
-        Anfrage::addFehler(new Fehler(0, "Core"));
+        Anfrage::addFehler(0, "Core");
       } else if (isset($_POST[$var])) {
         global $$var;
         $$var = $_POST[$var];
@@ -406,20 +239,20 @@ if(!$fehler) {
 }
 
 if($fehler) {
-  Anfrage::addFehler(new Fehler(1, "Core"), true);
+  Anfrage::addFehler(1, "Core", true);
 }
 
 $fehler 		= $fehler || !isset($_POST["ziel"]);
 $fehler 		= $fehler || (!is_numeric($_POST["ziel"]) || intval($_POST["ziel"]) < 0);
 
 if($fehler) {
-  Anfrage::addFehler(new Fehler(2, "Core"), true);
+  Anfrage::addFehler(2, "Core", true);
 }
 
 $ZIELE = [];
 
 if(!file_exists("$moduldir/anfragen/ziele.php")) {
-  Anfrage::addFehler(new Fehler(3, "Core"), true);
+  Anfrage::addFehler(3, "Core", true);
 }
 
 if($_POST["modul"] !== "Core") {
@@ -427,17 +260,17 @@ if($_POST["modul"] !== "Core") {
 }
 include("$moduldir/anfragen/ziele.php");
 if(!isset($ZIELE[$_POST["ziel"]])) {
-  Anfrage::addFehler(new Fehler(4, "Core"), true);
+  Anfrage::addFehler(4, "Core", true);
 }
 
-if(!file_exists("$moduldir/{$ZIELE[$_POST["ziel"]]}")) {
-  Anfrage::addFehler(new Fehler(5, "Core"), true);
+if(!file_exists("$moduldir/anfragen/{$ZIELE[$_POST["ziel"]]}")) {
+  Anfrage::addFehler(5, "Core", true);
 }
 
 $ROOT  = __DIR__;
 $MODUL = $_POST["modul"];
 $DIR   = $moduldir;
 $ZIEL  = $_POST["ziel"];
-include("$moduldir/{$ZIELE[$_POST["ziel"]]}");
+include("$moduldir/anfragen/{$ZIELE[$_POST["ziel"]]}");
 Anfrage::ausgeben();
 ?>

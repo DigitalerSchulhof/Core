@@ -97,8 +97,11 @@ echo "<html lang=\"de\">";
             $kopfnavi = new UI\Togglegruppe("dshKopfnavi");
             $kopfnavi->addOption($optWebsite);
             $kopfnavi->addOption($optSchulhof);
-
-            $kopfnavi->setWert(strtolower($DSH_URL[0]));
+            $bereich = $DSH_URL[0] ?? "Website";
+            if($bereich == "") {
+              $bereich = "Website";
+            }
+            $kopfnavi->setWert(strtolower($bereich));
             echo $kopfnavi;
 					echo "</li>";
 				echo "</ul>";

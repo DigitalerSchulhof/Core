@@ -1,5 +1,36 @@
 <?php
 
+  class Seite {
+    /**
+     * Prüft, ob der aktuelle Benutzer angemeldet ist, und gibt eine Fehlermeldung aus wenn nicht
+     */
+    public static function checkAngemeldet() {
+      if(!\Kern\Check::angemeldet()) {
+        self::seiteAus("Schulhof/Anmeldung");
+      }
+    }
+
+    /**
+     * Gibt eine Seite aus und beendet das Skript
+     * @param string $seite :)
+     */
+    public static function seiteAus($seite) {
+      global $DSH_TITEL, $CODE;
+      einbinden($seite);
+      Anfrage::setRueck("Titel",  $DSH_TITEL);
+      Anfrage::setRueck("Code",   $CODE);
+      Anfrage::ausgeben();
+      die;
+    }
+
+    /**
+     * Gibt eine 404-Fehlermeldung aus und beendet das Skript
+     */
+    public static function nichtGefunden() {
+      self::seiteAus("Fehler/404");
+    }
+  }
+
   function einbinden($seite) {
     global $CODE, $DSH_TITEL, $DSH_URL, $DSH_URLGANZ;
 
@@ -27,9 +58,6 @@
   $CODE;
   einbinden($seite);
 
-  if(Anfrage::getTyp() === null) {
-    Anfrage::setTyp("Seite");
-    Anfrage::setRueck("Titel",  $DSH_TITEL);
-    Anfrage::setRueck("Code",   $CODE);
-  }
+  Anfrage::setRueck("Titel",  $DSH_TITEL);
+  Anfrage::setRueck("Code",   $CODE);
 ?>

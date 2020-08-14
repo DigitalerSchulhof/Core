@@ -54,42 +54,22 @@ core.ajax = (modul, ziel, laden, daten, host) => {
 		var anfrage = new XMLHttpRequest();
 		anfrage.onreadystatechange = () => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
-        let fehler = false;
-        let r;
         try {
-          r = JSON.parse(anfrage.responseText);
-        }
-        catch(err) {
-          console.log("Fehler bei AJAX-Anfrage", anfrage.responseText);
-          fehler = true;
-        }
-        if (fehler) {
+          let r = JSON.parse(anfrage.responseText);
+          $("#dshFehlerbox").ausblenden();
+          if(r.Erfolg) {
+             erfolg(r);
+          } else {
+            console.error("Fehler: ", r.Fehler);
+          }
+        } catch(err) {
+          console.error("Kein gültiges JOSN: ", anfrage.responseText);
           $("#dshMeldungInitial").ausblenden();
           $("#dshFehlerbox").einblenden();
-          meld = anfrage.responseText;
+          let meld = anfrage.responseText;
           $("#dshFehlerbox pre").setText(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
           ui.laden.aus();
           core.seiteladebalken.aus();
-        } else {
-          $("#dshFehlerbox").ausblenden();
-          switch(r.Typ) {
-            case "Meldung":
-              ui.laden.aendern(null, r.Meldung, r.Knoepfe);
-              if (r.Autoschliessen) {
-                ui.laden.autoschliessen = setTimeout('ui.laden.aus()', 2500);
-              }
-              break;
-            case "Weiterleitung":
-              core.seiteLaden(r.Ziel);
-              break;
-            case "Fortsetzen":
-              eval(r.Funktion);
-              break;
-            case "Neuladen":
-              core.neuladen();
-              break;
-          }
-          erfolg(r);
         }
 			}
 		};
