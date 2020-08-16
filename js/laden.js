@@ -145,3 +145,8 @@ window.addEventListener("click", (e) => {
 window.addEventListener("popstate", (e) => {
   core.seiteLaden(document.location.pathname.substring($("base").getAttr("href").length), false);
 });
+
+if(document.location.pathname.slice(-1) === "/") {
+  console.log(document.location.pathname, document.location.pathname.length, document.location.pathname.substring(document.location.pathname.length));
+  window.history.replaceState({}, document.title, document.location.pathname.substring(0, document.location.pathname.length-1));
+}

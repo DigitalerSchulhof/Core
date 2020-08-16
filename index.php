@@ -3,6 +3,9 @@
 $DSH_VERSION = "1.0";
 
 $DSH_URLGANZ = $_GET["URL"] ?? "";
+if(substr($DSH_URLGANZ, -1) === "/") {
+  $DSH_URLGANZ = substr($DSH_URLGANZ, 0, -1);
+}
 $DSH_URL = explode("/", $DSH_URLGANZ);
 $DSH_MODULE = __DIR__."/module";
 $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()_]{3,}";
@@ -30,7 +33,9 @@ echo "<html lang=\"de\">";
 	echo "<head>";
     echo "<base href=\"{$EINSTELLUNGEN["Base"]}\">";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
-		echo style("css/layout.css");
+		echo style("css/layout.css");?>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <?php
 		if(isset($_COOKIE["dunkelmodus"])) {
 			if($_COOKIE["dunkelmodus"] == "ja") {
 				echo style("css/dunkelroh.css");
@@ -140,7 +145,7 @@ echo "<html lang=\"de\">";
 
     echo "<div id=\"dshFenstersammler\"></div>";
 		echo "<script>";
-			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false);$('#dshMeldungInitial').einblenden();}";
+			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false)};document.querySelector('#dshMeldungInitial').style.display='block';";
 		echo "</script>";
 	echo "</body>";
 echo "</html>";
