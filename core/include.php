@@ -52,6 +52,11 @@ class Einbinden {
   		$urlganz = "Fehler/404";
   		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
+
+    if(substr($gefunden, 0, 1) === ">") {
+      return self::seiteBestimmen(substr($gefunden, 1));
+    }
+
   	Einbinden::$aktuellesModul["gefunden"] = $gefunden;
   	Einbinden::$aktuellesModul["modul"] = $modul;
 
