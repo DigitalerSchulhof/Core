@@ -71,7 +71,7 @@ echo "<html lang=\"de\">";
 					echo "<li>";
 						echo "<div class=\"dshSuche\">";
               $suche = new UI\Textfeld("dshSuchePcSuchbegriff");
-              $suche->addFunktion("onkeyup", "dshSucheSuchen('dshSuche_pc_suchbegriff', 'dshSuchePcErgebnisse')");
+              $suche->addFunktion("oninput", "dshSucheSuchen('dshSuche_pc_suchbegriff', 'dshSuchePcErgebnisse')");
               echo $suche->setPlatzhalter("Suchen...")->self();
 							echo "<div id=\"dshSuchePcErgebnisse\">";
                 $schliessen = new UI\MiniIconKnopf(new UI\Icon(Ui\Konstanten::SCHLIESSEN), "Schließen", "Fehler", "UL");
