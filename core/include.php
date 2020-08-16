@@ -78,7 +78,7 @@ class Einbinden {
   * $DSH_URLGANZ    - Mit "/" verbundene URL
   */
   static function seiteFinden($return = false) {
-  	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR;
+  	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR, $EINSTELLUNGEN, $DBS, $DBP;
 
     Kern\Check::einwilligung();
     Kern\DB::log();
@@ -93,8 +93,6 @@ class Einbinden {
   	  include_once "$DIR/seiten/".Einbinden::$aktuellesModul['gefunden'];
       return $SEITE;
     } else {
-      // Gibt den Eindrück, als würde die Seite gesucht werden :)
-      sleep(1);
       $CODE[] = UI\Zeile::standard(new UI\Meldung("Datei fehlt", "Die einzubindende Datei wurde nicht gefunden. Bitte den Administrator informieren!", "Fehler"));
     }
     return false;
