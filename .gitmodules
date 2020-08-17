@@ -7,3 +7,6 @@
 [submodule "module/Website"]
 	path = module/Website
 	url = https://github.com/DigitalerSchulhof/Website.git
+[submodule "module/Postfach"]
+	path = module/Postfach
+	url = https://github.com/DigitalerSchulhof/Postfach.git
