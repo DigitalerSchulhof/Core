@@ -1,4 +1,15 @@
 <?php
+
+/*
+* Verfügbare Variablen:
+* $ROOT           - Hauptverzeichnis (/)
+* $DIR            - Verzeichnis, des aktuellen Moduls (/module/AKTUELLESMODUL)
+* $DSH_MODULE     - Absoluter Pfad zum Verzeichnis, in welchem die Module liegen (/module)
+* $DSH_ALLEMODULE - Assoziatives Array aller Module und deren Pfade: [Modul => Absoluter Pfad zum Modul (/module/MODUL)]
+*                   <code>array_keys($DSH_ALLEMODULE)</code> für nur die Module nutzen
+* $DSH_BENUTZER   - Aktueller Benutzer
+ */
+
 include_once(__DIR__."/yaml.php");
 use Async\YAML;
 
