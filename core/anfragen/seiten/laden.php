@@ -32,7 +32,7 @@
   }
 
   function einbinden($seite) {
-    global $CODE, $DSH_TITEL, $DSH_URL, $DSH_URLGANZ;
+    global $CODE, $DSH_TITEL, $DSH_URL, $DSH_URLGANZ, $DSH_BENUTZER;
 
     $urls = Core\Einbinden::seiteBestimmen($seite);
     $DSH_URL = $urls["url"];
@@ -46,6 +46,13 @@
     }
     $DSH_TITEL = $SEITE->getTitel();
     $CODE = (string) $SEITE;
+    if (isset($DSH_BENUTZER) && $DSH_BENUTZER->angemeldet()) {
+      $CODE .= "<script>";
+      $CODE .=  "kern.schulhof.nutzerkonto.aktivitaetsanzeige.limit = {$DSH_BENUTZER->getInaktivitaetszeit()};";
+      $CODE .=  "kern.schulhof.nutzerkonto.aktivitaetsanzeige.timeout = {$DSH_BENUTZER->getSessiontimeout()};";
+      $CODE .=  "kern.schulhof.nutzerkonto.aktivitaetsanzeige.aktualisieren();";
+      $CODE .= "</script>";
+    }
   }
 
   Anfrage::post("seite");

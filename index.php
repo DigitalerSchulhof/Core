@@ -146,9 +146,6 @@ echo "<html lang=\"de\">";
 
 		echo "<script>";
 			echo "window.onload=()=>{core.seiteLaden('$DSH_URLGANZ', false)};document.querySelector('#dshMeldungInitial').style.display='block';";
-      if (isset($DSH_BENUTZER) && $DSH_BENUTZER->angemeldet()) {
-        echo "window.setInterval(kern.schulhof.nutzerkonto.aktivitaetsanzeige.aktualisieren(), 60000);";
-      }
 		echo "</script>";
 	echo "</body>";
 echo "</html>";
