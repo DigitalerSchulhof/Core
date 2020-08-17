@@ -130,6 +130,16 @@ class Anfrage {
     die();
   }
 
+  // Prüft die üblichen Sortiervariablen und gibt einen Fehler aus, falls sie falsch oder nicht gesetzt sind
+  public static function postSort() {
+    Anfrage::post("sortSeite", "sortDatenproseite", "sortRichtung", "sortSpalte");
+    global $sortSeite, $sortDatenproseite, $sortRichtung, $sortSpalte;
+    if (!UI\Check::istZahl($sortSeite) || (!UI\Check::istZahl($sortDatenproseite) && $sortDatenproseite != 'alle')  ||
+        !in_array($sortRichtung, ["ASC", "DESC"]) || !UI\Check::istZahl($sortSpalte)) {
+      Anfrage::addFehler(-3, true);
+    }
+  }
+
   /**
    * Lädt die gegebenen Werte von $_POST in die entsprechenden Variablen
    * @param  boolean|string $fehler Wenn <code>true</code> oder <code>false</code>: Ob ein Fehler auftritt, wenn der Wert nicht übergeben wurde. Ansonsten: Erster Wert von ...$vars
