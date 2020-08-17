@@ -8,8 +8,6 @@
 * $DSH_ALLEMODULE - Assoziatives Array aller Module und deren Pfade: [Modul => Absoluter Pfad zum Modul (/module/MODUL)]
 *                   <code>array_keys($DSH_ALLEMODULE)</code> für nur die Module nutzen
 * $DSH_BENUTZER   - Aktueller Benutzer
-* $DSH_URL        - URL
-* $DSH_URLGANZ    - Mit "/" verbundene URL
  */
 
 include_once(__DIR__."/yaml.php");
