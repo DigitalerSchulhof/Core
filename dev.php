@@ -20,12 +20,15 @@ $globangebote = [];
 /** @var array Alle Styles, die es gibt */
 $allestyles = array("layout" => "", "hell" => "", "dunkel" => "", "dunkelroh" => "", "drucken" => "");
 
+/** @var array Alle Rechte */
+$allerechte = [];
+
 /**
 * Erzeugt die serialized-Version der YAML-Modulkonfiguration
 * @param string $modul Das Modul
 */
 function modulKeimen($modul) {
-  global $globseitenliste, $globangebote, $DSH_MODULE, $dbs, $allestyles;
+  global $globseitenliste, $globangebote, $DSH_MODULE, $dbs, $allestyles, $allerechte;
   echo "Modul »{$modul}« keimen lassen<br>\n";
   $config = YAML::loader(file_get_contents("$DSH_MODULE/$modul/modul.yml"));
 
@@ -69,7 +72,7 @@ function modulKeimen($modul) {
   $rechteliste = "$DSH_MODULE/$modul/funktionen/rechte.yml";
   if(file_exists($rechteliste)) {
     $modulRechte = YAML::loader($rechteliste);
-    file_put_contents("$DSH_MODULE/$modul/funktionen/rechte.core", serialize($modulRechte));
+    $allerechte[] = $modulRechte;
   }
 
   // Einstelungen keimen lassen
@@ -248,6 +251,8 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   file_put_contents(__DIR__."/css/drucken.css",   $drucken);
   echo "Styles gespeichert.<br>\n";
 
+  file_put_contents(__DIR__."/core/rechte.core",   serialize($allerechte));
+  echo "Rechte gespeichert.<br>\n";
 } else {
   echo "<a href=\"?keimen=ja\">Keimen</a>";
 }
