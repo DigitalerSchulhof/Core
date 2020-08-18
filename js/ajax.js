@@ -54,7 +54,7 @@ core.ajax = (modul, ziel, laden, daten, meldung, host) => {
   }
 
 
-  return new Promise((erfolg) => {
+  return new Promise((erfolg, fehler) => {
 		var anfrage = new XMLHttpRequest();
 		anfrage.onreadystatechange = () => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
@@ -73,6 +73,7 @@ core.ajax = (modul, ziel, laden, daten, meldung, host) => {
           } else {
             console.error("Fehler: ", r.Fehler);
             core.ajax("Kern", 30, ["Fehler werden geladen", "Bitte warten"], {fehler: r.Fehler}).then((r) => ui.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
+            fehler(r);
           }
         } catch(err) {
           console.error("Kein gültiges JOSN: ", anfrage.responseText);

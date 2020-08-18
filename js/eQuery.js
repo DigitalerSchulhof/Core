@@ -80,8 +80,8 @@ let $ = (...args) => {
     getAttr: (attr)       => eQuery.el[0].getAttribute(attr),
     /**
      * Setzt das übergebene Attribute auf den übergebenen Wert
-     * @param {[type]} attr Das Attribut
-     * @param {[type]} wert Der Wert
+     * @param {string} attr Das Attribut
+     * @param {*} wert Der Wert
      * @return {eQuery}
      */
     setAttr: (attr, wert) => eQuery.each(o => o.setAttribute(attr, wert)),
@@ -101,6 +101,8 @@ let $ = (...args) => {
     /**
      * Setzt eine oder mehrere CSS-Properties des eQuery-Objekts
      * @param {(string|Object)} k Wenn string: CSS-Property, die gesetzt werden soll | Wenn Object: [CSS-Property => Wert]
+     * @param {string} k.property Die CSS-Property
+     * @param {*} k.wert Der zu setzende Wert
      * @param {string} [v] Nur notwendig wenn typeof k === "string". Der Wert, auf welchen die CSS-Property gesetzt werden soll
      * @return {eQuery}
      */

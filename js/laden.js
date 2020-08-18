@@ -22,38 +22,32 @@ core.seiteLaden = (seite, push) => {
       window.history.replaceState({}, "Digitaler Schulhof - "+rueck["Titel"], seite);
     }
     document.title = "Digitaler Schulhof - " + rueck["Titel"];
-    $("#dshSeite").setHTML(rueck["Code"]);
-    $("#dshMeldungInitial", "#dshFehlerbox").ausblenden();
+    if(rueck.Code || rueck.Code === "") {
+      $("#dshSeite").setHTML(rueck.Code);
+      $("#dshMeldungInitial", "#dshFehlerbox").ausblenden();
 
-    // Script austauschen
-    var r = (n) => {
-      if(n.ist("script")) {
+      $("#dshSeite script").each((n) => {
         var c  = document.createElement("script");
-        c.text = n.getHTML();
-        for(let i = 0; i < n[0].attributes.length; i++) {
-          c.setAttribute(n[0].attributes[i].name, n[0].attributes[i].value);
+        c.text = n.innerHTML;
+        for(let i = 0; i < n.attributes.length; i++) {
+          c.setAttribute(n.attributes[i].name, n.attributes[i].value);
         }
-        n.parent()[0].replaceChild(c, n[0]);
-      } else {
-        for(let i = 0; i < n.kinder().length; i++) {
-          r($(n.kinder()[i]));
+        n.parentNode.replaceChild(c, n);
+      });
+
+      // Target von unvollständigen externen Links korrekt setzen
+      $("a.dshExtern:not([target])").setAttr("target", "_blank");
+
+      if($(".autofocus").existiert()) {
+        $(".autofocus")[0].focus();
+        if($(".autofocus").length > 1) {
+          console.warn("Mehr als ein .autofocus gefunden!");
         }
       }
-    }
-    r($("#dshSeite"));
-
-    // Target von unvollständigen externen Links korrekt setzen
-    $("a.dshExtern:not([target])").setAttr("target", "_blank");
-
-    if($(".autofocus").existiert()) {
-      $(".autofocus")[0].focus();
-      if($(".autofocus").length > 1) {
-        console.warn("Mehr als ein .autofocus gefunden!");
-      }
+      window.dispatchEvent(new Event("dshSeiteGeladen"));
+      window.dispatchEvent(new Event("resize"));
     }
 
-    window.dispatchEvent(new Event("dshSeiteGeladen"));
-    window.dispatchEvent(new Event("resize"));
   });
 }
 

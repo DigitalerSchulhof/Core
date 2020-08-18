@@ -114,6 +114,7 @@ echo "<html lang=\"de\">";
 			echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshPlatzhalter\"></div>";
+    echo "<div id=\"dshFenstersammler\"></div>";
 		echo "<div id=\"dshHauptteilO\">";
 			echo "<div id=\"dshHauptteilI\">";
         $hier = new UI\Link("hier", "https://www.enable-javascript.com/de/", true);
@@ -124,7 +125,6 @@ echo "<html lang=\"de\">";
           echo "<i></i>"; // Hack, sodass p:last-child nicht greift, und mb fälschlicherweise auf 0 setzt
         echo "</div>";
         echo UI\Zeile::standard((new UI\Meldung("Bitte warten", "Der Digitale Schulhof wird geladen...", "Arbeit")))->setID("dshMeldungInitial")->setStyle("display", "none");
-        echo "<div id=\"dshFenstersammler\"></div>";
       echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";
