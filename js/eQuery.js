@@ -1,17 +1,23 @@
 /**
  * Das eQuery Objekt
  * @param {...(string|HTMLElement)} args Elemente
+ * @alias eQuery
  *
  * Fehlt in einer Methodenbeschreibung das <b>Subjekt</b>, ist das eQuery-Objekt gemeint.
  * Wenn in einer Methodenbeschreibung von <i>das eQuery-Objekt</i> die Rede ist, ist, sofern nicht <i>explizit</i> genannt, jedes zugehörige HTMLElement gemeint, nicht das eQuery-Objekt selbst.
  */
-function $(...args) {
+let $ = (...args) => {
   let eQuery = {
     /**
      * Das Array an HTMLElement des eQuery-Objekts (explizit)
      * @private
      */
     el: [],
+    /**
+     * Gibt an, dass es sich um ein eQuery-Objekt handelt
+     * @type {Boolean}
+     */
+    eQuery: true,
     /**
      * Führt die übergebene Funktion für jedes HTMLElement des eQuery-Objekts aus
      * @param  {function} fn Die auszuführende Funktion
@@ -79,7 +85,19 @@ function $(...args) {
      * @return {eQuery}
      */
     setAttr: (attr, wert) => eQuery.each(o => o.setAttribute(attr, wert)),
-    // setCss: Nimmt entweder: ("CSS-Property", "Wert") oder ({CSS-Property: "Wert", CSS-Property2: "Wert", ...})
+    /**
+     * Setzt die ID des eQuery-Objekts
+     * Alias für eQuery.setAttr("id", id);
+     * @param {string} id Die neue ID
+     * @return {eQuery}
+     */
+    setID: (id)           => eQuery.setAttr("id", id),
+    /**
+     * Gibt die ID des ersten HTMLElements zurück
+     * Alias für eQuery.getAttr("id");
+     * @return {string} Die ID
+     */
+    getID: ()             => eQuery.getAttr("id"),
     /**
      * Setzt eine oder mehrere CSS-Properties des eQuery-Objekts
      * @param {(string|Object)} k Wenn string: CSS-Property, die gesetzt werden soll | Wenn Object: [CSS-Property => Wert]
@@ -214,7 +232,47 @@ function $(...args) {
      * Entfernt alle HTMLElemente des eQuery-Objekts (explizit)
      * @type {eQuery}
      */
-    entfernen: ()         => eQuery.each(o => o.remove())
+    entfernen: ()         => eQuery.each(o => o.remove()),
+    /**
+     * Hängt eines oder mehrere Objekte an.
+     * Nimmt HTML-Code (string), HTMLElemente und eQuery-Objekte, in beliebiger Reihenfolge.
+     * @param {...(string|HTMLElement|eQuery)} e Die anzuhängenden Objekte
+     * @return {eQuery} Das ursprüngliche eQuery-Element
+     */
+    anhaengen: (...e)         => {
+      for(let el of e) {
+        let a;
+        if(el instanceof HTMLElement) {
+          a = $(el);
+        } else if(typeof el === "string") {
+          a = $.parse(el);
+        } else if(el.eQuery) {
+          a = el;
+        } else {
+          console.error("Ungültiger Parameter: ", el);
+          continue;
+        }
+        eQuery.each(o => a.each(e => o.append(e)));
+      }
+      return eQuery;
+    },
+    /**
+     * Filtert nach einer Filterfunktion
+     * @param  {callback} filter Filterfunktion.
+     *  this: Das HTMLElement
+     *  1. Parameter: Das HTMLElement in einem eQuery-Objekt
+     * Wird <code>true</code> zurückgegeben, wird das HTMLElement behalten, wird <code>false</code> zurückgegeben, wird das HTMLElement aus dem eQuery-Objekt ausgefiltert
+     * @return {eQuery} Das reduzierte eQuery-Objekt
+     */
+    filter: (filter)        => {
+      let el = [];
+      eQuery.each(o => {
+        if(filter.call(o, $(o))) {
+          el.push(o);
+        }
+      });
+      return $(...el);
+    }
   };
   for(let a of args) {
     // Purer Text oder Sonstiges
@@ -233,3 +291,16 @@ function $(...args) {
   r.__proto__ = eQuery.el;
   return r;
 }
+
+/**
+ * Erzeugt aus HTML-Code ein eQuery-Objekt
+ * @param  {string} code :)
+ * @return {eQuery}
+ */
+$.parse = (code) => {
+  let t = document.createElement("template");
+  t.innerHTML = code;
+  return $(...t.content.children);
+}
+
+let eQuery = $;
