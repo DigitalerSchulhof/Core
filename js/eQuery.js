@@ -210,6 +210,11 @@ function $(...args) {
      * @return {bool}
      */
     existiert: ()         => eQuery.el.length > 0,
+    /**
+     * Entfernt alle HTMLElemente des eQuery-Objekts (explizit)
+     * @type {eQuery}
+     */
+    entfernen: ()         => eQuery.each(o => o.remove())
   };
   for(let a of args) {
     // Purer Text oder Sonstiges
