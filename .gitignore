@@ -4,3 +4,4 @@ ldapanmelden.php
 .tern-project
 core/config.php
 *.core
+dateien/personen/*
