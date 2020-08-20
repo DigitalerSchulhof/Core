@@ -26,6 +26,17 @@ core.seiteLaden = (seite, push) => {
       $("#dshSeite").setHTML(rueck.Code);
       $("#dshMeldungInitial", "#dshFehlerbox").ausblenden();
 
+      if(rueck.Scripts) {
+        let kopf = $("head");
+        for(let s of rueck.Scripts) {
+          if(!$("head script[src='js/modul.php?modul="+s+"']").existiert()) {
+            var c = document.createElement("script");
+            c.setAttribute("src", "js/modul.php?modul="+s);
+            kopf[0].appendChild(c);
+          }
+        }
+      }
+
       $("#dshSeite script").each((n) => {
         var c  = document.createElement("script");
         c.text = n.innerHTML;
@@ -47,7 +58,6 @@ core.seiteLaden = (seite, push) => {
       window.dispatchEvent(new Event("dshSeiteGeladen"));
       window.dispatchEvent(new Event("resize"));
     }
-
   });
 }
 

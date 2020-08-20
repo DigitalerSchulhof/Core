@@ -67,6 +67,18 @@ class Anfrage {
   }
 
   /**
+   * Hängt einen Rückgabewert an ein Rückgabefeld an, welches dann - obviously - ein Array ist
+   * @param string $feld  :)
+   * @param mixed ...$werte :)
+   */
+  public static function addRueck($feld, ...$werte) {
+    if(!isset(self::$RUECK[$feld])) {
+      self::$RUECK[$feld] = [];
+    }
+    self::$RUECK[$feld] = array_merge(self::$RUECK[$feld], $werte);
+  }
+
+  /**
    * Gibt den Wert eines Rückgabefeldes zurück. <code>null</code> wenn es nicht gesetzt ist.
    * @param string $feld :)
    * @return mixed
