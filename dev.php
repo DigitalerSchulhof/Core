@@ -91,7 +91,6 @@ function modulKeimen($modul) {
     $globangebote[$modul] = $modulAngebote;
   }
 
-
   file_put_contents("$DSH_MODULE/$modul/modul.core", serialize($config));
 
   // Styles keimen lassen
