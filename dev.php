@@ -1,7 +1,7 @@
 <?php
 include __DIR__."/yaml.php";
-include __DIR__."/module/Kern/klassen/db/DB.php";
-include __DIR__."/module/Kern/klassen/db/Anfrage.php";
+include __DIR__."/module/Kern/klassen/db/db.php";
+include __DIR__."/module/Kern/klassen/db/anfrage.php";
 use \Kern\DB;
 
 $dbs = new DB("localhost", 3306, "root", "", "dsh_schulhof", "MeinPasswortIstSicher");
