@@ -7,7 +7,7 @@ class Angebote {
    * @param string $platz Die Kennung des Platzes
    * @return mixed[] Alle gefundenen Angebote
    */
-  static function angeboteFinden($platz) {
+  static function finden($platz) {
     $angebote = unserialize(file_get_contents(__DIR__."/angebote.core"));
 
     if(!isset($angebote[$platz])) {
