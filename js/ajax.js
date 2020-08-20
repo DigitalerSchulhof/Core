@@ -19,7 +19,9 @@
  */
 core.ajax = (modul, ziel, laden, daten, meldung, host) => {
 	host    = host    || "";
-  meldung = meldung || null;
+  if (meldung === undefined) {
+    meldung = null;
+  }
   daten   = daten   || {};
 
 	if(laden !== null) {
