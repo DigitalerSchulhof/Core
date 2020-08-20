@@ -88,6 +88,12 @@ class Anfrage {
   /**
    * Fehlercode zur Liste hinzufügen
    * @param int $fehler Fehlercode, wenn < 1, wird Modul, sofern nicht explizit mit <code>$modul</code> übergeben, auf "Core" gesetzt
+   *  Fehlercodes von Core:
+   *  <code> 0</code>: Es fehlen Informationen, um die Anfrage zu verarbeiten.
+   *  <code>-1</code>: Die Fehlerdatei des Moduls »Core« konnte nicht gefunden werden.
+   *  <code>-2</code>: Aktuell ist kein Benutzer angemeldet.
+   *  <code>-3</code>: Du kannst hier schon 'nen anderen Wert eingeben, aber dann ist es halt kacke...
+   *  <code>-4</code>: Für diese Aktion besteht keine Berechtigung!
    * @param string $modul
    * Wenn <code>null</code>: Das aktuelle Modul
    * Wenn <code>true</code>: Der Wert von $die und $modul = null
@@ -246,6 +252,7 @@ if(!file_exists("$moduldir/anfragen/ziele.php")) {
 if($_POST["modul"] !== "Core") {
   Core\Einbinden::modulLaden($_POST["modul"], true);
 }
+Kern\DB::datenbankenLaden();
 include("$moduldir/anfragen/ziele.php");
 if(!isset($ZIELE[$_POST["ziel"]])) {
   Anfrage::addFehler(4, "Core", true);
