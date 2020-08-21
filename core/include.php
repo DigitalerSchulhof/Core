@@ -53,6 +53,8 @@ class Einbinden {
   		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
 
+    Kern\DB::datenbankenLaden();
+
     if(substr($gefunden, 0, 1) === ">") {
       return self::seiteBestimmen(substr($gefunden, 1));
     }
