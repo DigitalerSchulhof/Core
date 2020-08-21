@@ -164,6 +164,16 @@ let $ = (...args) => {
      */
     addKlasse: (...k)     => eQuery.each(o => o.classList.add(...k)),
     /**
+     * Gibt zurück, ob alle HTMLElemente des eQuery-Objekts (explizit) die übergebene CSS-Klasse hat
+     * @param  {string} k Die zu prüfende CSS-Klasse
+     * @return {bool}
+     */
+    hatKlasse: (k)        => {
+      let r = true;
+      eQuery.each(o => o.classList.contains(k) || (r = false));
+      return r;
+    },
+    /**
      * Fügt hinzu oder entfernt eine oder mehrere CSS-Klassen
      * @param {bool} b Bei true werden die Klassen hinzugefügt, bei false entfernt
      * @param {...string} k Die CSS-Klassen
@@ -202,19 +212,33 @@ let $ = (...args) => {
      * Gibt alle Kinder des ersten HTMLElements des eQuery-Objekts (explizit) zurück
      * @return {eQuery}
      */
-    kinder: ()            => $(...eQuery.el[0].childNodes),
+    kinder: ()            => $(...eQuery.el[0].children),
     /**
-     * Gibt alle direkten Kinder des ersten HTMLElements des eQuery-Objekts (explizit) zurück, welche dem übergebenen Selektor entsprechen
+     * Gibt alle direkten Kinder des eQuery-Objekts zurück, welche dem übergebenen Selektor entsprechen
      * @param  {string} s Der zu überprüfende Selektor
      * @return {eQuery}
      */
-    kinderSelector: (s)   => $(...eQuery.el[0].querySelectorAll(">".s)),
+    kinderSelector: (s)   => {
+      let l = [];
+      eQuery.each(o => {
+        for(let ob of o.children) {
+          if(ob.matches(s)) {
+            l.push(ob);
+          }
+        }
+      })
+      return $(...l);
+    },
     /**
-     * Gibt alle Kinder, direkt und über mehrere Generationen, des ersten HTMLElements des eQuery-Objekts (explizit) zurück, welche dem übergebenen Selektor entsprechen
+     * Gibt alle Kinder, direkt und über mehrere Generationen, des eQuery-Objekts zurück, welche dem übergebenen Selektor entsprechen
      * @param  {string} s Der zu überprüfende Selektor
      * @return {eQuery}
      */
-    finde: (s)            => $(...eQuery.el[0].querySelectorAll(s)),
+    finde: (s)            => {
+      let l = [];
+      eQuery.each(o => l.push(...o.querySelectorAll(s)));
+      return $(...l);
+    },
     /**
      * Gibt das vorherige Element zurück
      * @return {eQuery} eQuery-Objekt (explizit) des vorherigen Elements
@@ -225,6 +249,21 @@ let $ = (...args) => {
      * @return {eQuery} eQuery-Objekt (explizit) des nächsten Elements
      */
     siblingNach: ()       => $(eQuery.el[0].nextSibling),
+    /**
+     * Gibt alle Geschwisterelemente zurück
+     * @return {eQuery} eQuery-Objekt (explizit) aller Geschwisterelemente
+     */
+    siblings: ()          => {
+      let l = [];
+      eQuery.each(o => l.push(...$(...o.parentNode.children).filter(ob => !ob.istElement(o))));
+      return $(...l);
+    },
+    /**
+     * Gibt alle Geschwisterelemente zurück, die den übergebenen Selektor entsprechen
+     * @param {string} s Der zu überprüfende Selektor
+     * @return {eQuery} eQuery-Objekt (explizit) aller Geschwisterelemente
+     */
+     siblingsSelector: (s) => eQuery.siblings().filterSelector(s),
     /**
      * Gibt zurück, ob das eQuery-Objekt existiert, ob es mehr als 0 HTMLElemente fässt
      * @return {bool}
@@ -258,6 +297,12 @@ let $ = (...args) => {
       }
       return eQuery;
     },
+    /**
+     * Filter alle HTMLElemente aus, die nicht dem übergebenen Selektor entsprechen
+     * @param  {string} s Der zu filternde Selektor
+     * @return {eQuery} Das reduzierte eQuery-Objekt
+     */
+    filterSelector: (s)     => eQuery.filter(e => e.ist(s)),
     /**
      * Filtert nach einer Filterfunktion
      * @param  {callback} filter Filterfunktion.
