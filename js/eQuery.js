@@ -197,7 +197,7 @@ let $ = (...args) => {
      * @param  {string} s Der zu prüfende Selektor
      * @return {eQuery}   eQuery-Objekt (explizit) des nächsten passenden Elternteils
      */
-    parentSelector: (s)   => $(eQuery.el[0].closest(s)),
+    parentSelector: (s)   => $(eQuery.el[0].parentNode.closest(s)),
     /**
      * Gibt alle Kinder des ersten HTMLElements des eQuery-Objekts (explizit) zurück
      * @return {eQuery}

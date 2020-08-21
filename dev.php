@@ -29,7 +29,7 @@ $allerechte = [];
 */
 function modulKeimen($modul) {
   global $globseitenliste, $globangebote, $DSH_MODULE, $dbs, $allestyles, $allerechte;
-  echo "Modul »{$modul}« keimen lassen<br>\n";
+  echo "Modul »{$modul}« keimen lassen\n";
   $config = YAML::loader(file_get_contents("$DSH_MODULE/$modul/modul.yml"));
 
   $standard = array(
@@ -42,19 +42,19 @@ function modulKeimen($modul) {
 
 
   if(!isset($config["name"])) {
-    echo "Eintrag »name« fehlt in der Modulkonfiguration<br>\n";
+    echo "Eintrag »name« fehlt in der Modulkonfiguration\n";
   }
   if(!isset($config["beschreibung"])) {
-    echo "Eintrag »beschreibung« fehlt in der Modulkonfiguration<br>\n";
+    echo "Eintrag »beschreibung« fehlt in der Modulkonfiguration\n";
   }
   if(!isset($config["lehrernetz"])) {
-    echo "Eintrag »lehrernetz« fehlt in der Modulkonfiguration<br>\n";
+    echo "Eintrag »lehrernetz« fehlt in der Modulkonfiguration\n";
   }
   if(!isset($config["autor"])) {
-    echo "Eintrag »autor« fehlt in der Modulkonfiguration<br>\n";
+    echo "Eintrag »autor« fehlt in der Modulkonfiguration\n";
   }
   if(!isset($config["version"])) {
-    echo "Eintrag »version« fehlt in der Modulkonfiguration<br>\n";
+    echo "Eintrag »version« fehlt in der Modulkonfiguration\n";
   }
 
   $config = array_merge($standard, $config);
@@ -72,7 +72,9 @@ function modulKeimen($modul) {
   $rechteliste = "$DSH_MODULE/$modul/funktionen/rechte.yml";
   if(file_exists($rechteliste)) {
     $modulRechte = YAML::loader($rechteliste);
-    $allerechte[] = $modulRechte;
+    foreach($modulRechte as $root => $rechte) {
+      $allerechte[$root] = array_merge_recursive($allerechte[$root] ?? array(), $rechte);
+    }
   }
 
   // Einstelungen keimen lassen
@@ -123,7 +125,7 @@ function modulKeimen($modul) {
     $mdrucken   = "";
 
     foreach(array_diff(scandir($styledir), array(".", "..")) as $style) {
-      echo "Style: module/$modul/styles/$style<br>\n";
+      echo "Style: module/$modul/styles/$style\n";
       ob_flush();
       flush();
 
@@ -198,7 +200,7 @@ function modulKeimen($modul) {
     $allestyles["dunkelroh"]  .= $mdunkelroh;
     $allestyles["drucken"]    .= $mdrucken;
   }
-  echo "Modul »{$modul}« ausgewachsen<br>\n<br>\n";
+  echo "Modul »{$modul}« ausgewachsen\n\n";
   ob_flush();
   flush();
 }
@@ -207,7 +209,7 @@ function modulKeimen($modul) {
 foreach(array_diff(scandir($DSH_MODULE), array(".", "..", ".htaccess")) as $modul) {
   $MODULE[] = $modul;
 }
-
+echo "<pre>";
 if($_GET["keimen"] ?? "nein" == "ja") {
   foreach($MODULE as $modul) {
     modulKeimen($modul);
@@ -221,7 +223,7 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   }
 
   file_put_contents("$DSH_CORE/seitenliste.core", serialize($seiten));
-  echo "Seitenliste gespeichert.<br>\n";
+  echo "Seitenliste gespeichert.\n";
 
   $platzangebote = [];
   foreach($globangebote as $modul => $plaetze) {
@@ -232,7 +234,7 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   }
 
   file_put_contents("$DSH_CORE/angebote.core", serialize($platzangebote));
-  echo "Angebote gespeichert.<br>\n";
+  echo "Angebote gespeichert.\n";
 
   // Styles keimen lassen
   extract($allestyles);
@@ -248,11 +250,12 @@ if($_GET["keimen"] ?? "nein" == "ja") {
   file_put_contents(__DIR__."/css/dunkel.css",    $dunkel);
   file_put_contents(__DIR__."/css/dunkelroh.css", $dunkelroh);
   file_put_contents(__DIR__."/css/drucken.css",   $drucken);
-  echo "Styles gespeichert.<br>\n";
+  echo "Styles gespeichert.\n";
 
   file_put_contents(__DIR__."/core/rechte.core",   serialize($allerechte));
-  echo "Rechte gespeichert.<br>\n";
+  echo "Rechte gespeichert.\n";
 } else {
   echo "<a href=\"?keimen=ja\">Keimen</a>";
 }
+echo "</pre>";
 ?>
