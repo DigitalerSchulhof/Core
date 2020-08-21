@@ -265,6 +265,11 @@ if($_POST["modul"] !== "Core") {
   Core\Einbinden::modulLaden($_POST["modul"], true);
 }
 Kern\DB::datenbankenLaden();
+
+foreach($DSH_DB AS $d) {
+  $d->log();
+}
+
 include("$moduldir/anfragen/ziele.php");
 if(!isset($ZIELE[$_POST["ziel"]])) {
   Anfrage::addFehler(4, "Core", true);

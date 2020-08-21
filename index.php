@@ -136,6 +136,8 @@ echo "<html lang=\"de\">";
       echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
     echo "</div>";
 
+    echo "<div id=\"dshUiFensterLadesymbol\"><span>".(new UI\Icon(UI\Konstanten::LADEN))."<br> Fenster wird geladen...</span></div>";
+
     echo "<div id=\"dshBlende\">";
       echo "<div id=\"dshBlendeI\">";
         $laden = new UI\Fenster("dshLaden", "WIRD ÜBERSCHRIEBEN", "BLA");
