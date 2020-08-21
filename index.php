@@ -136,7 +136,7 @@ echo "<html lang=\"de\">";
       echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
     echo "</div>";
 
-    echo "<div id=\"dshUiFensterLadesymbol\"><span>".(new UI\Icon(UI\Konstanten::LADEN))."<br> Fenster wird geladen...</span></div>";
+    echo (new UI\Meldung("Fenster wird geladen...", null, "Laden"))->setID("dshUiFensterLadesymbol");
 
     echo "<div id=\"dshBlende\">";
       echo "<div id=\"dshBlendeI\">";
