@@ -1,4 +1,4 @@
 window.console.log("%cHalt!", "font-weight: bold; font-style: dshStandard,sans-serif; color: #EF5350; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size: 36px;")
 window.console.log("%cDiese Konsole ist für Entwickler gedacht. Geben Sie hier nichts ein, was Sie nicht selbst verstehen!\nDie Benutzung erfolgt auf eigene Gefahr!","font-style: dshStandard,sans-serif; color: #EF5350; font-weight: bold; font-size: 16px;text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;");
-window.console.log("%cWenn Sie wissen, was Sie tun, freuen wir uns über einen Besucht auf GitHub :)","font-style: dshStandard,sans-serif; color: #F5F5F5; font-weight: bold; font-size: 12px;text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;");
+window.console.log("%cWenn Sie wissen, was Sie tun, freuen wir uns über einen Besuch auf GitHub :)","font-style: dshStandard,sans-serif; color: #F5F5F5; font-weight: bold; font-size: 12px;text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;");
 var core = {};

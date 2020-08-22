@@ -122,6 +122,8 @@ core.navigationAnpassen = (ziel) => {
   }
 }
 
+core.rueck = () => window.history.back();
+
 window.addEventListener("load", () => {
   core.seiteladebalken.balken = $("#dshSeiteladenI");
 });
