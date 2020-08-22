@@ -15,13 +15,15 @@
  * @param {(number|array)} meldung=null Die Meldung, die geöffnet wird, wenn die Anfrage erfolgreich gewesen ist.
  * Wenn number: ui.laden.meldung(modul, meldung)
  * Sonst: ui.laden.meldung(meldung[0], meldung[1]);
+ * @param {string[]} sortieren=[] Array an Tabellenids, welche nach der Anfrage neu sortiert werden sollen.
  * @param {string|boolean} [host=""] Das Netz, in das die Anfrage geht
  */
-core.ajax = (modul, ziel, laden, daten, meldung, host) => {
+core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
 	host    = host    || "";
   if (meldung === undefined) {
     meldung = null;
   }
+  sortieren = sortieren || [];
   daten   = daten   || {};
 
 	if(laden !== null) {
@@ -64,6 +66,11 @@ core.ajax = (modul, ziel, laden, daten, meldung, host) => {
           let r = JSON.parse(anfrage.responseText);
           $("#dshFehlerbox").ausblenden();
           if(r.Erfolg) {
+            for(let t of sortieren) {
+              if($("#"+t).existiert()) {
+                ui.tabelle.sortieren(t);
+              }
+            }
             if(meldung !== null) {
               if(Number.isInteger(meldung)) {
                 ui.laden.meldung(modul, meldung);
