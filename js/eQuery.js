@@ -156,6 +156,12 @@ let $ = (...args) => {
      * @param  {...string} k Die zu entfernenden Klassen
      * @return {eQuery}
      */
+    getEditor: ()           => (eQuery.el[0] || {value: null}).value,
+    /**
+     * Entfernt eine oder mehrere CSS-Klassen vom eQuery-Objekt
+     * @param  {...string} k Die zu entfernenden Klassen
+     * @return {eQuery}
+     */
     removeKlasse: (...k)  => eQuery.each(o => o.classList.remove(...k)),
     /**
      * Fügt eine oder mehrere CSS-Klassen dem eQuery-Objekt hinzu
