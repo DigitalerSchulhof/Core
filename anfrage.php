@@ -216,8 +216,6 @@ $FEHLER = [];
 $MODUL = "";
 $DSH_MODULE = __DIR__."/module";
 $DSH_LINKMUSTER = "[\.\-a-zA-Z0-9äöüßÄÖÜ()_]*[\-a-zA-Z0-9äöüßÄÖÜ()_]{3,}";
-$DSH_DATENBANKEN = [];
-
 
 include_once(__DIR__."/core/config.php");
 include_once(__DIR__."/core/angebote.php");
@@ -226,8 +224,6 @@ include_once(__DIR__."/core/include.php");
 
 Core\Einbinden::modulLaden("UI", true, false);
 Core\Einbinden::modulLaden("Kern", true, false);
-
-Kern\DB::log();
 
 $DSH_ALLEMODULE = Core\Einbinden::alleModuleBestimmen();
 
@@ -264,7 +260,6 @@ if(!file_exists("$moduldir/anfragen/ziele.php")) {
 if($_POST["modul"] !== "Core") {
   Core\Einbinden::modulLaden($_POST["modul"], true);
 }
-Kern\DB::datenbankenLaden();
 
 include("$moduldir/anfragen/ziele.php");
 if(!isset($ZIELE[$_POST["ziel"]])) {

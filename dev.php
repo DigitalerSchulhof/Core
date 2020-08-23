@@ -35,7 +35,6 @@ function modulKeimen($modul) {
   $standard = array(
     "seitenPrio"      => 0,
     "speicher"        => "dateien/$modul",
-    "datenbanken"     => array("schulhof"),
     "benötigt"        => [],
     "erweitert"       => []
   );

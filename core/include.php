@@ -53,8 +53,6 @@ class Einbinden {
   		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
 
-    Kern\DB::datenbankenLaden();
-
     if(substr($gefunden, 0, 1) === ">") {
       return self::seiteBestimmen(substr($gefunden, 1));
     }
@@ -80,7 +78,7 @@ class Einbinden {
   * $DSH_URLGANZ    - Mit "/" verbundene URL
   */
   static function seiteFinden($return = false) {
-  	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR, $EINSTELLUNGEN, $DBS, $DBP;
+  	global $DSH_MODULE, $DSH_ALLEMODULE, $aktuellesModul, $DSH_BENUTZER, $DSH_URL, $DSH_URLGANZ, $ROOT, $DIR, $EINSTELLUNGEN, $DBS;
 
     Kern\Check::einwilligung();
     Kern\DB::log();
@@ -151,13 +149,6 @@ class Einbinden {
   			include_once $check;
   		}
   	}
-
-  	// Nötige Datenbankverbindungen bestimmen
-  	foreach($config["datenbanken"] as $db) {
-      if (!in_array($db, $DSH_DATENBANKEN)) {
-        $DSH_DATENBANKEN[] = $db;
-      }
-    }
 
     if($scripts) {
       \Anfrage::addRueck("Scripts", $modul);
