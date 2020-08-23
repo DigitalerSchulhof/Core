@@ -137,7 +137,7 @@ class Einbinden {
   		}
   	}
 
-    $MODUL        = "$DSH_MODULE/$modul";
+    $MODUL        = "$modul";
   	if($laden) {
   		$KLASSEN    = "$DSH_MODULE/$modul/klassen";
   		$geladen    = "$DSH_MODULE/$modul/funktionen/geladen.php";

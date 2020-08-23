@@ -36,15 +36,7 @@ core.seiteLaden = (seite, push) => {
           }
         }
       }
-
-      $("#dshSeite script").each((n) => {
-        var c  = document.createElement("script");
-        c.text = n.innerHTML;
-        for(let i = 0; i < n.attributes.length; i++) {
-          c.setAttribute(n.attributes[i].name, n.attributes[i].value);
-        }
-        n.parentNode.replaceChild(c, n);
-      });
+      core.scriptAn($("#dshSeite"));
 
       // Target von unvollständigen externen Links korrekt setzen
       $("a.dshExtern:not([target])").setAttr("target", "_blank");
@@ -123,6 +115,17 @@ core.navigationAnpassen = (ziel) => {
 }
 
 core.rueck = () => window.history.back();
+
+core.scriptAn = (feld) => {
+  feld.finde("script").each((n) => {
+    var c  = document.createElement("script");
+    c.text = n.innerHTML;
+    for(let i = 0; i < n.attributes.length; i++) {
+      c.setAttribute(n.attributes[i].name, n.attributes[i].value);
+    }
+    n.parentNode.replaceChild(c, n);
+  });
+}
 
 window.addEventListener("load", () => {
   core.seiteladebalken.balken = $("#dshSeiteladenI");
