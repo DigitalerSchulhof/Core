@@ -116,11 +116,22 @@ let $ = (...args) => {
      return eQuery.each(o => o.style[k] = v);
     },
     /**
-     * Gibt den Wert der übergebenen CSS-Property des ersten HTMLElement des eQuery-Objekts (explizit) zurück
-     * @param  {string} property Die CSS-Property
+     * Gibt den Wert der übergebenen CSS-Property/-ies des ersten HTMLElement des eQuery-Objekts (explizit) zurück
+     * @param  {string|string[]} property Die CSS-Property/-ies
      * @return {string}
+     * Wenn <code>typeof property === 'string'</code>: Der Wert der Property
+     * Sonst: Assiziatives Array an [property[n] => css[property[n]]]
      */
-    getCss: (property)    => eQuery.el[0].style[property],
+    getCss: (property)    => {
+      if(typeof property === "string") {
+        return eQuery.el[0].style[property]
+      }
+      let r = [];
+      for(let p of property) {
+        r[p] = eQuery.el[0].style[p];
+      }
+      return r;
+    },
     /**
      * Wechselt eine CSS-Property zwischen zwei Werten ab
      * Beträgt die Property a, so wird diese auf b gesetzt, und anders herum.
@@ -324,7 +335,13 @@ let $ = (...args) => {
         }
       });
       return $(...el);
-    }
+    },
+    /**
+     * Ersetzt das eQuery-Objekt durch das übergebene HTMLElement
+     * @param  {HTMLElement} el HTMLElement, durch welches ersetzt werden soll.
+     * @return {eQuery}         eQuery-Objekt mit den neuen Elementen
+     */
+    ersetzen: (el)          => eQuery.each(o => o.replaceWith(el))
   };
   for(let a of args) {
     // Purer Text oder Sonstiges
