@@ -66,6 +66,9 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
           let r = JSON.parse(anfrage.responseText);
           $("#dshFehlerbox").ausblenden();
           if(r.Erfolg) {
+            if(!Array.isArray(sortieren)) {
+              sortieren = [sortieren];
+            }
             for(let t of sortieren) {
               if($("#"+t).existiert()) {
                 ui.tabelle.sortieren(t);
