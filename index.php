@@ -139,6 +139,7 @@ echo "<html lang=\"de\">";
       echo "<div id=\"dshBlendeI\">";
         $laden = new UI\Fenster("dshLaden", "WIRD ÜBERSCHRIEBEN", "BLA");
         $laden->setSchliessen(false);
+        $laden->setMinimieren(false);
         echo $laden;
       echo "</div>";
     echo "</div>";

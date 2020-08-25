@@ -189,6 +189,7 @@ let $ = (...args) => {
       eQuery.each(o => o.classList.contains(k) || (r = false));
       return r;
     },
+    toggleKlasse: (...k)  => k.forEach(k => eQuery.each(function() {this.setKlasse(!this.hatKlasse(k), k)})),
     /**
      * Fügt hinzu oder entfernt eine oder mehrere CSS-Klassen
      * @param {bool} b Bei true werden die Klassen hinzugefügt, bei false entfernt
