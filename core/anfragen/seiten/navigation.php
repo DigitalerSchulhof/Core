@@ -16,63 +16,61 @@ class NavigationReiter extends UI\Reiter {
 $hauptreiter = new NavigationReiter("dshHauptnavigationReiter");
 
 if($bereich === "Schulhof") {
-  if(!Kern\Check::angemeldet()) {
-    Anfrage::addFehler(-4, true);
-  }
+  if(Kern\Check::angemeldet()) {
+    new Kern\Wurmloch("funktionen/navigation.php", array(),
+    /**
+     * @param UI\Reitersegment $r
+     */
+    function($r) use (&$hauptreiter) {
+      if($r === null) {
+        return;
+      }
+      foreach($r as $seg) {
+        $kopf = $seg->getKopf();
+        $koerper = $seg->getKoerper();
+        $kopf    ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
+        $kopf    ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
+        $koerper ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
+        $koerper ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
+        $hauptreiter[] = $seg;
+      }
+    });
 
-  new Kern\Wurmloch("funktionen/navigation.php", array(),
-  /**
-   * @param UI\Reitersegment $r
-   */
-  function($r) use (&$hauptreiter) {
-    if($r === null) {
-      return;
+    // Verwaltung
+    new Kern\Wurmloch("funktionen/verwaltung/elemente.php");
+
+    $reiter = new UI\Reiter("dshHauptnavigationVerwaltung");
+    foreach(Liste::getKategorien() as $kat) {
+      if(!($kat instanceof \Kern\Verwaltung\Kategorie)) {
+        throw new Exception("Die Kategorie ist ungültig");
+      } else {
+        if(count($kat->getElemente()) > 0) {
+          $kopf     = new UI\Reiterkopf($kat->getTitel());
+          $spalte   = new UI\Spalte("A1");
+          $spalte   ->addKlasse("dshUiOhnePadding");
+          foreach($kat->getElemente() as $elm) {
+            $art = null;
+            if($elm->istFortgeschritten()) {
+              $art = "Warnung";
+            }
+            $knopf = new UI\IconKnopf($elm->getIcon(), $elm->getName(), $art);
+            $knopf ->addFunktion("href", $elm->getZiel());
+            $spalte[] = "$knopf ";
+          }
+          $koerper  = new UI\Reiterkoerper($spalte);
+          $reiter[] = new UI\Reitersegment($kopf, $koerper);
+        }
+      }
     }
-    foreach($r as $seg) {
-      $kopf = $seg->getKopf();
-      $koerper = $seg->getKoerper();
+    if(count($reiter->getReitersegmente()) > 0) {
+      $kopf    = new UI\Reiterkopf("Verwaltung");
+      $koerper = new UI\Reiterkoerper(new UI\Spalte("A1", $reiter));
       $kopf    ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
       $kopf    ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
       $koerper ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
       $koerper ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
-      $hauptreiter[] = $seg;
+      $hauptreiter[] = new UI\Reitersegment($kopf, $koerper);
     }
-  });
-
-  // Verwaltung
-  new Kern\Wurmloch("funktionen/verwaltung/elemente.php");
-
-  $reiter = new UI\Reiter("dshHauptnavigationVerwaltung");
-  foreach(Liste::getKategorien() as $kat) {
-    if(!($kat instanceof \Kern\Verwaltung\Kategorie)) {
-      throw new Exception("Die Kategorie ist ungültig");
-    } else {
-      if(count($kat->getElemente()) > 0) {
-        $kopf     = new UI\Reiterkopf($kat->getTitel());
-        $spalte   = new UI\Spalte("A1");
-        $spalte   ->addKlasse("dshUiOhnePadding");
-        foreach($kat->getElemente() as $elm) {
-          $art = null;
-          if($elm->istFortgeschritten()) {
-            $art = "Warnung";
-          }
-          $knopf = new UI\IconKnopf($elm->getIcon(), $elm->getName(), $art);
-          $knopf ->addFunktion("href", $elm->getZiel());
-          $spalte[] = "$knopf ";
-        }
-        $koerper  = new UI\Reiterkoerper($spalte);
-        $reiter[] = new UI\Reitersegment($kopf, $koerper);
-      }
-    }
-  }
-  if(count($reiter->getReitersegmente()) > 0) {
-    $kopf    = new UI\Reiterkopf("Verwaltung");
-    $koerper = new UI\Reiterkoerper(new UI\Spalte("A1", $reiter));
-    $kopf    ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
-    $kopf    ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
-    $koerper ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
-    $koerper ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
-    $hauptreiter[] = new UI\Reitersegment($kopf, $koerper);
   }
 }
 
