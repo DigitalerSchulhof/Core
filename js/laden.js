@@ -60,6 +60,9 @@ core.seiteLaden = (seite, push) => {
             kopf[0].appendChild(c);
           }
         }
+        if(ladend === 0) {
+          scriptDa();
+        }
       } else {
         // Keine Scripts übergeben
         scriptDa();
