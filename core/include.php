@@ -47,7 +47,7 @@ class Einbinden {
   		$urlganz = "Fehler/404";
   		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
-
+    
   	if(!in_array($modul, array("Kern", "UI")) && Einbinden::modulLaden($modul, true, true, true) === false) {
   		$urlganz = "Fehler/404";
   		$gefunden = "../../Kern/seiten/fehler/404.php";
@@ -109,7 +109,7 @@ class Einbinden {
   * @param bool $script Ob die benötigten Scripts zurückgegeben werden sollen
   * @return bool|array false wenn Modul nicht gefunden, sonst Modulkonfiguration
   */
-  static function modulLaden($modul, $laden = true, $configrueck = true, $scripts = false) {
+  static function modulLaden($modul, $laden = true, $configrueck = false, $scripts = false) {
   	global $DSH_MODULE, $DSH_DATENBANKEN, $MODUL, $EINSTELLUNGEN;
   	if(!file_exists("$DSH_MODULE/$modul/modul.core")) {
   		// Modul gibt's nicht

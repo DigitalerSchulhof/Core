@@ -57,9 +57,6 @@
 
   Anfrage::post("seite");
 
-  Core\Einbinden::modulLaden("UI", true, false);
-  Core\Einbinden::modulLaden("Kern", true, false);
-
   $rueck = [];
 
   $CODE;
