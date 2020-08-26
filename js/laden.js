@@ -43,7 +43,7 @@ core.seiteLaden = (seite, push) => {
         core.seiteladebalken.aus();
       }
 
-      if(rueck.Scripts || rueck.Scripts.length === 0) {
+      if(rueck.Scripts && rueck.Scripts.length > 0) {
         let kopf = $("head");
         var ladend = 0;
         for(let s of rueck.Scripts) {
