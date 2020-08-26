@@ -87,14 +87,12 @@ echo "<html lang=\"de\">";
             $optWebsite->setText("Website");
             $optWebsite->setWert("website");
             $optWebsite->addFunktion("href", "Website");
-            $optWebsite->addFunktion("onhref", "core.navigationAnpassen('website')");
             $optWebsite->addFunktion("onhref", "this.blur()");
 
             $optSchulhof = new UI\Toggleoption("dshKopfnaviSchulhof");
             $optSchulhof->setText("Schulhof");
             $optSchulhof->setWert("schulhof");
             $optSchulhof->addFunktion("href", "Schulhof");
-            $optSchulhof->addFunktion("onhref", "core.navigationAnpassen('schulhof')");
             $optSchulhof->addFunktion("onhref", "this.blur()");
 
             $kopfnavi = new UI\Togglegruppe("dshKopfnavi");
@@ -108,6 +106,7 @@ echo "<html lang=\"de\">";
             echo $kopfnavi;
 					echo "</li>";
 				echo "</ul>";
+        echo "<div id=\"dshHauptnavigation\"></div>";
 				echo "<div class=\"dshClear\"></div>";
 			echo "</div>";
 		echo "</div>";

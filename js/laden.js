@@ -6,7 +6,7 @@ core.seiteLaden = (seite, push) => {
   if(push === undefined) {
     push = true;
   }
-
+  core.navigationAnpassen(seite.split("/")[0]);
   ui.laden.aus();
   core.seiteladebalken.an();
   core.seiteladebalken.seite = seite;
@@ -125,11 +125,15 @@ core.seiteladebalken = {
   }
 }
 
-
+core.bereich = "";
 core.navigationAnpassen = (ziel) => {
-  if(ziel === $("#dshKopfnavi").getWert()) {
+  if(ziel === core.bereich) {
     return;
   }
+  core.bereich = ziel;
+  core.ajax("Core", 1, null, {bereich: ziel}).then(r => {
+    $("#dshHauptnavigation").setHTML(r.Navigation);
+  });
 }
 
 core.rueck = () => window.history.back();
