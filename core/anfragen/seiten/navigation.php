@@ -20,6 +20,25 @@ if($bereich === "Schulhof") {
     Anfrage::addFehler(-4, true);
   }
 
+  new Kern\Wurmloch("funktionen/navigation.php", array(),
+  /**
+   * @param UI\Reitersegment $r
+   */
+  function($r) use (&$hauptreiter) {
+    if($r === null) {
+      return;
+    }
+    foreach($r as $seg) {
+      $kopf = $seg->getKopf();
+      $koerper = $seg->getKoerper();
+      $kopf    ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
+      $kopf    ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
+      $koerper ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
+      $koerper ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
+      $hauptreiter[] = $seg;
+    }
+  });
+
   // Verwaltung
   new Kern\Wurmloch("funktionen/verwaltung/elemente.php");
 
