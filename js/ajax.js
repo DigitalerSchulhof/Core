@@ -65,43 +65,45 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
         var r = null;
         try {
           r = JSON.parse(anfrage.responseText);
+          try {
+            $("#dshFehlerbox").ausblenden();
+            if(r.Erfolg) {
+              if(!Array.isArray(sortieren)) {
+                sortieren = [sortieren];
+              }
+              for(let t of sortieren) {
+                if($("#"+t).existiert()) {
+                  ui.tabelle.sortieren(t);
+                }
+              }
+              if(meldung !== null) {
+                if(Number.isInteger(meldung)) {
+                  ui.laden.meldung(modul, meldung);
+                } else {
+                  ui.laden.meldung(meldung[0], meldung[1]);
+                }
+              }
+              erfolg(r);
+            } else {
+              console.error("Fehler: ", r.Fehler);
+              core.ajax("Kern", 30, ["Fehler werden geladen", "Bitte warten"], {fehler: r.Fehler}).then((r) => ui.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
+              fehler(r);
+            }
+          } catch(err) {
+            console.error(err);
+            $("#dshMeldungInitial").ausblenden();
+            $("#dshFehlerbox").einblenden();
+            $("#dshFehlerbox pre").setText("Bei der Anfrage ist ein unbekannter Fehler aufgetreten!");
+            ui.laden.aus();
+            core.seiteladebalken.aus();
+          }
         } catch(err) {
           console.error("Kein gültiges JOSN: ", anfrage.responseText);
-        }
-        try {
-          if(r === null) {
-            throw new Exception();
-          }
-          $("#dshFehlerbox").ausblenden();
-          if(r.Erfolg) {
-            if(!Array.isArray(sortieren)) {
-              sortieren = [sortieren];
-            }
-            for(let t of sortieren) {
-              if($("#"+t).existiert()) {
-                ui.tabelle.sortieren(t);
-              }
-            }
-            if(meldung !== null) {
-              if(Number.isInteger(meldung)) {
-                ui.laden.meldung(modul, meldung);
-              } else {
-                ui.laden.meldung(meldung[0], meldung[1]);
-              }
-            }
-            erfolg(r);
-          } else {
-            console.error("Fehler: ", r.Fehler);
-            core.ajax("Kern", 30, ["Fehler werden geladen", "Bitte warten"], {fehler: r.Fehler}).then((r) => ui.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
-            fehler(r);
-          }
-        } catch(err) {
           $("#dshMeldungInitial").ausblenden();
           $("#dshFehlerbox").einblenden();
           $("#dshFehlerbox pre").setText("Bei der Anfrage ist ein unbekannter Fehler aufgetreten!");
           let meld = anfrage.responseText;
           $("#dshFehlerbox pre").setText(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
-          // @TODO: Remove
           ui.laden.aus();
           core.seiteladebalken.aus();
         }
