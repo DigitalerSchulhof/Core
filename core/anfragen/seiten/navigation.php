@@ -55,14 +55,6 @@ if($bereich === "Schulhof") {
     $koerper ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
     $hauptreiter[] = new UI\Reitersegment($kopf, $koerper);
   }
-
-  $kopf    = new UI\Reiterkopf("Bla");
-  $koerper = new UI\Reiterkoerper(new UI\Spalte("A1", new UI\InhaltElement("hi")));
-  $kopf    ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
-  $kopf    ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
-  $koerper ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
-  $koerper ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
-  $hauptreiter[] = new UI\Reitersegment($kopf, $koerper);
 }
 
 Anfrage::setRueck("Navigation", (string) $hauptreiter);
