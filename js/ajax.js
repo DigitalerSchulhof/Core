@@ -62,8 +62,16 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
 		var anfrage = new XMLHttpRequest();
 		anfrage.onreadystatechange = () => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
+        var r = null;
         try {
-          let r = JSON.parse(anfrage.responseText);
+          r = JSON.parse(anfrage.responseText);
+        } catch(err) {
+          console.error("Kein gültiges JOSN: ", anfrage.responseText);
+        }
+        try {
+          if(r === null) {
+            throw new Exception();
+          }
           $("#dshFehlerbox").ausblenden();
           if(r.Erfolg) {
             if(!Array.isArray(sortieren)) {
@@ -88,11 +96,12 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
             fehler(r);
           }
         } catch(err) {
-          console.error("Kein gültiges JOSN: ", anfrage.responseText);
           $("#dshMeldungInitial").ausblenden();
           $("#dshFehlerbox").einblenden();
+          $("#dshFehlerbox pre").setText("Bei der Anfrage ist ein unbekannter Fehler aufgetreten!");
           let meld = anfrage.responseText;
           $("#dshFehlerbox pre").setText(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
+          // @TODO: Remove
           ui.laden.aus();
           core.seiteladebalken.aus();
         }
