@@ -17,7 +17,6 @@ core.seiteLaden = (seite, push) => {
     if(rueck.Weiterleitung === true) {
       core.seiteLaden(rueck.Ziel, false);
     }
-    core.seiteladebalken.aus();
     if(push) {
       window.history.replaceState({}, "Digitaler Schulhof - "+rueck["Titel"], seite);
     }
@@ -26,29 +25,45 @@ core.seiteLaden = (seite, push) => {
       $("#dshSeite").setHTML(rueck.Code);
       $("#dshMeldungInitial", "#dshFehlerbox").ausblenden();
 
-      if(rueck.Scripts) {
+
+      var scriptDa = () => {
+        core.scriptAn($("#dshSeite"));
+
+        // Target von unvollständigen externen Links korrekt setzen
+        $("a.dshExtern:not([target])").setAttr("target", "_blank");
+
+        if($(".autofocus").existiert()) {
+          $(".autofocus")[0].focus();
+          if($(".autofocus").length > 1) {
+            console.warn("Mehr als ein .autofocus gefunden!");
+          }
+        }
+        window.dispatchEvent(new Event("dshSeiteGeladen"));
+        window.dispatchEvent(new Event("resize"));
+        core.seiteladebalken.aus();
+      }
+
+      if(rueck.Scripts || rueck.Scripts.length === 0) {
         let kopf = $("head");
+        var ladend = 0;
         for(let s of rueck.Scripts) {
           if(!$("head script[src='js/modul.php?modul="+s+"']").existiert()) {
+            ladend++;
             var c = document.createElement("script");
             c.setAttribute("src", "js/modul.php?modul="+s);
+            c.onload = () => {
+              if(--ladend == 0) {
+                // Alle Script geladen
+                scriptDa();
+              }
+            }
             kopf[0].appendChild(c);
           }
         }
+      } else {
+        // Keine Scripts übergeben
+        scriptDa();
       }
-      core.scriptAn($("#dshSeite"));
-
-      // Target von unvollständigen externen Links korrekt setzen
-      $("a.dshExtern:not([target])").setAttr("target", "_blank");
-
-      if($(".autofocus").existiert()) {
-        $(".autofocus")[0].focus();
-        if($(".autofocus").length > 1) {
-          console.warn("Mehr als ein .autofocus gefunden!");
-        }
-      }
-      window.dispatchEvent(new Event("dshSeiteGeladen"));
-      window.dispatchEvent(new Event("resize"));
     }
   });
 }
