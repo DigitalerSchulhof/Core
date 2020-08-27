@@ -172,7 +172,7 @@ class Anfrage {
   /**
    * Lädt die gegebenen Werte von $_POST in die entsprechenden Variablen
    * @param  boolean|string $fehler Wenn <code>true</code> oder <code>false</code>: Ob ein Fehler auftritt, wenn der Wert nicht übergeben wurde. Ansonsten: Erster Wert von ...$vars
-   * @param  string ...$var Werte
+   * @param  string ...$vars Werte
    */
   public static function post($fehler = true, ...$vars) {
     if(($fehler === true || $fehler === false) && count($vars) === 0) {

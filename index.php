@@ -33,6 +33,7 @@ echo "<html lang=\"de\">";
 	echo "<head>";
     echo "<base href=\"{$EINSTELLUNGEN["Base"]}\">";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
+    echo "<meta charset=\"UTF-8\">";
 		echo style("css/layout.css");
 		if(isset($_COOKIE["dunkelmodus"])) {
 			if($_COOKIE["dunkelmodus"] == "ja") {

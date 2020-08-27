@@ -1,12 +1,14 @@
 /**
  * Lädt eine Seite asynchron nach
- * @param  {string} seite URL
+ * @param {string} seite URL
+ * @param {bool} push
+ * @param {bool} navigation Ob die Navigation geändert werden soll
  */
-core.seiteLaden = (seite, push) => {
+core.seiteLaden = (seite, push, navigation) => {
   if(push === undefined) {
     push = true;
   }
-  core.navigationAnpassen(seite.split("/")[0]);
+  core.navigationAnpassen(seite.split("/")[0], navigation);
   ui.laden.aus();
   core.seiteladebalken.an();
   core.seiteladebalken.seite = seite;
@@ -126,9 +128,12 @@ core.seiteladebalken = {
 }
 
 core.bereich = "";
-core.navigationAnpassen = (ziel) => {
-  if(ziel === core.bereich) {
+core.navigationAnpassen = (ziel, force) => {
+  if(!force && ziel === core.bereich) {
     return;
+  }
+  if(ziel === null) {
+    ziel = core.bereich;
   }
   core.bereich = ziel;
   core.ajax("Core", 1, null, {bereich: ziel}).then(r => {

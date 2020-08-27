@@ -63,8 +63,12 @@ if($bereich === "Schulhof") {
       }
     }
     if(count($reiter->getReitersegmente()) > 0) {
-      $kopf    = new UI\Reiterkopf("Verwaltung");
-      $koerper = new UI\Reiterkoerper(new UI\Spalte("A1", $reiter));
+      $kopf    = new UI\Reiterkopf("Verwaltung", new UI\Icon(UI\Konstanten::VERWALTUNGSBEREICH));
+      $direkt  = new UI\IconKnopf(new UI\Icon(UI\Konstanten::VERWALTUNGSBEREICH), "Verwaltungsübersicht");
+      $direkt  ->addFunktion("href", "Schulhof/Verwaltung");
+      $koerper = new UI\Reiterkoerper(new UI\Spalte("A1", $reiter, $direkt));
+      $kopf    ->addFunktion("href",         "Schulhof/Verwaltung");
+      $kopf    ->setTag("a");
       $kopf    ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
       $kopf    ->addFunktion("onmouseleave", "kern.navigation.ausblenden(this)");
       $koerper ->addFunktion("onmouseenter", "kern.navigation.einblenden(this)");
@@ -73,6 +77,8 @@ if($bereich === "Schulhof") {
     }
   }
 }
+
+$hauptreiter->addFunktion("onclick", "kern.navigation.ausblenden(true, event)");
 
 Anfrage::setRueck("Navigation", (string) $hauptreiter);
 
