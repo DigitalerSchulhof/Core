@@ -44,8 +44,8 @@
       einbinden("Fehler/404");
       return;
     }
-    $DSH_TITEL = $SEITE->getTitel();
     $CODE = (string) $SEITE;
+    $DSH_TITEL = $SEITE->getTitel();
     if (isset($DSH_BENUTZER) && $DSH_BENUTZER->angemeldet()) {
       $CODE .= "<script>";
       $CODE .=  "kern.schulhof.nutzerkonto.aktivitaetsanzeige.limit = {$DSH_BENUTZER->getInaktivitaetszeit()};";

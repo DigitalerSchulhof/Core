@@ -4,7 +4,12 @@
  * @param {bool} push
  * @param {bool} navigation Ob die Navigation geändert werden soll
  */
+core.ladendAnfrage = null;
 core.seiteLaden = (seite, push, navigation) => {
+  if(core.ladendAnfrage !== null) {
+    core.ladendAnfrage.abort();
+    core.ladendAnfrage = null;
+  }
   if(push === undefined) {
     push = true;
   }
@@ -22,7 +27,7 @@ core.seiteLaden = (seite, push, navigation) => {
     if(push) {
       window.history.replaceState({}, "Digitaler Schulhof - "+rueck["Titel"], seite);
     }
-    document.title = "Digitaler Schulhof - " + rueck["Titel"];
+    document.title = rueck["Titel"];
     if(rueck.Code || rueck.Code === "") {
       $("#dshSeite").setHTML(rueck.Code);
       $("#dshMeldungInitial", "#dshFehlerbox").ausblenden();
@@ -71,6 +76,7 @@ core.seiteLaden = (seite, push, navigation) => {
       }
     }
   });
+  core.ladendAnfrage = core.ajaxanfrage;
 }
 
 core.neuladen = () => core.seiteLaden(document.location.pathname.substring($("base").getAttr("href").length), false);

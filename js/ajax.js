@@ -18,6 +18,7 @@
  * @param {string[]} sortieren=[] Array an Tabellenids, welche nach der Anfrage neu sortiert werden sollen.
  * @param {string|boolean} [host=""] Das Netz, in das die Anfrage geht
  */
+core.ajaxanfrage = null;
 core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
 	host    = host    || "";
   if (meldung === undefined) {
@@ -62,6 +63,7 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
 		var anfrage = new XMLHttpRequest();
 		anfrage.onreadystatechange = () => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
+        core.ajaxanfrage = null;
         var r = null;
         try {
           r = JSON.parse(anfrage.responseText);
@@ -111,6 +113,7 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
 		};
 		anfrage.open("POST",host+"anfrage.php", true);
 		anfrage.send(daten);
+    core.ajaxanfrage =  anfrage;
 	});
 }
 
