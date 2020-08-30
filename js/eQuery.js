@@ -48,7 +48,7 @@ let $ = (...args) => {
      * Gibt den innerHTML-Code des ersten HTMLElements des eQuery-Objekts (explizit) zurück
      * @return {string}
      */
-    getHTML: ()           => eQuery.el[0].innerHTML,
+    getHTML: ()           => (eQuery.el[0] || {innerHTML: undefined}).innerHTML,
     /**
      * Setzt den innerHTML-Code
      * @param {string} html Der Code
@@ -59,7 +59,7 @@ let $ = (...args) => {
      * Gibt den innerText-Text des ersten HTMLElements des eQuery-Objekts (explizit) zurück
      * @return {string}
      */
-    getText: ()           => eQuery.el[0].innerText,
+    getText: ()           => (eQuery.el[0] || {innerText: undefined}).innerText,
     /**
      * Setzt den innerText-Text
      * @param {string} text Der Text
@@ -71,13 +71,13 @@ let $ = (...args) => {
      * @param  {string} attr Das Attribute
      * @return {bool}
      */
-    hatAttr: (attr)       => eQuery.el[0].hasAttribute(attr),
+    hatAttr: (attr)       => (eQuery.el[0] || {hasAttribute: _ => undefined}).hasAttribute(attr),
     /**
      * Gibt den Wert des übergebenen Attributes des ersten HTMLElements des eQuery-Objekts (explizit) zurück
      * @param  {string} attr Das Attribute
      * @return {*}
      */
-    getAttr: (attr)       => eQuery.el[0].getAttribute(attr),
+    getAttr: (attr)       => (eQuery.el[0] || {getAttribute: _ => undefined}).getAttribute(attr),
     /**
      * Setzt das übergebene Attribute auf den übergebenen Wert
      * @param {string} attr Das Attribut
@@ -123,6 +123,9 @@ let $ = (...args) => {
      * Sonst: Assiziatives Array an [property[n] => css[property[n]]]
      */
     getCss: (property)    => {
+      if(!eQuery.el.length) {
+        return undefined;
+      }
       if(typeof property === "string") {
         return eQuery.el[0].style[property]
       }
@@ -161,12 +164,12 @@ let $ = (...args) => {
      * Gibt den value-Wert des ersten HTMLElements des eQuery-Objekts (explizit) zurück
      * @return {*}
      */
-    getWert: ()           => (eQuery.el[0] || {value: null}).value,
+    getWert: ()           => (eQuery.el[0] || {value: undefined}).value,
     /**
      * Gibt den Inhalt des Editors zurück
      * @return {string|null}
      */
-    getEditor: ()           => (eQuery.el[0] || {value: null}).value,
+    getEditor: ()           => (eQuery.el[0] || {value: undefined}).value,
     /**
      * Entfernt eine oder mehrere CSS-Klassen vom eQuery-Objekt
      * @param  {...string} k Die zu entfernenden Klassen
@@ -185,6 +188,9 @@ let $ = (...args) => {
      * @return {bool}
      */
     hatKlasse: (k)        => {
+      if(!eQuery.el.length) {
+        return undefined;
+      }
       let r = true;
       eQuery.each(o => o.classList.contains(k) || (r = false));
       return r;
@@ -207,29 +213,29 @@ let $ = (...args) => {
     * @param {string} s Der zu überprüfende Selektor
     * @return {bool}
     */
-    ist: (s)              => eQuery.el[0].matches(s),
+    ist: (s)              => (eQuery.el[0] || {matches: _ => undefined}).matches(s),
     /**
      * Prüft, ob das erste HTMLElement des eQuery-Objekts (explizit) dem übergebenen HTMLElement entspricht
      * @param  {HTMLElement} e Das zu prüfende HTMLElement
      * @return {bool}
      */
-    istElement: (e)       => eQuery.el[0].isSameNode(e),
+    istElement: (e)       => (eQuery.el[0] || {isSameNode: _ => undefined}).isSameNode(e),
     /**
      * Gibt das Elternteil zurück
      * @return {eQuery} eQuery-Objekt (explizit) des Elternteils
      */
-    parent: ()            => $(eQuery.el[0].parentNode),
+    parent: ()            => $((eQuery.el[0] || {parentNode: undefined}).parentNode),
     /**
      * Gibt das nächste Elternteil, das dem übergebenen Selektor entspricht, zurück
      * @param  {string} s Der zu prüfende Selektor
      * @return {eQuery}   eQuery-Objekt (explizit) des nächsten passenden Elternteils
      */
-    parentSelector: (s)   => $(eQuery.el[0].parentNode.closest(s)),
+    parentSelector: (s)   => $(((eQuery.el[0] || {parentNode: undefined}).parentNode || {closest: _ => undefined}).closest(s)),
     /**
      * Gibt alle Kinder des ersten HTMLElements des eQuery-Objekts (explizit) zurück
      * @return {eQuery}
      */
-    kinder: ()            => $(...eQuery.el[0].children),
+    kinder: ()            => $(...(eQuery.el[0] || {children: [undefined]}).children),
     /**
      * Gibt alle direkten Kinder des eQuery-Objekts zurück, welche dem übergebenen Selektor entsprechen
      * @param  {string} s Der zu überprüfende Selektor
@@ -260,19 +266,19 @@ let $ = (...args) => {
      * Gibt das vorherige Element zurück
      * @return {eQuery} eQuery-Objekt (explizit) des vorherigen Elements
      */
-    siblingVor: ()        => $(eQuery.el[0].previousSibling),
+    siblingVor: ()        => $((eQuery.el[0] || {previousSibling: undefined}).previousSibling),
     /**
      * Gibt das nächste Element zurück
      * @return {eQuery} eQuery-Objekt (explizit) des nächsten Elements
      */
-    siblingNach: ()       => $(eQuery.el[0].nextSibling),
+    siblingNach: ()       => $((eQuery.el[0] || {nextSibling: undefined}).nextSibling),
     /**
      * Gibt alle Geschwisterelemente zurück
      * @return {eQuery} eQuery-Objekt (explizit) aller Geschwisterelemente
      */
     siblings: ()          => {
       let l = [];
-      eQuery.each(o => l.push(...$(...o.parentNode.children).filter(ob => !ob.istElement(o))));
+      eQuery.each(o => l.push(...$(...(o.parentNode || {children: []}).children).filter(ob => !ob.istElement(o))));
       return $(...l);
     },
     /**
@@ -353,6 +359,8 @@ let $ = (...args) => {
       eQuery.el.push(a);
     } else if(typeof a === "string") {
       eQuery.el.push(...document.querySelectorAll(a));
+    } else if(a === undefined) {
+      // Passiert...
     } else {
       console.error("Ungültiger eQuery-Parameter: ", a);
     }
