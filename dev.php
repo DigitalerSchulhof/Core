@@ -97,7 +97,7 @@ function modulKeimen($modul) {
   // Styles keimen lassen
   $styledir = "$DSH_MODULE/$modul/styles";
   if(is_dir($styledir)) {
-    $anfrage = $dbs->anfrage("SELECT s.bezeichnung, IFNULL(s.wert_h, ah.wert_h), IFNULL(s.wert_d, ad.wert_d) FROM kern_styles as s LEFT JOIN dsh_module as m ON m.id = s.modul OR s.modul = 0 LEFT JOIN kern_styles as ah ON ah.id = s.alias_h LEFT JOIN kern_styles as ad ON ad.id = s.alias_d WHERE m.name = ? ORDER BY s.modul ASC", "s", $modul);
+    $anfrage = $dbs->anfrage("SELECT s.bezeichnung, IFNULL(s.wert_h, ah.wert_h), IFNULL(s.wert_d, ad.wert_d) FROM kern_styles as s JOIN dsh_module as m ON m.id = s.modul LEFT JOIN kern_styles as ah ON ah.id = s.alias_h LEFT JOIN kern_styles as ad ON ad.id = s.alias_d WHERE m.name = ? OR m.id = 0 ORDER BY s.modul ASC", "s", $modul);
     $styles = [];
     while($anfrage->werte($bezeichnung, $wert_h, $wert_d)) {
       $styles[$bezeichnung] = array($wert_h, $wert_d);

@@ -126,7 +126,7 @@ var modulname = {
 ~~~
 
 #### Funktionen<span id="StyleguideJavascriptFunktionen"></span>
-Funktionen sind im Sinne der Objektorientierung immer einem Javascript-Objekt eines Moduls zugeordnet. Funktionen werden als *Arrow functions* (`() => {}`) definiert (siehe: Codebeispiel Allgemeines), sofern dies nicht wegen fehlender Eigenschaften, etwa `this` in `eQuery.each()` nicht möglich ist. Wenn möglich, sind diese inline zu schreiben (`(x) => {return x**2;}` wird zu `(x) => x**2`)
+Funktionen sind im Sinne der Objektorientierung immer einem Javascript-Objekt eines Moduls zugeordnet. Funktionen werden als *Arrow functions* (`_ => {}`) definiert (siehe: Codebeispiel Allgemeines), sofern dies nicht wegen fehlender Eigenschaften, etwa `this` in `eQuery.each()` nicht möglich ist. Wenn möglich, sind diese inline zu schreiben (`(x) => {return x**2;}` wird zu `(x) => x**2`)
 
 #### Verzweigungen und Schleifen<span id="StyleguideJavascriptVerzweigungenschleifen"></span>
 Es gelten die gleichen Angaben wie bei [PHP](#StyleguidePhpVerzweigungenschleifen)

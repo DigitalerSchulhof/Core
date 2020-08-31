@@ -33,7 +33,7 @@ core.seiteLaden = (seite, push, navigation) => {
       $("#dshMeldungInitial", "#dshFehlerbox").ausblenden();
 
 
-      var scriptDa = () => {
+      var scriptDa = _ => {
         core.scriptAn($("#dshSeite"));
 
         // Target von unvollständigen externen Links korrekt setzen
@@ -58,7 +58,7 @@ core.seiteLaden = (seite, push, navigation) => {
             ladend++;
             var c = document.createElement("script");
             c.setAttribute("src", "js/modul.php?modul="+s);
-            c.onload = () => {
+            c.onload = _ => {
               if(--ladend == 0) {
                 // Alle Script geladen
                 scriptDa();
@@ -79,14 +79,14 @@ core.seiteLaden = (seite, push, navigation) => {
   core.ladendAnfrage = core.ajaxanfrage;
 }
 
-core.neuladen = () => core.seiteLaden(document.location.pathname.substring($("base").getAttr("href").length), false);
+core.neuladen = _ => core.seiteLaden(document.location.pathname.substring($("base").getAttr("href").length), false);
 
 core.seiteladebalken = {
   balken: $("#dshSeiteladenI"),
   fortschritt: 0,
   timeout: null,
   seite: null,
-  an: () => {
+  an: _ => {
     let b = core.seiteladebalken.balken;
 
     b.addKlasse("dshNoTransition");
@@ -98,12 +98,12 @@ core.seiteladebalken = {
 
     clearTimeout(core.seiteladebalken.timeout);
 
-    core.seiteladebalken.timeout = setTimeout(() => {
+    core.seiteladebalken.timeout = setTimeout(_ => {
       core.seiteladebalken.fortschritt += 12;
       core.seiteladebalken.update();
     }, 10);
   },
-  update: () => {
+  update: _ => {
     let b = core.seiteladebalken.balken;
 
     if(core.seiteladebalken.fortschritt > 200) {
@@ -111,18 +111,18 @@ core.seiteladebalken = {
     }
 
     b.setCss("width", Math.min(core.seiteladebalken.fortschritt, 92)+"%");
-    core.seiteladebalken.timeout = setTimeout(() => {
+    core.seiteladebalken.timeout = setTimeout(_ => {
       core.seiteladebalken.fortschritt += Math.floor(Math.random() * 4);
       core.seiteladebalken.update();
     }, Math.floor(100 + (Math.random()*200)));
   },
-  aus: () => {
+  aus: _ => {
     let b = core.seiteladebalken.balken;
     core.seiteladebalken.fortschritt = 100;
     b.setCss("width", core.seiteladebalken.fortschritt+"%");
-    setTimeout(() => {
+    setTimeout(_ => {
       b.setCss("opacity", "0");
-      setTimeout(() => {
+      setTimeout(_ => {
         b.addKlasse("dshNoTransition");
         b.setCss("width", "0%");
         b.removeKlasse("dshNoTransition");
@@ -147,7 +147,7 @@ core.navigationAnpassen = (ziel, force) => {
   });
 }
 
-core.rueck = () => window.history.back();
+core.rueck = _ => window.history.back();
 
 core.scriptAn = (feld) => {
   feld.finde("script").each((n) => {
@@ -160,7 +160,7 @@ core.scriptAn = (feld) => {
   });
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("load", _ => {
   core.seiteladebalken.balken = $("#dshSeiteladenI");
 });
 

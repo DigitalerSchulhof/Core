@@ -61,7 +61,7 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
 
   return new Promise((erfolg, fehler) => {
 		var anfrage = new XMLHttpRequest();
-		anfrage.onreadystatechange = () => {
+		anfrage.onreadystatechange = _ => {
 			if (anfrage.readyState == 4 && anfrage.status == 200) {
         core.ajaxanfrage = null;
         var r = null;
