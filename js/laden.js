@@ -133,7 +133,7 @@ core.seiteladebalken = {
   }
 }
 
-core.bereich = "";
+core.bereich = null;
 core.navigationAnpassen = (ziel, force) => {
   if(!force && ziel === core.bereich) {
     return;

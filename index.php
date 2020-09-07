@@ -56,7 +56,7 @@ echo "<html lang=\"de\">";
 		echo modulJs("UI");
     echo "<title>Digitaler Schulhof - Seite wird geladen...</title>";
 	echo "</head>";
-	echo "<body class=\"dshSeiteP\">";
+	echo "<body>";
     echo "<div id=\"dshSeiteladenO\"><div id=\"dshSeiteladenI\"></div></div>";
 		echo "<div id=\"dshKopfzeileO\">";
 			echo "<div id=\"dshKopfzeileI\">";
@@ -87,7 +87,7 @@ echo "<html lang=\"de\">";
             $optWebsite = new UI\Toggleoption("dshKopfnaviWebsite");
             $optWebsite->setText("Website");
             $optWebsite->setWert("website");
-            $optWebsite->addFunktion("href", "Website");
+            $optWebsite->addFunktion("href", "");
             $optWebsite->addFunktion("onhref", "this.blur()");
 
             $optSchulhof = new UI\Toggleoption("dshKopfnaviSchulhof");
@@ -107,7 +107,15 @@ echo "<html lang=\"de\">";
             echo $kopfnavi;
 					echo "</li>";
 				echo "</ul>";
-        echo "<div id=\"dshHauptnavigation\"></div>";
+        echo "<div id=\"dshHauptnavigation\">";
+        class NavigationReiter extends UI\Reiter {
+          public function __toString() : string {
+            $this->gewaehlt = -1;
+            return parent::__toString();
+          }
+        }
+        echo (new NavigationReiter("dshHauptnavigationReiter"))->addReitersegment(new UI\Reitersegment(new UI\Reiterkopf("Navigation wird geladen", new UI\Icon("fas fa-clock"))));
+        echo "</div>";
 				echo "<div class=\"dshClear\"></div>";
 			echo "</div>";
 		echo "</div>";
