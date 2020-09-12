@@ -13,13 +13,16 @@
 
   Einbinden::modulLaden("UI", true, false);
   Einbinden::modulLaden("Kern", true, false);
+  
+  $DBS->anfrage("SELECT wert_h FROM kern_styles WHERE bezeichnung = 'akzent1'")
+        ->werte($thema1);
 ?>
 {
   "name": "Digitaler Schulhof",
   "short_name": "DSH",
-  "start_url": "/Schulhof",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "<?php $DBS->anfrage("SELECT wert_h FROM kern_styles WHERE bezeichnung = 'akzent1'")->werte($thema1); echo $thema1; ?>",
+  "background_color": "<?php echo $thema1; ?>",
   "description": "Der Digitaler Schulhof des @TODO: Name.",
   "icons": [{
     "src": "dateien/schulspezifisch/favicon/48.png",
@@ -55,5 +58,38 @@
     "platform": "itunes",
     "url": "https://apps.apple.com/de/app/digitaler-schulhof/id1500912100",
     "id": "1500912100"
+  }],
+  "shortcuts": [{
+    "name": "Website öffnen",
+    "short_name": "Website",
+    "description": "Öffnet direkt die Website",
+    "url": "/",
+    "icons": [{
+      "src": "dateien/schulspezifisch/favicon/96.png",
+      "sizes": "96x96",
+      "purpose": "any"
+    }]
+  },
+  {
+    "name": "Schulhof öffnen",
+    "short_name": "Schulhof",
+    "description": "Öffnet direkt den Schulhof",
+    "url": "/Schulhof",
+    "icons": [{
+      "src": "dateien/schulspezifisch/favicon/96.png",
+      "sizes": "96x96",
+      "purpose": "any"
+    }]
+  },
+  {
+    "name": "Stundenplan öffnen",
+    "short_name": "Stundenplan",
+    "description": "Öffnet direkt den Stundenplan",
+    "url": "/Schulhof/Stundenplan",
+    "icons": [{
+      "src": "dateien/schulspezifisch/favicon/96.png",
+      "sizes": "96x96",
+      "purpose": "any"
+    }]
   }]
 }

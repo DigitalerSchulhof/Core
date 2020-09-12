@@ -22,7 +22,9 @@ core.a2hs = {
   install: _ => {
     let box = $("#dshPWAInstallation");
     core.a2hs.prompt.prompt();
+    box.addKlasse("dshUiKnopfLeer");
     core.a2hs.prompt.userChoice.then(r => {
+      box.removeKlasse("dshUiKnopfLeer");
       if (r.outcome === 'accepted') {
         console.log('A2HS akzeptiert');
         box.ausblenden();
