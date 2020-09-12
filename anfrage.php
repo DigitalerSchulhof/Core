@@ -14,7 +14,7 @@ include_once(__DIR__."/yaml.php");
 use Async\YAML;
 
 /*
- * Eine Anfrage gibt (außer im Falle eines Fehlers) immer JSON-Code zurück. Kommt ungültiges JSON zurück, wird, sofern dies nicht explizit verlangt wird, eine Fehlermeldung direkt an DSH übermittelt.
+ * Eine Anfrage gibt (außer im Falle eines Fehlers lol) immer JSON-Code zurück. Kommt ungültiges JSON zurück, wird, sofern dies nicht explizit verlangt wird, eine Fehlermeldung direkt an DSH übermittelt.
  *
  * JSON-Rückgaben enthalten das Feld {Erfolg: }, welches angibt, ob die Anfrage erfolgreich gewesen ist, oder nicht.
  * Ist die Anfrage nicht erfolgreich gewesen ({Erfolg: false}), ist das Feld {Fehler: } enthalten, welches ein Array an Fehlercodes und deren zugehörigen Modul entfält. Beispiel: {Erfolg: false, Fehler: [["Core", -3], ["Kern", 4], ["Kern", 6]]}
@@ -155,7 +155,7 @@ class Anfrage {
    * Gibt das Resultat der Anfrage aus und beendet das Skript.
    */
   public static function ausgeben() {
-    echo json_encode(array_merge(array("Erfolg" => self::$ERFOLG), self::$RUECK));
+    echo json_encode(array_merge(["Erfolg" => self::$ERFOLG], self::$RUECK));
     die();
   }
 

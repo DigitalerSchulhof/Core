@@ -55,6 +55,7 @@ echo "<html lang=\"de\">";
 		echo modulJs("Kern");
 		echo modulJs("UI");
     echo "<title>Digitaler Schulhof - Seite wird geladen...</title>";
+    echo "<link rel=\"manifest\" href=\"/man.php\">";
 	echo "</head>";
 	echo "<body>";
     echo "<div id=\"dshSeiteladenO\"><div id=\"dshSeiteladenI\"></div></div>";
