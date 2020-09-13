@@ -75,6 +75,7 @@ if($bereich === "Schulhof") {
     }
   }
 } else {
+  Core\Einbinden::modulLaden("Website");
   if(!$DBS->existiert("website_sprachen", "a2 = [?]", "s", $bereich)) {
     $bereich = "DE";
   }
@@ -95,21 +96,28 @@ if($bereich === "Schulhof") {
     $pfad     = Kern\Texttrafo::text2url($pfad);
     $kopf     = new UI\Reiterkopf($bezeichnung);
     $spalte   = new UI\Spalte();
-    $kopf     ->addFunktion("href", "$sprache$pfad");
-    $kopf     ->setTag("a");
+    if ((Kern\Check::angemeldet() && $DSH_BENUTZER->hatRecht("website.inhalte.elemente.[|anlegen,bearbeiten,löschen]")) || Website\Seite::sichtbar($id, $bereich)) {
+      $kopf     ->addFunktion("href", "$sprache$pfad");
+      $kopf     ->setTag("a");
+    }
     // Unterseiten laden
-    $anff = $DBS->anfrage("SELECT {(SELECT COALESCE(wsd.pfad, COALESCE(wsd.bezeichnung, (SELECT COALESCE(wsds.pfad, wsds.bezeichnung) FROM website_seitendaten as wsds WHERE wsds.seite = ws.id AND wsds.sprache = (SELECT id FROM website_sprachen as wsp WHERE wsp.a2 = (SELECT wert FROM website_einstellungen WHERE id = 0))))))}, {(SELECT COALESCE(wsd.bezeichnung, (SELECT wsds.bezeichnung FROM website_seitendaten as wsds WHERE wsds.seite = ws.id AND wsds.sprache = (SELECT id FROM website_sprachen as wsp WHERE wsp.a2 = (SELECT wert FROM website_einstellungen WHERE id = 0)))))} FROM website_seiten as ws JOIN website_sprachen as wsp LEFT JOIN website_seitendaten as wsd ON wsd.seite = ws.id AND wsd.sprache = wsp.id WHERE wsp.id = (SELECT id FROM website_sprachen WHERE a2 = [?]) AND ws.zugehoerig = ?$sqlStatus", "si", $bereich, $id);
-    while($anff->werte($pf, $bez)) {
-      $direkt  = new UI\IconKnopf(new UI\Icon("fas fa-globe"), $bez);
-      $direkt  ->addFunktion("href", "$sprache$pfad/$pf");
-      $spalte[] = "$direkt ";
+    $anff = $DBS->anfrage("SELECT ws.id, {(SELECT COALESCE(wsd.pfad, COALESCE(wsd.bezeichnung, (SELECT COALESCE(wsds.pfad, wsds.bezeichnung) FROM website_seitendaten as wsds WHERE wsds.seite = ws.id AND wsds.sprache = (SELECT id FROM website_sprachen as wsp WHERE wsp.a2 = (SELECT wert FROM website_einstellungen WHERE id = 0))))))}, {(SELECT COALESCE(wsd.bezeichnung, (SELECT wsds.bezeichnung FROM website_seitendaten as wsds WHERE wsds.seite = ws.id AND wsds.sprache = (SELECT id FROM website_sprachen as wsp WHERE wsp.a2 = (SELECT wert FROM website_einstellungen WHERE id = 0)))))} FROM website_seiten as ws JOIN website_sprachen as wsp LEFT JOIN website_seitendaten as wsd ON wsd.seite = ws.id AND wsd.sprache = wsp.id WHERE wsp.id = (SELECT id FROM website_sprachen WHERE a2 = [?]) AND ws.zugehoerig = ?$sqlStatus", "si", $bereich, $id);
+    while($anff->werte($unterid, $pf, $bez)) {
+      if ((Kern\Check::angemeldet() && $DSH_BENUTZER->hatRecht("website.inhalte.elemente.[|anlegen,bearbeiten,löschen]")) || Website\Seite::sichtbar($unterid, $bereich)) {
+        $direkt  = new UI\IconKnopf(new UI\Icon("fas fa-globe"), $bez);
+        $direkt  ->addFunktion("href", "$sprache$pfad/$pf");
+        $spalte[] = "$direkt ";
+      }
     }
     if(count($spalte->getElemente()) > 0) {
       $koerper  = new UI\Reiterkoerper($spalte);
     } else {
       $koerper  = new UI\Reiterkoerper();
     }
-    $hauptreiter[] = new UI\Reitersegment($kopf, $koerper);
+    if(count($koerper->getSpalten()) > 0 || $kopf->getTag() == "a") {
+      // Hat Funktion (Selbst Klick oder Kinder)
+      $hauptreiter[] = new UI\Reitersegment($kopf, $koerper);
+    }
   }
 }
 
