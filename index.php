@@ -28,6 +28,9 @@ Kern\DB::log();
 Kern\Check::einwilligung();
 
 
+  $DBS->anfrage("SELECT wert_h FROM kern_styles WHERE bezeichnung = 'akzent1'")
+        ->werte($thema1);
+
 echo "<!DOCTYPE html>";
 echo "<html lang=\"de\">";
 	echo "<head>";
@@ -56,6 +59,8 @@ echo "<html lang=\"de\">";
 		echo modulJs("UI");
     echo "<title>Digitaler Schulhof - Seite wird geladen...</title>";
     echo "<link rel=\"manifest\" href=\"man.php\">";
+    $thema1hex = UI\Generieren::RgbaZuHex($thema1);
+    echo "<meta name=\"theme-color\" content=\"$thema1hex\">";
     echo "<link rel=\"icon\" type=\"image/png\" href=\"dateien/schulspezifisch/favicon/192.png\">";
     echo "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">";
     echo "<link rel=\"apple-touch-icon\" sizes=\"192x192\" href=\"dateien/schulspezifisch/favicon/192.png\">";
@@ -135,6 +140,7 @@ echo "<html lang=\"de\">";
           echo "<i></i>"; // Hack, sodass p:last-child nicht greift, und mb fälschlicherweise auf 0 setzt
         echo "</div>";
         echo UI\Zeile::standard((new UI\Meldung("Bitte warten", "Der Digitale Schulhof wird geladen...", "Arbeit")))->setID("dshMeldungInitial")->setStyle("display", "none");
+        echo UI\Zeile::standard((new UI\Meldung("Offline", "Der Digitale Schulhof benötigt eine Internetverbindung!", "Fehler")))->setID("dshMeldungOffline")->setStyle("display", "none");
       echo "</div>";
 		echo "</div>";
 		echo "<div id=\"dshFusszeileO\">";
@@ -143,7 +149,6 @@ echo "<html lang=\"de\">";
 		echo "</div>";
     echo "<div id=\"dshNetzcheck\">";
       echo "<a style=\"font-family: inherit; color: inherit; font-size: inherit;\" target=\"_blank\" tabindex=\"0\" class=\"dshExtern\" href=\"https://github.com/DigitalerSchulhof\" rel=\"noopener\">Digitaler Schulhof – Version $DSH_VERSION – Website – Schulhof"./**" – Lehrerzimmer"*/"</a>";
-      echo "<p>Offline!<br>Der Digitale Schulhof benötigt eine Internetverbindung.</p>";
     echo "</div>";
 
     echo (new UI\Meldung("Fenster wird geladen...", null, "Laden"))->setID("dshUiFensterLadesymbol");

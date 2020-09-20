@@ -13,16 +13,18 @@
 
   Einbinden::modulLaden("UI", true, false);
   Einbinden::modulLaden("Kern", true, false);
-  
+
   $DBS->anfrage("SELECT wert_h FROM kern_styles WHERE bezeichnung = 'akzent1'")
         ->werte($thema1);
+  $thema1hex = UI\Generieren::RgbaZuHex($thema1);
 ?>
 {
   "name": "Digitaler Schulhof",
   "short_name": "DSH",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "<?php echo $thema1; ?>",
+  "background_color": "<?php echo $thema1hex; ?>",
+  "theme_color": "<?php echo $thema1hex; ?>",
   "description": "Der Digitaler Schulhof des @TODO: Name.",
   "icons": [{
     "src": "dateien/schulspezifisch/favicon/48.png",

@@ -106,15 +106,18 @@ core.seiteladebalken = {
   update: _ => {
     let b = core.seiteladebalken.balken;
 
-    if(core.seiteladebalken.fortschritt > 200) {
-      window.location.href = core.seiteladebalken.seite;
+    if(core.seiteladebalken.fortschritt > 120) {
+      core.seiteladebalken.aus();
+      $("#dshMeldungInitial").ausblenden();
+      $("#dshMeldungOffline").einblenden();
+      $("#dshHauptnavigation").ausblenden();
     }
 
     b.setCss("width", Math.min(core.seiteladebalken.fortschritt, 92)+"%");
     core.seiteladebalken.timeout = setTimeout(_ => {
-      core.seiteladebalken.fortschritt += Math.floor(Math.random() * 4);
+      core.seiteladebalken.fortschritt += Math.floor(Math.random() * 3);
       core.seiteladebalken.update();
-    }, Math.floor(100 + (Math.random()*200)));
+    }, Math.floor(100 + (Math.random()*50)));
   },
   aus: _ => {
     let b = core.seiteladebalken.balken;

@@ -1,0 +1,21 @@
+{
+	"DBS": {
+		"scope": "php",
+		"prefix": "dbs",
+		"body": [
+			"/** @var \\Kern\\DB \\$DBS */",
+			"global \\$DBS;",
+			""
+		],
+		"description": "Datenbankverbindung einbinden"
+	},
+	"DBS Kommentar": {
+		"scope": "php",
+		"prefix": "dbsc",
+		"body": [
+			"/** @var \\Kern\\DB \\$DBS */",
+			""
+		],
+		"description": "Datenbankverbindung einbinden (Nur Kommentar)"
+	}
+}
