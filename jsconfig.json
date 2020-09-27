@@ -1,0 +1,7 @@
+{
+    "include": [
+        "js/**/*.js",
+        "module/Kern/js/**/*.js",
+        "module/UI/js/**/*.js"
+    ],
+}
