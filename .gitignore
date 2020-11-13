@@ -5,3 +5,4 @@ ldapanmelden.php
 core/config.php
 *.core
 dateien/personen/*
+php_errors.log

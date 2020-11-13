@@ -47,7 +47,7 @@ class Einbinden {
   		$urlganz = "Fehler/404";
   		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
-    
+
   	if(!in_array($modul, array("Kern", "UI")) && Einbinden::modulLaden($modul, true, true, true) === false) {
   		$urlganz = "Fehler/404";
   		$gefunden = "../../Kern/seiten/fehler/404.php";

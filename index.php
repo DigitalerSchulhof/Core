@@ -131,14 +131,14 @@ echo "<html lang=\"de\">";
 		echo "</div>";
     echo "<div id=\"dshFenstersammler\"></div>";
 		echo "<div id=\"dshHauptteilO\">";
-			echo "<div id=\"dshHauptteilI\">";
+      echo "<div id=\"dshHauptteilI\">";
+        echo "<div id=\"dshSeite\">";
+          echo (new Kern\Aktionszeile(true, false))->setBrotkrumenPfad(array($DSH_URLGANZ => "Digitaler Schuhlhof"));
+          echo "<i></i>"; // Leeres Element, sodass p:last-child nicht greift, und mb fälschlicherweise auf 0 setzt
+        echo "</div>";
         $hier = new UI\Link("hier", "https://www.enable-javascript.com/de/", true);
         echo UI\Zeile::standard((new UI\Meldung("Inkompatibel", "JavaScript ist deaktiviert! Um den Digitalen Schulof zu nutzen, muss JavaScript aktiv sein.<br>Wie Sie dieses aktivieren, erfahren Sie $hier.", "Fehler")))->setTag("noscript");
         echo UI\Zeile::standard((new UI\Meldung("Fehler", "Bei der Anfrage ist ein unbekannter Fehler aufgetreten: <pre></pre", "Fehler")))->setID("dshFehlerbox")->setStyle("display", "none");
-        echo "<div id=\"dshSeite\">";
-          echo (new Kern\Aktionszeile(true, false))->setBrotkrumenPfad(array($DSH_URLGANZ => "Digitaler Schuhlhof"));
-          echo "<i></i>"; // Hack, sodass p:last-child nicht greift, und mb fälschlicherweise auf 0 setzt
-        echo "</div>";
         echo UI\Zeile::standard((new UI\Meldung("Bitte warten", "Der Digitale Schulhof wird geladen...", "Arbeit")))->setID("dshMeldungInitial")->setStyle("display", "none");
         echo UI\Zeile::standard((new UI\Meldung("Offline", "Der Digitale Schulhof benötigt eine Internetverbindung!", "Fehler")))->setID("dshMeldungOffline")->setStyle("display", "none");
       echo "</div>";

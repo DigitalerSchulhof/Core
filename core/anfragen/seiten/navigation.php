@@ -76,6 +76,7 @@ if($bereich === "Schulhof") {
   }
 } else {
   Core\Einbinden::modulLaden("Website");
+
   if(!$DBS->existiert("website_sprachen", "a2 = [?]", "s", $bereich)) {
     $bereich = "DE";
   }
@@ -87,11 +88,13 @@ if($bereich === "Schulhof") {
   }
   // Bereich ist Sprache
 
+
   $sqlStatus = "";
   if(!Kern\Check::angemeldet() || !$DSH_BENUTZER->hatRecht("website.inhalte.versionen.[|alt,neu].[|sehen,aktivieren] || website.inhalte.elemente.[|anlegen,bearbeiten,löschen]")) {
     $sqlStatus = " AND status = 'a'";
   }
   $anf = $DBS->anfrage("SELECT ws.id, {(SELECT COALESCE(wsd.pfad, COALESCE(wsd.bezeichnung, (SELECT COALESCE(wsds.pfad, wsds.bezeichnung) FROM website_seitendaten as wsds WHERE wsds.seite = ws.id AND wsds.sprache = (SELECT id FROM website_sprachen as wsp WHERE wsp.a2 = (SELECT wert FROM website_einstellungen WHERE id = 0))))))}, {(SELECT COALESCE(wsd.bezeichnung, (SELECT wsds.bezeichnung FROM website_seitendaten as wsds WHERE wsds.seite = ws.id AND wsds.sprache = (SELECT id FROM website_sprachen as wsp WHERE wsp.a2 = (SELECT wert FROM website_einstellungen WHERE id = 0)))))} FROM website_seiten as ws JOIN website_sprachen as wsp LEFT JOIN website_seitendaten as wsd ON wsd.seite = ws.id AND wsd.sprache = wsp.id WHERE wsp.id = (SELECT id FROM website_sprachen WHERE a2 = [?]) AND ws.zugehoerig IS NULL$sqlStatus", "s", $bereich);
+  // Overnavigationen ausgeben
   while($anf->werte($id, $pfad, $bezeichnung)) {
     $pfad     = Kern\Texttrafo::text2url($pfad);
     $kopf     = new UI\Reiterkopf($bezeichnung);
@@ -100,7 +103,7 @@ if($bereich === "Schulhof") {
       $kopf     ->addFunktion("href", "$sprache$pfad");
       $kopf     ->setTag("a");
     }
-    // Unterseiten laden
+    // Unternavigationen ausgeben
     $anff = $DBS->anfrage("SELECT ws.id, {(SELECT COALESCE(wsd.pfad, COALESCE(wsd.bezeichnung, (SELECT COALESCE(wsds.pfad, wsds.bezeichnung) FROM website_seitendaten as wsds WHERE wsds.seite = ws.id AND wsds.sprache = (SELECT id FROM website_sprachen as wsp WHERE wsp.a2 = (SELECT wert FROM website_einstellungen WHERE id = 0))))))}, {(SELECT COALESCE(wsd.bezeichnung, (SELECT wsds.bezeichnung FROM website_seitendaten as wsds WHERE wsds.seite = ws.id AND wsds.sprache = (SELECT id FROM website_sprachen as wsp WHERE wsp.a2 = (SELECT wert FROM website_einstellungen WHERE id = 0)))))} FROM website_seiten as ws JOIN website_sprachen as wsp LEFT JOIN website_seitendaten as wsd ON wsd.seite = ws.id AND wsd.sprache = wsp.id WHERE wsp.id = (SELECT id FROM website_sprachen WHERE a2 = [?]) AND ws.zugehoerig = ?$sqlStatus", "si", $bereich, $id);
     while($anff->werte($unterid, $pf, $bez)) {
       if ((Kern\Check::angemeldet() && $DSH_BENUTZER->hatRecht("website.inhalte.elemente.[|anlegen,bearbeiten,löschen]")) || Website\Seite::sichtbar($unterid, $bereich)) {
@@ -119,6 +122,13 @@ if($bereich === "Schulhof") {
       $hauptreiter[] = new UI\Reitersegment($kopf, $koerper);
     }
   }
+
+
+
+  $neuKopf = new UI\Reiterkopf("Neue Seite", new UI\Icon(UI\Konstanten::NEU));
+  $neuKopf ->addKlasse("dshUiReiterKopfErfolg");
+  $neuKoreper = new UI\Reiterkoerper();
+  $hauptreiter[] = new UI\Reitersegment($neuKopf, $neuKoreper);
 }
 
 $hauptreiter->addFunktion("onclick", "kern.navigation.ausblenden(true, event)");
