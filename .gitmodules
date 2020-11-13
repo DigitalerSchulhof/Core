@@ -10,3 +10,6 @@
 [submodule "module/Postfach"]
 	path = module/Postfach
 	url = https://github.com/DigitalerSchulhof/Postfach.git
+[submodule "dev/less.php"]
+	path = dev/less.php
+	url = https://github.com/wikimedia/less.php.git
