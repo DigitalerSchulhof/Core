@@ -1,4 +1,5 @@
 <?php
+include __DIR__."/../core/config.php";
 include __DIR__."/../yaml.php";
 include __DIR__."/lib/Less/Autoloader.php";
 Less_Autoloader::register();
@@ -6,7 +7,13 @@ include __DIR__."/../module/Kern/klassen/db/db.php";
 include __DIR__."/../module/Kern/klassen/db/anfrage.php";
 use \Kern\DB;
 
-$dbs = new DB("localhost", 3306, "root", "", "dsh_schulhof", "MeinPasswortIstSicher");
+$dbs = new DB($EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Host"], 
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Port"], 
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Benutzer"], 
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Passwort"], 
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["DB"], 
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Schluessel"]
+            );
 $cli = php_sapi_name() == "cli";
 
 use Async\YAML;
@@ -225,6 +232,9 @@ $less->Reset();
 $drucken    = $less->parse($drucken)->getCss();
 $less->Reset();
 
+if (!file_exists(__DIR__."/../css")) {
+  mkdir(__DIR__."/../css");
+}
 
 file_put_contents(__DIR__."/../css/layout.css",    $layout);
 file_put_contents(__DIR__."/../css/hell.css",      $hell);
