@@ -11,9 +11,7 @@ export default function navigationAnpassen(ziel?: string, force?: boolean): void
     ziel = bereich;
   }
   bereich = ziel;
-  ajax<{
-    Navigation: string;
-  }>("Core", 1, false, { bereich: ziel }).then(r => {
+  ajax("Core", 1, false, { bereich: ziel }).then(r => {
     $("#dshHauptnavigation").setHTML(r.Navigation);
   });
 }

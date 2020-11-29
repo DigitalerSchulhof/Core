@@ -2,6 +2,18 @@ import { AntwortLeer, AntwortCode } from "./ajax";
 
 
 export interface AnfrageAntworten {
+  "Core": {
+    0: {
+      Titel: string;
+      Code: string;
+    } & {
+      Weiterleitung: true;
+      Ziel: string;
+    },
+    1: {
+      Navigation: string;
+    }
+  },
   "Kern": {
     0: AntwortLeer;
     1: AntwortLeer;

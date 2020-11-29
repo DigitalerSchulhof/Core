@@ -3,9 +3,8 @@ import $ from "ts/eQuery";
 import * as ladebalken from "ts/ladebalken";
 import { AnfrageAntworten } from "./AnfrageAntworten";
 
-export interface AntwortLeer {
-
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AntwortLeer { }
 
 export interface AntwortCode {
   Code: string
@@ -25,7 +24,7 @@ interface AnfrageFehler {
 type M = keyof AnfrageAntworten;
 type Z = keyof AnfrageAntworten[M];
 
-export interface AjaxAntwort<A extends AnfrageAntworten[M][Z]> extends Promise<AnfrageErfolg & A> { }
+export type AjaxAntwort<A extends AnfrageAntworten[M][Z]> = Promise<AnfrageErfolg & A>
 
 export let letzteAnfrage: XMLHttpRequest | null = null;
 
