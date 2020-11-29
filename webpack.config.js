@@ -3,21 +3,23 @@ var glob = require("glob");
 
 module.exports = {
   entry: glob.sync("./ts/**/*.ts").concat(glob.sync("./module/*/ts/**/*.ts")),
-  // devtool: "inline-source-map",
+  devtool: "inline-source-map",
+
   module: {
     rules: [
       {
         test: /\.ts$/,
         loader: "ts-loader",
         exclude: /node_modules/,
-        options: { context: path.resolve(__dirname), configFile: "tsconfig.json" },
+        options: {
+          context: path.resolve(__dirname),
+          configFile: "tsconfig.json",
+        },
       },
     ],
   },
   resolve: {
-    modules: [
-      __dirname
-    ],
+    modules: [__dirname],
     extensions: [".ts"],
   },
   output: {

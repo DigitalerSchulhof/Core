@@ -14,7 +14,7 @@
     "webpack-cli": "^4.2.0"
   },
   "scripts": {
-    "tslint": "eslint --no-error-on-unmatched-pattern --fix ./ts/**/*.ts ./module/*/ts/**/*.ts",
+    "tslint": "clear && eslint --no-error-on-unmatched-pattern --fix ./ts/**/*.ts ./module/*/ts/**/*.ts",
     "webpack": "npx webpack-cli",
     "build": "npm run tslint && npm run webpack"
   },

@@ -1,28 +1,43 @@
-import * as uiLaden from "module/UI/ts/elemente/laden";
-import * as uiTabelle from "module/UI/ts/elemente/tabelle";
+import ui from "module/UI/ts/ui";
 import $ from "ts/eQuery";
 import * as ladebalken from "ts/ladebalken";
+import { AnfrageAntworten } from "./AnfrageAntworten";
 
+export interface AntwortLeer {
+
+}
+
+export interface AntwortCode {
+  Code: string
+}
 
 export interface AnfrageErfolg {
-  Erfolg: boolean;
+  Erfolg: true;
 }
 
 interface AnfrageFehler {
   Fehler: [string, number][];
 }
 
+// export interface AjaxAntwort<M extends keyof AnfrageAntworten, Z extends keyof AnfrageAntworten[M]> extends Promise<AnfrageErfolg & AnfrageAntworten[M][Z]> {
+// }
+
+type M = keyof AnfrageAntworten;
+type Z = keyof AnfrageAntworten[M];
+
+export interface AjaxAntwort<A extends AnfrageAntworten[M][Z]> extends Promise<AnfrageErfolg & A> { }
+
 export let letzteAnfrage: XMLHttpRequest | null = null;
 
-const ajax = <T>(
-  modul: string,
-  ziel: number,
+const ajax = <M extends keyof AnfrageAntworten, Z extends keyof AnfrageAntworten[M], A extends AnfrageAntworten[M][Z]>(
+  modul: M,
+  ziel: Z,
   laden?: string | { titel: string; beschreibung?: string; } | false,
   daten?: { [key: string]: any; },
   meldung?: number | { modul: string; meldung: number; },
   sortieren?: string | string[],
   host?: string
-): Promise<AnfrageErfolg & T> => {
+): AjaxAntwort<A> => {
   // Laden Fix
   if (laden === undefined) {
     laden = "Die Anfrage wird behandelt...";
@@ -48,7 +63,7 @@ const ajax = <T>(
   host = host || "";
 
   if (laden !== false) {
-    uiLaden.an(laden.titel, laden.beschreibung);
+    ui.elemente.laden.an(laden.titel, laden.beschreibung);
   }
 
   // Daten
@@ -63,32 +78,29 @@ const ajax = <T>(
   formDaten.append("modul", modul);
   formDaten.append("ziel", ziel.toString());
 
-  return new Promise((erfolg: (rueckgabe: AnfrageErfolg & T) => void, fehler: (fehler: AnfrageFehler) => void) => {
+  return new Promise((erfolg: (rueckgabe: AnfrageErfolg & A) => void, fehler: (fehler: AnfrageFehler) => void) => {
     const anfrage = new XMLHttpRequest();
     anfrage.onreadystatechange = () => {
       if (anfrage.readyState === 4 && anfrage.status === 200) {
         try {
-          const r: AnfrageErfolg & AnfrageFehler & T = JSON.parse(anfrage.responseText);
+          const r: { Erfolg: boolean } & AnfrageFehler & A = JSON.parse(anfrage.responseText);
           try {
             $("#dshFehlerbox").ausblenden();
             if (r.Erfolg) {
               if (typeof sortieren === "object") {
                 for (const t of sortieren) {
                   if ($("#" + t).existiert()) {
-                    uiTabelle.sortieren(t);
+                    ui.elemente.tabelle.sortieren(t);
                   }
                 }
               }
               if (typeof meldung === "object") {
-                uiLaden.meldung(meldung.modul, meldung.meldung);
+                ui.elemente.laden.meldung(meldung.modul, meldung.meldung);
               }
-              erfolg(r);
+              erfolg(r as AnfrageErfolg & A);
             } else {
               console.error("Fehler: ", r.Fehler);
-              ajax<{
-                Meldung: string;
-                Knoepfe: string;
-              }>("Kern", 30, { titel: "Fehler werden geladen", beschreibung: "Bitte warten" }, { fehler: r.Fehler }).then((r) => uiLaden.aendern("Fehler", r.Meldung, r.Knoepfe));
+              ajax("Kern", 30, { titel: "Fehler werden geladen", beschreibung: "Bitte warten" }, { fehler: r.Fehler }).then((r) => ui.elemente.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
               fehler(r);
             }
           } catch (err) {
@@ -96,7 +108,7 @@ const ajax = <T>(
             $("#dshMeldungInitial").ausblenden();
             $("#dshFehlerbox").einblenden();
             $("#dshFehlerbox pre").setText("Bei der Anfrage ist ein unbekannter Fehler aufgetreten!");
-            uiLaden.aus();
+            ui.elemente.laden.aus();
             ladebalken.aus();
           }
         } catch (err) {
@@ -106,7 +118,7 @@ const ajax = <T>(
           $("#dshFehlerbox pre").setText("Bei der Anfrage ist ein unbekannter Fehler aufgetreten!");
           const meld = anfrage.responseText;
           $("#dshFehlerbox pre").setText(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
-          uiLaden.aus();
+          ui.elemente.laden.aus();
           ladebalken.aus();
         }
       }
