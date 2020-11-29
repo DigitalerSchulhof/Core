@@ -18,9 +18,6 @@ interface AnfrageFehler {
   Fehler: [string, number][];
 }
 
-// export interface AjaxAntwort<M extends keyof AnfrageAntworten, Z extends keyof AnfrageAntworten[M]> extends Promise<AnfrageErfolg & AnfrageAntworten[M][Z]> {
-// }
-
 type M = keyof AnfrageAntworten;
 type Z = keyof AnfrageAntworten[M];
 
@@ -28,7 +25,7 @@ export type AjaxAntwort<A extends AnfrageAntworten[M][Z]> = Promise<AnfrageErfol
 
 export let letzteAnfrage: XMLHttpRequest | null = null;
 
-const ajax = <M extends keyof AnfrageAntworten, Z extends keyof AnfrageAntworten[M], A extends AnfrageAntworten[M][Z]>(
+const ajax = <M extends Extract<keyof AA, string>, Z extends keyof AA[M], A extends AA[M][Z], AA extends Record<string, any> = AnfrageAntworten>(
   modul: M,
   ziel: Z,
   laden?: string | { titel: string; beschreibung?: string; } | false,
