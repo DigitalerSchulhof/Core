@@ -22,13 +22,21 @@
     },
     {
       "type": "npm",
-      "script": "build-eslint",
+      "script": "tslint",
       "problemMatcher": [
         "$eslint-compact"
       ],
-      "group": "build",
-      "label": "npm: build-eslint",
-      "detail": "eslint ./**/*.js"
+      "label": "npm: tslint",
+      "detail": "eslint --fix ./**/*.ts"
+    },
+    {
+      "type": "npm",
+      "script": "tsc",
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "label": "npm: tsc",
+      "detail": "tsc"
     }
   ]
 }

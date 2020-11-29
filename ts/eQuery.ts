@@ -1,6 +1,5 @@
-interface eQuery {
+export interface eQuery {
   __proto__: eQuery["el"];
-  parse: (s: string) => eQuery;
   length: number;
   [n: number]: HTMLElement;
 
@@ -25,8 +24,10 @@ interface eQuery {
   setID: (id: string) => eQuery;
 
   toggleCss: (k: string, a: string, b?: string) => eQuery;
-  getCss: (k: string | string[]) => string | { [key: string]: string } | undefined;
-  setCss: (k: string | { [key: string]: string }, v?: string | null) => eQuery,
+
+  getCss: ((k: string) => string | undefined) & ((k: string[]) => { [key: string]: string } | undefined);
+
+  setCss: ((k: string, v: string) => eQuery) & ((k: { [key: string]: string }) => eQuery);
 
   getWert: () => string | undefined;
   setWert: (val: string) => eQuery;
@@ -55,10 +56,9 @@ interface eQuery {
   ersetzen: (e: HTMLElement) => eQuery;
 }
 
-const $ = (...args: (string | Element | undefined | null)[]): eQuery => {
+const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQuery => {
   const obj: eQuery = {
     __proto__: [],
-    parse: (s) => obj,
     length: -1,
 
     el: [],
@@ -75,8 +75,8 @@ const $ = (...args: (string | Element | undefined | null)[]): eQuery => {
     setHTML: (html) => obj.each(o => o.innerHTML = html),
     getText: () => (obj.el[0] || { innerText: undefined }).innerText,
     setText: (text) => obj.each(o => o.innerText = text),
-    hatAttr: (attr) => (obj.el[0] || { hasAttribute: _ => undefined }).hasAttribute(attr),
-    getAttr: (attr) => (obj.el[0] || { getAttribute: _ => undefined }).getAttribute(attr),
+    hatAttr: (attr) => (obj.el[0] || { hasAttribute: (): undefined => undefined }).hasAttribute(attr),
+    getAttr: (attr) => (obj.el[0] || { getAttribute: (): undefined => undefined }).getAttribute(attr),
     setAttr: (attr, wert) => obj.each(o => o.setAttribute(attr, wert)),
     getID: () => obj.getAttr("id"),
     setID: (id) => obj.setAttr("id", id),
@@ -90,7 +90,7 @@ const $ = (...args: (string | Element | undefined | null)[]): eQuery => {
         }
       });
     },
-    getCss: (k) => {
+    getCss: (k: string | string[]) => {
       if (!obj.el.length) {
         return undefined;
       }
@@ -103,7 +103,7 @@ const $ = (...args: (string | Element | undefined | null)[]): eQuery => {
       }
       return r;
     },
-    setCss: (k, v) => {
+    setCss: (k: string | {[key: string]: string}, v?: string) => {
       if (typeof k === "string" && typeof v === "string") {
         return obj.each(o => o.style[k as any] = v);
       }
@@ -137,15 +137,15 @@ const $ = (...args: (string | Element | undefined | null)[]): eQuery => {
     removeKlasse: (...k) => obj.each(o => o.classList.remove(...k)),
     ist: (s) => {
       if (typeof s === "string") {
-        return (obj.el[0] || { matches: _ => undefined }).matches(s);
+        return (obj.el[0] || { matches: (): undefined => undefined }).matches(s);
       }
-      return (obj.el[0] || { isSameNode: _ => undefined }).isSameNode(s);
+      return (obj.el[0] || { isSameNode: (): undefined => undefined }).isSameNode(s);
     },
     parent: (s) => {
       if (s === undefined) {
         return $((obj.el[0] || { parentNode: undefined }).parentNode as HTMLElement);
       }
-      return $(((obj.el[0] || { parentNode: undefined }).parentNode as HTMLElement || { closest: () => undefined }).closest(s) as HTMLElement);
+      return $(((obj.el[0] || { parentNode: undefined }).parentNode as HTMLElement || { closest: (): undefined => undefined }).closest(s) as HTMLElement);
     },
     kinder: (s) => {
       if (s === undefined) {
@@ -231,10 +231,12 @@ const $ = (...args: (string | Element | undefined | null)[]): eQuery => {
   return r;
 };
 
-($ as any).parse = (code: string) => {
-  const t = document.createElement("template");
-  t.innerHTML = code;
-  return $(...t.content.children);
+export const eQuery = {
+  parse: (code: string): eQuery => {
+    const t = document.createElement("template");
+    t.innerHTML = code;
+    return $(...t.content.children);
+  }
 };
 
-export { $ };
+export default $;

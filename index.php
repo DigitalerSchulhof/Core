@@ -51,12 +51,7 @@ echo "<html lang=\"de\">";
 		if(/** drucken */ false) {
 			echo style("css/drucken.css");
 		}
-    echo js("js/eQuery.js");
-		echo js("js/core.js");
-		echo js("js/ajax.js");
-		echo js("js/laden.js");
-		echo modulJs("Kern");
-		echo modulJs("UI");
+    echo js("js.js");
     echo "<title>Digitaler Schulhof - Seite wird geladen...</title>";
     echo "<link rel=\"manifest\" href=\"man.php\">";
     $thema1hex = UI\Generieren::RgbaZuHex($thema1);

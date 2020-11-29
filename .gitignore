@@ -6,4 +6,5 @@ core/config.php
 *.core
 dateien/personen/*
 php_errors.log
-node_modules
+node_modules/
+js.js
