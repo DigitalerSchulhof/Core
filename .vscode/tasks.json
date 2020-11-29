@@ -19,6 +19,16 @@
         "clear": false
       },
       "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build-eslint",
+      "problemMatcher": [
+        "$eslint-compact"
+      ],
+      "group": "build",
+      "label": "npm: build-eslint",
+      "detail": "eslint ./**/*.js"
     }
   ]
 }
