@@ -11,8 +11,6 @@
  */
 
 include_once(__DIR__."/yaml.php");
-use Async\YAML;
-
 /*
  * Eine Anfrage gibt (außer im Falle eines Fehlers lol) immer JSON-Code zurück. Kommt ungültiges JSON zurück, wird, sofern dies nicht explizit verlangt wird, eine Fehlermeldung direkt an DSH übermittelt.
  *
@@ -43,7 +41,7 @@ class Anfrage {
 
   /**
    * Setzt, ob die Anfrage erfolgreich ist
-   * @param bool $typ :)
+   * @param bool $erfolg :)
    */
   public static function setErfolg($erfolg) {
     self::$ERFOLG = $erfolg;
@@ -106,7 +104,7 @@ class Anfrage {
    *  `2`: Aktuell ist kein Benutzer angemeldet.
    *  `3`: Du kannst hier schon 'nen anderen Wert eingeben, aber dann ist es halt kacke...
    *  `4`: Für diese Aktion besteht keine Berechtigung!
-   * @param string $modul
+   * @param string|true $modul
    * Wenn <code>null</code>: Das aktuelle Modul
    * Wenn <code>true</code>: Der Wert von $die und $modul = null
    * Sonst: das Modul des Fehlers
@@ -122,7 +120,7 @@ class Anfrage {
       $modul = null;
     }
     if($fehler < 1) {
-      $modul = $modul ?? "Core";
+      $modul ??= "Core";
     }
     $fehler = [$modul ?? $MODUL, $fehler];
     $d = false;
@@ -227,9 +225,7 @@ Core\Einbinden::modulLaden("Kern", true, false);
 
 $DSH_ALLEMODULE = Core\Einbinden::alleModuleBestimmen();
 
-$fehler = false;
-
-$fehler 		= $fehler || !isset($_POST);
+$fehler 		= !isset($_POST);
 $fehler 		= $fehler || !isset($_POST["modul"]);
 $fehler 		= $fehler || !Kern\Check::istModul($_POST["modul"]);
 if(!$fehler) {
@@ -237,7 +233,7 @@ if(!$fehler) {
   if($_POST["modul"] === "Core") {
     $moduldir = __DIR__."/core";
   }
-  $fehler 		= $fehler || !is_dir($moduldir);
+  $fehler 		= !is_dir($moduldir);
 }
 
 if($fehler) {

@@ -14,11 +14,12 @@
     "webpack-cli": "^4.2.0"
   },
   "scripts": {
+    "build": "npm run tslint && npm run webpack && npm run core && npm run phan && npm run clean",
     "tslint": "eslint --no-error-on-unmatched-pattern --fix ./ts/**/*.ts ./module/*/ts/**/*.ts",
     "webpack": "npx webpack-cli",
     "core": "php -f dev/dev.php",
-    "clean": "rm -f php_errors.log",
-    "build": "clear && npm run tslint && npm run webpack && npm run core && npm run clean"
+    "phan": "php -f vendor/phan/phan/phan -C",
+    "clean": "rm -f php_errors.log"
   },
   "dependencies": {}
 }
