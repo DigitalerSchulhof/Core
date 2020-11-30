@@ -1,0 +1,6 @@
+{
+    "require": {
+        "phan/phan": "^3.2",
+        "wikimedia/less.php": "^3.0"
+    }
+}

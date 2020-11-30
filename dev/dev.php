@@ -1,7 +1,7 @@
 <?php
 include __DIR__."/../core/config.php";
 include __DIR__."/../yaml.php";
-include __DIR__."/lib/Less/Autoloader.php";
+require __DIR__ . '/vendor/autoload.php';
 Less_Autoloader::register();
 include __DIR__."/../module/Kern/klassen/db/db.php";
 include __DIR__."/../module/Kern/klassen/db/anfrage.php";

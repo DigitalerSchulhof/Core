@@ -17,7 +17,7 @@
     "tslint": "eslint --no-error-on-unmatched-pattern --fix ./ts/**/*.ts ./module/*/ts/**/*.ts",
     "webpack": "npx webpack-cli",
     "core": "php -f dev/dev.php",
-    "clean": "rm php_errors.log",
+    "clean": "rm -f php_errors.log",
     "build": "clear && npm run tslint && npm run webpack && npm run core && npm run clean"
   },
   "dependencies": {}
