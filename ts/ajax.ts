@@ -25,7 +25,7 @@ export type AjaxAntwort<A extends AnfrageAntworten[M][Z]> = Promise<AnfrageErfol
 
 export let letzteAnfrage: XMLHttpRequest | null = null;
 
-const ajax = <M extends Extract<keyof AA, string>, Z extends keyof AA[M], A extends AA[M][Z], AA extends Record<string, any> = AnfrageAntworten>(
+const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M][Z], AA extends Record<string, any> = AnfrageAntworten>(
   modul: M,
   ziel: Z,
   laden?: string | { titel: string; beschreibung?: string; } | false,

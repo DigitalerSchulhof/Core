@@ -7,14 +7,24 @@ include __DIR__."/../module/Kern/klassen/db/db.php";
 include __DIR__."/../module/Kern/klassen/db/anfrage.php";
 use \Kern\DB;
 
-$dbs = new DB($EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Host"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Port"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Benutzer"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Passwort"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["DB"], 
+$dbs = new DB($EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Host"],
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Port"],
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Benutzer"],
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Passwort"],
+              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["DB"],
               $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Schluessel"]
             );
 $cli = php_sapi_name() == "cli";
+
+if($cli) {
+  // Single-line ProblemMatcher
+  set_exception_handler (function($ex) {
+    /** @var Exception $ex */
+    $msg = explode("\n", $ex->getMessage())[0];
+    echo "Error: $msg in {$ex->getFile()} on line {$ex->getLine()}\n";
+    echo $ex->getMessage();
+  });
+}
 
 use Async\YAML;
 
