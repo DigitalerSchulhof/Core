@@ -2,6 +2,7 @@ import ui from "module/UI/ts/ui";
 import $ from "ts/eQuery";
 import * as ladebalken from "ts/ladebalken";
 import { AnfrageAntworten } from "./AnfrageAntworten";
+import { AnfrageAntwortenInoffiziell } from "./AnfrageAntwortenInoffiziell";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AntwortLeer { }
@@ -18,14 +19,15 @@ interface AnfrageFehler {
   Fehler: [string, number][];
 }
 
-type M = keyof AnfrageAntworten;
-type Z = keyof AnfrageAntworten[M];
+type ANTWORTEN = AnfrageAntworten & AnfrageAntwortenInoffiziell;
 
-export type AjaxAntwort<A extends AnfrageAntworten[M][Z]> = Promise<AnfrageErfolg & A>
+type MODUL = keyof ANTWORTEN & string;
+type ZIEL = keyof ANTWORTEN[MODUL];
+export type AjaxAntwort<A extends ANTWORTEN[MODUL][ZIEL]> = Promise<AnfrageErfolg & A>
 
 export let letzteAnfrage: XMLHttpRequest | null = null;
 
-const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M][Z], AA extends Record<string, any> = AnfrageAntworten>(
+const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M][Z], AA extends Record<string, any> = ANTWORTEN>(
   modul: M,
   ziel: Z,
   laden?: string | { titel: string; beschreibung?: string; } | false,

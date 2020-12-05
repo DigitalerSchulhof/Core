@@ -10,7 +10,7 @@
 * $DSH_BENUTZER   - Aktueller Benutzer
  */
 
-include_once(__DIR__."/yaml.php");
+include_once(__DIR__."/core/yaml.php");
 /*
  * Eine Anfrage gibt (außer im Falle eines Fehlers lol) immer JSON-Code zurück. Kommt ungültiges JSON zurück, wird, sofern dies nicht explizit verlangt wird, eine Fehlermeldung direkt an DSH übermittelt.
  *
