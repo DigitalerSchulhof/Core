@@ -1,6 +1,6 @@
+//@ts-nocheck
 import seiteLaden from "./laden";
 
-// @ts-ignore
-window["core"] = {
+window.core = {
   seiteLaden: seiteLaden
 };

@@ -1,6 +1,6 @@
 const cacheName = "DigitalerSchulhof";
-self.addEventListener("install", _ => {});
-self.addEventListener("activate", _ => {
+// self.addEventListener("install", () => {});
+self.addEventListener("activate", () => {
   // caches.delete(cacheName);
 });
 self.addEventListener("fetch", function (event) {

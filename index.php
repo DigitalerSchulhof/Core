@@ -48,9 +48,9 @@ echo "<html lang=\"de\">";
 			echo style("css/hell.css");
 			// echo style("css/dunkel.css");
 		}
-		if(/** drucken */ false) {
-			echo style("css/drucken.css");
-		}
+		// if(false) {
+		// 	echo style("css/drucken.css");
+		// }
     echo js("js.js");
     echo "<title>Digitaler Schulhof - Seite wird geladen...</title>";
     echo "<link rel=\"manifest\" href=\"man.php\">";

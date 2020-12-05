@@ -1,6 +1,7 @@
 <?php
 
 use Phan\Issue;
+
 return [
 
     'target_php_version' => "7.4",
@@ -13,7 +14,7 @@ return [
 
     'array_casts_as_null' => false,
 
-    'scalar_implicit_cast' => false,
+    'scalar_implicit_cast' => true,
 
     'scalar_array_key_cast' => false,
 
@@ -41,7 +42,7 @@ return [
 
     'dead_code_detection' => true,
 
-    'unused_variable_detection' => true,
+    'unused_variable_detection' => false,
 
     'redundant_condition_detection' => true,
 
@@ -53,7 +54,13 @@ return [
 
     'minimum_severity' => Issue::SEVERITY_LOW,
 
-    'suppress_issue_types' => ["PhanUnreferencedPublicMethod", "PhanPluginComparisonNotStrictInCall", "PhanReadOnlyProtectedProperty", "PhanUndeclaredGlobalVariable"],
+    'suppress_issue_types' => [
+        "PhanPluginComparisonNotStrictInCall",
+        // Ungenutzte Var
+        "PhanWriteOnlyProtectedProperty",
+        "PhanUnreferencedPublicClassConstant",
+        "PhanUnreferencedPublicMethod"
+    ],
 
     'exclude_file_regex' => '@^vendor/.*/(tests?|Tests?)/@',
 
@@ -77,7 +84,6 @@ return [
     'plugins' => [
         'AlwaysReturnPlugin',
         'DuplicateArrayKeyPlugin',
-        'DuplicateExpressionPlugin',
         'PregRegexCheckerPlugin',
         'PrintfCheckerPlugin',
         'SleepCheckerPlugin',

@@ -105,7 +105,6 @@ class Einbinden {
   *	@param string $modul Das zu ladende Modul
   * @param bool $laden Ob die geladen-Funktion des Moduls ausgeführt werden soll
   * @param bool $configrueck Ob die Modulkonfiguration zurückgegeben werden soll
-  * @param bool $script Ob die benötigten Scripts zurückgegeben werden sollen
   * @return bool|array false wenn Modul nicht gefunden, sonst Modulkonfiguration
   */
   static function modulLaden($modul, $laden = true, $configrueck = false) {

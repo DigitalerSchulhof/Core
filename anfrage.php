@@ -36,12 +36,12 @@ class Anfrage {
   /** @var bool Ob die Anfrage erfolgreich ist */
   private static $ERFOLG = true;
 
-  /** @var [Rückgabefeld : string] => [Rückgabewert : mixed] Rückgabefelder mit deren Inhalt */
+  /** @var array [Rückgabefeld : string] => [Rückgabewert : mixed] Rückgabefelder mit deren Inhalt */
   private static $RUECK = [];
 
   /**
    * Setzt, ob die Anfrage erfolgreich ist
-   * @param bool $erfolg :)
+   * @param bool $erfolg
    */
   public static function setErfolg($erfolg) {
     self::$ERFOLG = $erfolg;
@@ -57,8 +57,8 @@ class Anfrage {
 
   /**
    * Setzt den Wert eines Rückgabefeldes
-   * @param string $feld :)
-   * @param mixed $wert :)
+   * @param string $feld
+   * @param mixed $wert
    */
   public static function setRueck($feld, $wert) {
     self::$RUECK[$feld] = $wert;
@@ -66,8 +66,8 @@ class Anfrage {
 
   /**
    * Hängt einen Rückgabewert an ein Rückgabefeld an, welches dann - obviously - ein Array ist
-   * @param string $feld  :)
-   * @param mixed ...$werte :)
+   * @param string $feld
+   * @param mixed ...$werte
    */
   public static function addRueck($feld, ...$werte) {
     if(!isset(self::$RUECK[$feld])) {
@@ -78,7 +78,7 @@ class Anfrage {
 
   /**
    * Gibt den Wert eines Rückgabefeldes zurück. <code>null</code> wenn es nicht gesetzt ist.
-   * @param string $feld :)
+   * @param string $feld
    * @return mixed
    */
   public static function getRueck($feld) {
@@ -228,6 +228,7 @@ $DSH_ALLEMODULE = Core\Einbinden::alleModuleBestimmen();
 $fehler 		= !isset($_POST);
 $fehler 		= $fehler || !isset($_POST["modul"]);
 $fehler 		= $fehler || !Kern\Check::istModul($_POST["modul"]);
+$moduldir = "";
 if(!$fehler) {
   $moduldir 	= __DIR__."/module/{$_POST["modul"]}";
   if($_POST["modul"] === "Core") {
