@@ -7,8 +7,12 @@ const config: webpack.Configuration = {
   entry: ({
     core: "ts/export.ts",
     ...glob.sync("./module/*", {}).reduce<{ [key: string]: any }>((list, dir: string) => {
+      const modul = glob.sync(dir + "/ts/**/*.ts").filter(file => fs.readFileSync(file).indexOf(".addEventListener") >= 0);
       if (fs.existsSync(dir + "/ts/export.ts")) {
-        list[dir.substring(dir.lastIndexOf("/") + 1).toLocaleLowerCase()] = [dir + "/ts/export.ts"];
+        modul.push(dir + "/ts/export.ts");
+      }
+      if(modul.length > 0) {
+        list[dir.substring(dir.lastIndexOf("/") + 1).toLocaleLowerCase()] = modul;
       }
       return list;
     }, {})
@@ -45,5 +49,7 @@ const config: webpack.Configuration = {
     }),
   ]
 };
+
+console.log(config.entry);
 
 export default config;
