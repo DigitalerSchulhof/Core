@@ -67,8 +67,7 @@ return [
     'exclude_file_list' => [],
 
     'exclude_analysis_directory_list' => [
-        'vendor/',
-        'core/phpmailer'
+        'vendor/'
     ],
 
     'enable_include_path_checks' => true,

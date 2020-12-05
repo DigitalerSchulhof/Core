@@ -1,6 +1,5 @@
-//@ts-nocheck
 import seiteLaden from "./laden";
 
-window.core = {
+export default {
   seiteLaden: seiteLaden
 };

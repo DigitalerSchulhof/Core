@@ -7,5 +7,5 @@ core/config.php
 dateien/personen/*
 php_errors.log
 node_modules/
-js.js
+js/
 vendor/

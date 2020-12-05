@@ -50,8 +50,10 @@ echo "<html lang=\"de\">";
 		}
 		// if(false) {
 		// 	echo style("css/drucken.css");
-		// }
-    echo js("js.js");
+    // }
+    foreach(array_diff(scandir(__DIR__."/js"), array(".", "..", ".htaccess")) as $js) {
+      echo js("js/$js");
+    }
     echo "<title>Digitaler Schulhof - Seite wird geladen...</title>";
     echo "<link rel=\"manifest\" href=\"man.php\">";
     $thema1hex = UI\Generieren::RgbaZuHex($thema1);
