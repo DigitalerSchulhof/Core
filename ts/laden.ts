@@ -68,11 +68,11 @@ export const scriptAn = (feld: eQuery): void => {
   });
 };
 
-window.addEventListener("load", () => {
-  ladebalken.setBalken($("#dshSeiteladenI"));
-});
+if (document.location.pathname.slice(-1) === "/") {
+  window.history.replaceState({}, document.title, document.location.pathname.substring(0, document.location.pathname.length - 1));
+}
 
-window.addEventListener("click", (e: MouseEvent) => {
+export const click = (e: MouseEvent): void => {
   let ziel = $(e.target);
   if (e.ctrlKey) {
     return;
@@ -92,12 +92,12 @@ window.addEventListener("click", (e: MouseEvent) => {
     }
     e.preventDefault();
   }
-});
+};
 
-window.addEventListener("popstate", () => {
+export const load = (): void => {
+  ladebalken.setBalken($("#dshSeiteladenI"));
+};
+
+export const popstate = (): void => {
   seiteLaden(document.location.pathname.substring(($("base").getAttr("href") as string).length), false);
-});
-
-if (document.location.pathname.slice(-1) === "/") {
-  window.history.replaceState({}, document.title, document.location.pathname.substring(0, document.location.pathname.length - 1));
-}
+};
