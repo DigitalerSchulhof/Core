@@ -1,6 +1,4 @@
-export interface eQuery {
-  __proto__: eQuery["el"];
-  length: number;
+interface eQueryInterface {
   [n: number]: HTMLElement;
 
   el: HTMLElement[],
@@ -56,18 +54,17 @@ export interface eQuery {
   ersetzen: (e: HTMLElement) => eQuery;
 }
 
-const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQuery => {
-  const obj: eQuery = {
-    __proto__: [],
-    length: -1,
+export type eQuery = eQueryInterface & Array < HTMLElement >;
 
+const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQuery => {
+  const obj: eQueryInterface = {
     el: [],
     eQuery: true,
     each: (fn: (this: eQuery, element: HTMLElement, index: number) => void): eQuery => {
       for (let i = 0; i < obj.el.length; i++) {
         fn.call($(obj.el[i]), obj.el[i], i);
       }
-      return obj;
+      return obj as eQuery;
     },
     einblenden: (d) => obj.each(o => o.style.display = d || "block"),
     ausblenden: (d) => obj.each(o => o.style.display = d || "none"),
@@ -110,7 +107,7 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
       for (const kk in k as { [key: string]: string }) {
         obj.each(o => o.style[kk as any] = (k as { [key: string]: string })[kk]);
       }
-      return obj;
+      return obj as eQuery;
     },
     getWert: () => (obj.el[0] as HTMLInputElement || { value: undefined }).value,
     setWert: (val) => obj.each(o => (o as HTMLInputElement).value = val),
@@ -131,7 +128,7 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
     },
     toggleKlasse: (...k) => {
       k.forEach(k => obj.each(function () { this.setKlasse(!this.hatKlasse(k), k); }));
-      return obj;
+      return obj as eQuery;
     },
     addKlasse: (...k) => obj.each(o => o.classList.add(...k)),
     removeKlasse: (...k) => obj.each(o => o.classList.remove(...k)),
@@ -193,7 +190,7 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
         }
         obj.each(o => a.each(e => o.append(e)));
       }
-      return obj;
+      return obj as eQuery;
     },
     filter: (filter) => {
       if (typeof filter === "string") {
@@ -226,9 +223,10 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
     }
   }
 
-  const r: eQuery = obj;
+  const r: eQuery = obj as eQuery;
+  // @ts-ignore
   r.__proto__ = obj.el;
-  return r;
+  return r as eQuery;
 };
 
 export const eQuery = {

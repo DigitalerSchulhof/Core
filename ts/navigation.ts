@@ -3,7 +3,7 @@ import ajax from "./ajax";
 
 let bereich = "";
 
-export default function navigationAnpassen(ziel?: string, force?: boolean): void {
+export const navigationAnpassen = (ziel?: string, force?: boolean): void => {
   if (!force && ziel === bereich) {
     return;
   }
@@ -14,4 +14,4 @@ export default function navigationAnpassen(ziel?: string, force?: boolean): void
   ajax("Core", 1, false, { bereich: ziel }).then(r => {
     $("#dshHauptnavigation").setHTML(r.Navigation);
   });
-}
+};

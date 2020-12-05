@@ -3,26 +3,16 @@ import * as glob from "glob";
 import * as webpack from "webpack";
 import * as fs from "fs";
 
-const entries: webpack.Entry = {};
-entries.core = glob.sync("ts/**/*.ts");
-entries.core = entries.core.filter((el: string) => el.substr(-9) !== "export.ts");
-entries.core.push("ts/export.ts");
-
-glob.sync("module/*").forEach(dir => {
-  let files = glob.sync(dir + "/ts/**/*.ts");
-  files = files.filter((el: string) => el.substr(-9) !== "export.ts");
-  if (files.length > 0) {
-    if (fs.existsSync(dir + "/ts/export.ts")) {
-      files.push(dir + "/ts/export.ts");
-    }
-    entries[dir.substring(dir.lastIndexOf("/") + 1)] = files;
-  }
-});
-
-console.log(entries);
-
 const config: webpack.Configuration = {
-  entry: entries,
+  entry: ({
+    core: "ts/export.ts",
+    ...glob.sync("./module/*", {}).reduce<{ [key: string]: any }>((list, dir: string) => {
+      if (fs.existsSync(dir + "/ts/export.ts")) {
+        list[dir.substring(dir.lastIndexOf("/") + 1).toLocaleLowerCase()] = [dir + "/ts/export.ts"];
+      }
+      return list;
+    }, {})
+  }),
   devtool: "inline-source-map",
 
   module: {
@@ -43,11 +33,11 @@ const config: webpack.Configuration = {
     extensions: [".ts", ".js"],
   },
   output: {
-    filename: "js.[name].js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "js"),
     library: "[name]",
     libraryTarget: "var",
-    libraryExport: "default"
+    libraryExport: "default",
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({

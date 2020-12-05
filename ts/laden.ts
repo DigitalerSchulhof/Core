@@ -1,7 +1,7 @@
 import ajax, { letzteAnfrage } from "./ajax";
 import $, { eQuery } from "ts/eQuery";
 import * as ladebalken from "ts/ladebalken";
-import navigationAnpassen from "./navigation";
+import { navigationAnpassen } from "./navigation";
 import * as uiLaden from "module/UI/ts/elemente/laden";
 
 let letzteSeitenanfrage: XMLHttpRequest | null = null;
@@ -52,7 +52,6 @@ const seiteLaden = (seite: string, push?: boolean, navigation?: boolean): void =
 };
 
 export default seiteLaden;
-module.exports.seiteLaden = seiteLaden;
 
 export const neuladen = (): void => seiteLaden(document.location.pathname.substring(($("base").getAttr("href") as string).length), false);
 
@@ -89,7 +88,7 @@ window.addEventListener("click", (e: MouseEvent) => {
   if (ziel.ist("a[href]:not(.dshExtern)") && href !== null) {
     seiteLaden(href);
     if (ziel.ist("[onhref]")) {
-      new Function(href).call(ziel[0]);
+      new Function(ziel.getAttr("onhref")).call(ziel[0]);
     }
     e.preventDefault();
   }
