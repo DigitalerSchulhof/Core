@@ -2,7 +2,7 @@ import ajax, { letzteAnfrage } from "./ajax";
 import $, { eQuery } from "ts/eQuery";
 import * as ladebalken from "ts/ladebalken";
 import navigationAnpassen from "./navigation";
-import ui from "module/UI/ts/ui";
+import * as uiLaden from "module/UI/ts/elemente/laden";
 
 let letzteSeitenanfrage: XMLHttpRequest | null = null;
 
@@ -15,7 +15,7 @@ const seiteLaden = (seite: string, push?: boolean, navigation?: boolean): void =
     push = true;
   }
   navigationAnpassen(seite.split("/")[0], navigation);
-  ui.elemente.laden.aus();
+  uiLaden.aus();
   ladebalken.an();
   if (push) {
     window.history.pushState({}, "Digitaler Schulhof - Die Seite wird geladen...", seite);
@@ -52,6 +52,7 @@ const seiteLaden = (seite: string, push?: boolean, navigation?: boolean): void =
 };
 
 export default seiteLaden;
+module.exports.seiteLaden = seiteLaden;
 
 export const neuladen = (): void => seiteLaden(document.location.pathname.substring(($("base").getAttr("href") as string).length), false);
 

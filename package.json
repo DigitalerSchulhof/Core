@@ -22,8 +22,8 @@
     "builddd": "npm run tslint && npm run webpack && npm run core && npm run phan && npm run clean",
     "buildd": "npm run phan && npm run clean",
     "tslint": "eslint --no-error-on-unmatched-pattern --fix ./ts/**/*.ts ./module/*/ts/**/*.ts",
-    "webpack": "npx webpack-cli",
-    "core": "php -f dev/dev.php",
+    "webpack": "npx webpack-cli --mode development",
+    "core": "php -f dev.php",
     "phan": "php -f vendor/phan/phan/phan -C",
     "clean": "rm -f php_errors.log"
   },

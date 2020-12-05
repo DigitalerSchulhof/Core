@@ -1,10 +1,9 @@
 <?php
-include __DIR__."/../core/config.php";
-include __DIR__."/../core/yaml.php";
-require __DIR__ . '/../vendor/autoload.php';
-Less_Autoloader::register();
-include __DIR__."/../module/Kern/klassen/db/db.php";
-include __DIR__."/../module/Kern/klassen/db/anfrage.php";
+include __DIR__."/core/config.php";
+include __DIR__."/core/yaml.php";
+require __DIR__."/vendor/autoload.php";
+include __DIR__."/module/Kern/klassen/db/db.php";
+include __DIR__."/module/Kern/klassen/db/anfrage.php";
 use \Kern\DB;
 
 $dbs = new DB($EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Host"],
@@ -28,8 +27,8 @@ if($cli) {
 
 use Async\YAML;
 
-$DSH_CORE = __DIR__."/../core";
-$DSH_MODULE = __DIR__."/../module";
+$DSH_CORE = __DIR__."/core";
+$DSH_MODULE = __DIR__."/module";
 
 /** @var array Priorität => Seitenliste */
 $globseitenliste = [];
@@ -242,18 +241,18 @@ $less->Reset();
 $drucken    = $less->parse($drucken)->getCss();
 $less->Reset();
 
-if (!file_exists(__DIR__."/../css")) {
-  mkdir(__DIR__."/../css");
+if (!file_exists(__DIR__."/css")) {
+  mkdir(__DIR__."/css");
 }
 
-file_put_contents(__DIR__."/../css/layout.css",    $layout);
-file_put_contents(__DIR__."/../css/hell.css",      $hell);
-file_put_contents(__DIR__."/../css/dunkel.css",    $dunkel);
-file_put_contents(__DIR__."/../css/dunkelroh.css", $dunkelroh);
-file_put_contents(__DIR__."/../css/drucken.css",   $drucken);
+file_put_contents(__DIR__."/css/layout.css",    $layout);
+file_put_contents(__DIR__."/css/hell.css",      $hell);
+file_put_contents(__DIR__."/css/dunkel.css",    $dunkel);
+file_put_contents(__DIR__."/css/dunkelroh.css", $dunkelroh);
+file_put_contents(__DIR__."/css/drucken.css",   $drucken);
 echo "Styles gespeichert.\n";
 
-file_put_contents(__DIR__."/../core/rechte.core",   serialize($allerechte));
+file_put_contents(__DIR__."/core/rechte.core",   serialize($allerechte));
 echo "Rechte gespeichert.\n";
 
 if(!$cli) {

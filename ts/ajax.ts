@@ -1,8 +1,9 @@
-import ui from "module/UI/ts/ui";
 import $ from "ts/eQuery";
 import * as ladebalken from "ts/ladebalken";
 import { AnfrageAntworten } from "./AnfrageAntworten";
 import { AnfrageAntwortenInoffiziell } from "./AnfrageAntwortenInoffiziell";
+import * as uiLaden from "module/UI/ts/elemente/laden";
+import * as uiTabelle from "module/UI/ts/elemente/tabelle";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AntwortLeer { }
@@ -19,7 +20,7 @@ interface AnfrageFehler {
   Fehler: [string, number][];
 }
 
-type ANTWORTEN = AnfrageAntworten & AnfrageAntwortenInoffiziell;
+export type ANTWORTEN = AnfrageAntworten & AnfrageAntwortenInoffiziell;
 
 type MODUL = keyof ANTWORTEN & string;
 type ZIEL = keyof ANTWORTEN[MODUL];
@@ -61,7 +62,7 @@ const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M
   host = host || "";
 
   if (laden !== false) {
-    ui.elemente.laden.an(laden.titel, laden.beschreibung);
+    uiLaden.an(laden.titel, laden.beschreibung);
   }
 
   // Daten
@@ -88,17 +89,17 @@ const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M
               if (typeof sortieren === "object") {
                 for (const t of sortieren) {
                   if ($("#" + t).existiert()) {
-                    ui.elemente.tabelle.sortieren(t);
+                    uiTabelle.sortieren(t);
                   }
                 }
               }
               if (typeof meldung === "object") {
-                ui.elemente.laden.meldung(meldung.modul, meldung.meldung);
+                uiLaden.meldung(meldung.modul, meldung.meldung);
               }
               erfolg(r as AnfrageErfolg & A);
             } else {
               console.error("Fehler: ", r.Fehler);
-              ajax("Kern", 30, { titel: "Fehler werden geladen", beschreibung: "Bitte warten" }, { fehler: r.Fehler }).then((r) => ui.elemente.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
+              ajax("Kern", 30, { titel: "Fehler werden geladen", beschreibung: "Bitte warten" }, { fehler: r.Fehler }).then((r) => uiLaden.aendern("Fehler", r.Meldung, r.Knoepfe));
               fehler(r);
             }
           } catch (err) {
@@ -106,7 +107,7 @@ const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M
             $("#dshMeldungInitial").ausblenden();
             $("#dshFehlerbox").einblenden();
             $("#dshFehlerbox pre").setText("Bei der Anfrage ist ein unbekannter Fehler aufgetreten!");
-            ui.elemente.laden.aus();
+            uiLaden.aus();
             ladebalken.aus();
           }
         } catch (err) {
@@ -116,7 +117,7 @@ const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M
           $("#dshFehlerbox pre").setText("Bei der Anfrage ist ein unbekannter Fehler aufgetreten!");
           const meld = anfrage.responseText;
           $("#dshFehlerbox pre").setText(meld.replace(/^<br \/>\n/, "").replace(/\n$/, ""));
-          ui.elemente.laden.aus();
+          uiLaden.aus();
           ladebalken.aus();
         }
       }

@@ -4,12 +4,12 @@ import * as webpack from "webpack";
 import * as fs from "fs";
 
 const entries: webpack.Entry = {};
-entries.core = glob.sync("./ts/**/*.ts");
+entries.core = glob.sync("ts/**/*.ts");
 entries.core = entries.core.filter((el: string) => el.substr(-9) !== "export.ts");
-entries.core.push("./ts/export.ts");
+entries.core.push("ts/export.ts");
 
-glob.sync("./module/*").forEach(dir => {
-  let files = glob.sync(dir + "/ts/**/*.ts").concat(glob.sync(dir + "/js/**/*.js"));
+glob.sync("module/*").forEach(dir => {
+  let files = glob.sync(dir + "/ts/**/*.ts");
   files = files.filter((el: string) => el.substr(-9) !== "export.ts");
   if (files.length > 0) {
     if (fs.existsSync(dir + "/ts/export.ts")) {
@@ -47,7 +47,7 @@ const config: webpack.Configuration = {
     path: path.resolve(__dirname, "js"),
     library: "[name]",
     libraryTarget: "var",
-    "libraryExport": "default"
+    libraryExport: "default"
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
