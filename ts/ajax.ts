@@ -1,38 +1,42 @@
 import $ from "ts/eQuery";
 import * as ladebalken from "ts/ladebalken";
 import { AnfrageAntworten } from "./AnfrageAntworten";
-import { AnfrageAntwortenInoffiziell } from "./AnfrageAntwortenInoffiziell";
 import * as uiLaden from "module/UI/ts/elemente/laden";
 import * as uiTabelle from "module/UI/ts/elemente/tabelle";
+import { AnfrageDaten } from "./AnfrageDaten";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AntwortLeer { }
+export interface AnfrageAntwortLeer { }
 
-export interface AntwortCode {
+export interface AnfrageAntwortCore {
   Code: string
 }
 
-export interface AnfrageErfolg {
+export interface AnfrageAntwortErfolg {
   Erfolg: true;
 }
 
-interface AnfrageFehler {
+interface AnfrageAntwortFehler {
   Fehler: [string, number][];
 }
 
-export type ANTWORTEN = AnfrageAntworten & AnfrageAntwortenInoffiziell;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AnfrageDatenLeer {}
+
+export type ANTWORTEN = AnfrageAntworten;
+export type DATEN = AnfrageDaten;
 
 type MODUL = keyof ANTWORTEN & string;
 type ZIEL = keyof ANTWORTEN[MODUL];
-export type AjaxAntwort<A extends ANTWORTEN[MODUL][ZIEL]> = Promise<AnfrageErfolg & A>
+export type AjaxAntwort<A extends ANTWORTEN[MODUL][ZIEL]> = Promise<AnfrageAntwortErfolg & A>
 
 export let letzteAnfrage: XMLHttpRequest | null = null;
 
-const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M][Z], AA extends Record<string, any> = ANTWORTEN>(
+const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & keyof AD[M], A extends AA[M][Z], D extends AD[M][Z], AA = ANTWORTEN, AD = DATEN>(
   modul: M,
   ziel: Z,
   laden?: string | { titel: string; beschreibung?: string; } | false,
-  daten?: { [key: string]: any; },
+  daten?: D,
   meldung?: number | { modul: string; meldung: number; },
   sortieren?: string | string[],
   host?: string
@@ -46,7 +50,7 @@ const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M
   }
 
   // Daten Fix
-  daten = daten || {};
+  // daten = daten || {};
 
   // Sortieren Fix
   if (typeof sortieren === "string") {
@@ -77,12 +81,12 @@ const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M
   formDaten.append("modul", modul);
   formDaten.append("ziel", ziel.toString());
 
-  return new Promise((erfolg: (rueckgabe: AnfrageErfolg & A) => void, fehler: (fehler: AnfrageFehler) => void) => {
+  return new Promise((erfolg: (rueckgabe: AnfrageAntwortErfolg & A) => void, fehler: (fehler: AnfrageAntwortFehler) => void) => {
     const anfrage = new XMLHttpRequest();
     anfrage.onreadystatechange = () => {
       if (anfrage.readyState === 4 && anfrage.status === 200) {
         try {
-          const r: { Erfolg: boolean } & AnfrageFehler & A = JSON.parse(anfrage.responseText);
+          const r: { Erfolg: boolean } & A & AnfrageAntwortFehler = JSON.parse(anfrage.responseText) as { Erfolg: boolean } & A & AnfrageAntwortFehler;
           try {
             $("#dshFehlerbox").ausblenden();
             if (r.Erfolg) {
@@ -96,7 +100,7 @@ const ajax = <M extends keyof AA & string, Z extends keyof AA[M], A extends AA[M
               if (typeof meldung === "object") {
                 uiLaden.meldung(meldung.modul, meldung.meldung);
               }
-              erfolg(r as AnfrageErfolg & A);
+              erfolg(r as AnfrageAntwortErfolg & A);
             } else {
               console.error("Fehler: ", r.Fehler);
               ajax("Kern", 30, { titel: "Fehler werden geladen", beschreibung: "Bitte warten" }, { fehler: r.Fehler }).then((r) => uiLaden.aendern("Fehler", r.Meldung, r.Knoepfe));
