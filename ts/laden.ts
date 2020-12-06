@@ -94,10 +94,6 @@ export const click = (e: MouseEvent): void => {
   }
 };
 
-export const load = (): void => {
-  ladebalken.setBalken($("#dshSeiteladenI"));
-};
-
 export const popstate = (): void => {
   seiteLaden(document.location.pathname.substring(($("base").getAttr("href") as string).length), false);
 };

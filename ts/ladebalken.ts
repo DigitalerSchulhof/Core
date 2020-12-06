@@ -1,17 +1,13 @@
-import $, { eQuery } from "./eQuery";
+import $ from "./eQuery";
 
-let balken: eQuery = $("#dshSeiteladenI");
 let fortschritt = 0;
 let timeout: number | null = null;
-
-export const setBalken = (neuerBalken: eQuery): void => {
-  balken = neuerBalken;
-};
 
 // Weil sonst NodeJS' genommen wird
 declare function setTimeout(handler: TimerHandler, timeout?: number, ...arguments: any[]): number;
 
 export const an = (): void => {
+  const balken = $("#dshSeiteladenI");
   balken.addKlasse("dshNoTransition");
   balken.setCss({ width: "0%", opacity: "0" });
   balken[0].offsetHeight;  // CSS-Cache leeren
@@ -30,6 +26,7 @@ export const an = (): void => {
 };
 
 export const update = (): void => {
+  const balken = $("#dshSeiteladenI");
   if (fortschritt > 120) {
     aus();
     $("#dshMeldungInitial").ausblenden();
@@ -45,6 +42,7 @@ export const update = (): void => {
 };
 
 export const aus = (): void => {
+  const balken = $("#dshSeiteladenI");
   fortschritt = 100;
   balken.setCss("width", fortschritt + "%");
   setTimeout(() => {
