@@ -5,14 +5,14 @@ import * as fs from "fs";
 
 const config: webpack.Configuration = {
   entry: ({
-    core: ["ts/events.ts", "ts/export.ts"],
+    core: ["ts/_events.ts", "ts/_export.ts"],
     ...glob.sync("./module/*", {}).reduce<{ [key: string]: any }>((list, dir: string) => {
       const modul = [];
-      if (fs.existsSync(dir + "/ts/events.ts")) {
-        modul.push(dir + "/ts/events.ts");
+      if (fs.existsSync(dir + "/ts/_events.ts")) {
+        modul.push(dir + "/ts/_events.ts");
       }
-      if (fs.existsSync(dir + "/ts/export.ts")) {
-        modul.push(dir + "/ts/export.ts");
+      if (fs.existsSync(dir + "/ts/_export.ts")) {
+        modul.push(dir + "/ts/_export.ts");
       }
       if (modul.length > 0) {
         list[dir.substring(dir.lastIndexOf("/") + 1).toLocaleLowerCase()] = modul;

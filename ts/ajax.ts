@@ -35,7 +35,7 @@ export let letzteAnfrage: XMLHttpRequest | null = null;
 const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & keyof AD[M], A extends AA[M][Z], D extends AD[M][Z], AA extends Record<string, any> = ANTWORTEN, AD extends Record<string, any> = DATEN>(
   modul: M,
   ziel: Z,
-  laden?: string | { titel: string; beschreibung?: string; } | false,
+  laden?: string | { titel: string; beschreibung: string | null; } | false,
   daten?: D,
   meldung?: number | { modul: string; meldung: number; } | false,
   sortieren?: string | string[] | false,
@@ -46,7 +46,7 @@ const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & ke
   }
   if (laden !== false) {
     if (typeof laden === "string") {
-      laden = { titel: laden };
+      laden = { titel: laden, beschreibung: "Bitte warten..."};
     }
     uiLaden.an(laden.titel, laden.beschreibung);
   }
@@ -61,17 +61,12 @@ const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & ke
     if (host === undefined) {
       host = "";
     }
-    // // Meldung Fix
-    // if (typeof meldung === "number") {
-    //   meldung = { meldung: meldung, modul: modul };
-    // }
 
-    // Daten
     const formDaten = new FormData();
     for (const key in daten) {
       if (["string", "Blob"].includes(typeof daten[key])) {
         formDaten.append(key, daten[key]);
-      } else if ((daten[key] as { toString?: () => string }).toString) {
+      } else if (["number"].includes(typeof daten[key])) {
         formDaten.append(key, (daten[key] as { toString: () => string }).toString());
       } else {
         formDaten.append(key, JSON.stringify(daten[key]));
