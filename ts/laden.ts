@@ -88,7 +88,7 @@ export const click = (e: MouseEvent): void => {
   if (ziel.ist("a[href]:not(.dshExtern)") && href !== null) {
     seiteLaden(href);
     if (ziel.ist("[onhref]")) {
-      new Function(ziel.getAttr("onhref")).call(ziel[0]);
+      new Function(ziel.getAttr("onhref") || "").call(ziel[0]);
     }
     e.preventDefault();
   }

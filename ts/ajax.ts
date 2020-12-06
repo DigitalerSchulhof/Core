@@ -21,7 +21,7 @@ interface AnfrageAntwortFehler {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AnfrageDatenLeer {}
+export interface AnfrageDatenLeer { }
 
 export type ANTWORTEN = AnfrageAntworten;
 export type DATEN = AnfrageDaten;
@@ -32,56 +32,54 @@ export type AjaxAntwort<A extends ANTWORTEN[MODUL][ZIEL]> = Promise<AnfrageAntwo
 
 export let letzteAnfrage: XMLHttpRequest | null = null;
 
-const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & keyof AD[M], A extends AA[M][Z], D extends AD[M][Z], AA = ANTWORTEN, AD = DATEN>(
+const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & keyof AD[M], A extends AA[M][Z], D extends AD[M][Z], AA extends Record<string, any> = ANTWORTEN, AD extends Record<string, any> = DATEN>(
   modul: M,
   ziel: Z,
   laden?: string | { titel: string; beschreibung?: string; } | false,
   daten?: D,
-  meldung?: number | { modul: string; meldung: number; },
-  sortieren?: string | string[],
+  meldung?: number | { modul: string; meldung: number; } | false,
+  sortieren?: string | string[] | false,
   host?: string
 ): AjaxAntwort<A> => {
-  // Laden Fix
   if (laden === undefined) {
     laden = "Die Anfrage wird behandelt...";
   }
-  if (typeof laden === "string") {
-    laden = { titel: laden };
-  }
-
-  // Daten Fix
-  // daten = daten || {};
-
-  // Sortieren Fix
-  if (typeof sortieren === "string") {
-    sortieren = [sortieren];
-  }
-  sortieren = sortieren || [];
-
-  // Meldung Fix
-  if (typeof meldung === "number") {
-    meldung = { meldung: meldung, modul: modul };
-  }
-
-  host = host || "";
-
   if (laden !== false) {
+    if (typeof laden === "string") {
+      laden = { titel: laden };
+    }
     uiLaden.an(laden.titel, laden.beschreibung);
   }
 
-  // Daten
-  const formDaten = new FormData();
-  for (const key in daten) {
-    if (["string", "Blob"].includes(typeof daten[key])) {
-      formDaten.append(key, daten[key]);
-    } else {
-      formDaten.append(key, JSON.stringify(daten[key]));
-    }
-  }
-  formDaten.append("modul", modul);
-  formDaten.append("ziel", ziel.toString());
-
   return new Promise((erfolg: (rueckgabe: AnfrageAntwortErfolg & A) => void, fehler: (fehler: AnfrageAntwortFehler) => void) => {
+    if (meldung === undefined) {
+      meldung = false;
+    }
+    if (sortieren === undefined) {
+      sortieren = false;
+    }
+    if (host === undefined) {
+      host = "";
+    }
+    // // Meldung Fix
+    // if (typeof meldung === "number") {
+    //   meldung = { meldung: meldung, modul: modul };
+    // }
+
+    // Daten
+    const formDaten = new FormData();
+    for (const key in daten) {
+      if (["string", "Blob"].includes(typeof daten[key])) {
+        formDaten.append(key, daten[key]);
+      } else if ((daten[key] as { toString?: () => string }).toString) {
+        formDaten.append(key, (daten[key] as { toString: () => string }).toString());
+      } else {
+        formDaten.append(key, JSON.stringify(daten[key]));
+      }
+    }
+    formDaten.append("modul", modul);
+    formDaten.append("ziel", ziel.toString());
+
     const anfrage = new XMLHttpRequest();
     anfrage.onreadystatechange = () => {
       if (anfrage.readyState === 4 && anfrage.status === 200) {
@@ -90,14 +88,17 @@ const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & ke
           try {
             $("#dshFehlerbox").ausblenden();
             if (r.Erfolg) {
-              if (typeof sortieren === "object") {
-                for (const t of sortieren) {
+              if (sortieren !== false) {
+                if (typeof sortieren === "string") {
+                  sortieren = [sortieren];
+                }
+                for (const t of sortieren as string[]) {
                   if ($("#" + t).existiert()) {
                     uiTabelle.sortieren(t);
                   }
                 }
               }
-              if (typeof meldung === "object") {
+              if (meldung !== null && typeof meldung === "object") {
                 uiLaden.meldung(meldung.modul, meldung.meldung);
               }
               erfolg(r as AnfrageAntwortErfolg & A);

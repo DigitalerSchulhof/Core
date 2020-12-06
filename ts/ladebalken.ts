@@ -2,11 +2,14 @@ import $, { eQuery } from "./eQuery";
 
 let balken: eQuery = $("#dshSeiteladenI");
 let fortschritt = 0;
-let timeout: NodeJS.Timeout = null;
+let timeout: number | null = null;
 
 export const setBalken = (neuerBalken: eQuery): void => {
   balken = neuerBalken;
 };
+
+// Weil sonst NodeJS' genommen wird
+declare function setTimeout(handler: TimerHandler, timeout?: number, ...arguments: any[]): number;
 
 export const an = (): void => {
   balken.addKlasse("dshNoTransition");

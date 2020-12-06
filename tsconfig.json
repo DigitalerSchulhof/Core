@@ -7,8 +7,8 @@
     "baseUrl": "./",
     "rootDir": "./",
     "outDir": "./js",
-    "strict": false,
-    "noImplicitAny": true
+    "strict": true,
+    "noImplicitReturns": true
   },
   "include": ["./ts/**/*.ts", "./module/*/ts/**/*.ts"],
 }

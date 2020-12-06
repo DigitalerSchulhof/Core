@@ -8,36 +8,36 @@ interface eQueryInterface {
   einblenden: (d?: string) => eQuery;
   ausblenden: (d?: string) => eQuery;
 
-  getHTML: () => string | undefined;
+  getHTML: () => string;
   setHTML: (html: string) => eQuery;
 
-  getText: () => string | undefined;
+  getText: () => string;
   setText: (html: string) => eQuery;
 
-  hatAttr: (attr: string) => boolean | undefined;
+  hatAttr: (attr: string) => boolean;
   getAttr: (attr: string) => string | null;
-  setAttr: (attr: string, wert: string) => eQuery;
+  setAttr: (attr: string, wert: string | null) => eQuery;
 
   getID: () => string | null;
   setID: (id: string) => eQuery;
 
   toggleCss: (k: string, a: string, b?: string) => eQuery;
 
-  getCss: ((k: string) => string | undefined) & ((k: string[]) => { [key: string]: string } | undefined);
+  getCss: ((k: string) => string) & ((k: string[]) => { [key: string]: string });
 
   setCss: ((k: string, v: string) => eQuery) & ((k: { [key: string]: string }) => eQuery);
 
-  getWert: () => string | undefined;
+  getWert: () => string;
   setWert: (val: string) => eQuery;
-  getEditor: () => string | undefined;
+  getEditor: () => string;
 
-  hatKlasse: (k: string) => boolean | undefined;
+  hatKlasse: (k: string) => boolean;
   setKlasse: (b: boolean, ...k: string[]) => eQuery;
   toggleKlasse: (...k: string[]) => eQuery;
   addKlasse: (...k: string[]) => eQuery;
   removeKlasse: (...k: string[]) => eQuery;
 
-  ist: (s: string | HTMLElement) => boolean | undefined;
+  ist: (s: string | HTMLElement) => boolean;
   parent: (s?: string) => eQuery;
   kinder: (s?: string) => eQuery;
   finde: (s: string) => eQuery;
@@ -54,7 +54,7 @@ interface eQueryInterface {
   ersetzen: (e: HTMLElement) => eQuery;
 }
 
-export type eQuery = eQueryInterface & Array < HTMLElement >;
+export type eQuery = eQueryInterface & Array<HTMLElement>;
 
 const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQuery => {
   const obj: eQueryInterface = {
@@ -68,29 +68,25 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
     },
     einblenden: (d) => obj.each(o => o.style.display = d || "block"),
     ausblenden: (d) => obj.each(o => o.style.display = d || "none"),
-    getHTML: () => (obj.el[0] || { innerHTML: undefined }).innerHTML,
+    getHTML: () => (obj.el[0]).innerHTML,
     setHTML: (html) => obj.each(o => o.innerHTML = html),
-    getText: () => (obj.el[0] || { innerText: undefined }).innerText,
+    getText: () => (obj.el[0]).innerText,
     setText: (text) => obj.each(o => o.innerText = text),
-    hatAttr: (attr) => (obj.el[0] || { hasAttribute: (): undefined => undefined }).hasAttribute(attr),
-    getAttr: (attr) => (obj.el[0] || { getAttribute: (): undefined => undefined }).getAttribute(attr),
-    setAttr: (attr, wert) => obj.each(o => o.setAttribute(attr, wert)),
+    hatAttr: (attr) => (obj.el[0]).hasAttribute(attr),
+    getAttr: (attr) => (obj.el[0]).getAttribute(attr),
+    setAttr: (attr, wert) => obj.each(o => wert === null ? o.removeAttribute(attr) : o.setAttribute(attr, wert)),
     getID: () => obj.getAttr("id"),
     setID: (id) => obj.setAttr("id", id),
     toggleCss: (k, a, b) => {
-      b = b || "";
       return obj.each(function () {
         if (this.getCss(k) === a) {
-          this.setCss(k, b);
+          this.setCss(k, b || "");
         } else {
           this.setCss(k, a);
         }
       });
     },
     getCss: (k: string | string[]) => {
-      if (!obj.el.length) {
-        return undefined;
-      }
       if (typeof k === "string") {
         return obj.el[0].style[k as any];
       }
@@ -100,7 +96,7 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
       }
       return r;
     },
-    setCss: (k: string | {[key: string]: string}, v?: string) => {
+    setCss: (k: string | { [key: string]: string }, v?: string) => {
       if (typeof k === "string" && typeof v === "string") {
         return obj.each(o => o.style[k as any] = v);
       }
@@ -109,13 +105,10 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
       }
       return obj as eQuery;
     },
-    getWert: () => (obj.el[0] as HTMLInputElement || { value: undefined }).value,
+    getWert: () => (obj.el[0] as HTMLInputElement).value,
     setWert: (val) => obj.each(o => (o as HTMLInputElement).value = val),
-    getEditor: () => (obj.el[0] as HTMLInputElement || { value: undefined }).value,
+    getEditor: () => (obj.el[0] as HTMLInputElement).value,
     hatKlasse: (k) => {
-      if (!obj.el.length) {
-        return undefined;
-      }
       let r = true;
       obj.each(o => o.classList.contains(k) || (r = false));
       return r;
@@ -134,19 +127,19 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
     removeKlasse: (...k) => obj.each(o => o.classList.remove(...k)),
     ist: (s) => {
       if (typeof s === "string") {
-        return (obj.el[0] || { matches: (): undefined => undefined }).matches(s);
+        return (obj.el[0]).matches(s);
       }
-      return (obj.el[0] || { isSameNode: (): undefined => undefined }).isSameNode(s);
+      return (obj.el[0]).isSameNode(s);
     },
     parent: (s) => {
       if (s === undefined) {
-        return $((obj.el[0] || { parentNode: undefined }).parentNode as HTMLElement);
+        return $((obj.el[0]).parentNode as HTMLElement);
       }
-      return $(((obj.el[0] || { parentNode: undefined }).parentNode as HTMLElement || { closest: (): undefined => undefined }).closest(s) as HTMLElement);
+      return $(((obj.el[0]).parentNode as HTMLElement).closest(s) as HTMLElement);
     },
     kinder: (s) => {
       if (s === undefined) {
-        return $(...(obj.el[0] || { children: [undefined] }).children as any);
+        return $(...(obj.el[0]).children as any);
       }
       const l: any = [];
       obj.each(o => {
@@ -163,8 +156,8 @@ const $ = (...args: (string | Element | undefined | null | EventTarget)[]): eQue
       obj.each(o => l.push(...o.querySelectorAll(s)));
       return $(...l);
     },
-    siblingVor: () => $((obj.el[0] || { previousSibling: undefined }).previousSibling as HTMLElement),
-    siblingNach: () => $((obj.el[0] || { nextSibling: undefined }).nextSibling as HTMLElement),
+    siblingVor: () => $((obj.el[0]).previousSibling as HTMLElement),
+    siblingNach: () => $((obj.el[0]).nextSibling as HTMLElement),
     siblings: (s) => {
       if (s === undefined) {
         const l: HTMLElement[] = [];

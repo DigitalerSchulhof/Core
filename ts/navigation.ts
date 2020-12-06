@@ -3,11 +3,11 @@ import ajax from "./ajax";
 
 let bereich = "";
 
-export const navigationAnpassen = (ziel?: string, force?: boolean): void => {
+export const navigationAnpassen = (ziel?: string | null, force?: boolean): void => {
   if (!force && ziel === bereich) {
     return;
   }
-  if (ziel === undefined) {
+  if (ziel === undefined || ziel === null) {
     ziel = bereich;
   }
   bereich = ziel;
