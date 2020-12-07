@@ -1,3 +1,4 @@
+import { Antworten as AntwortenCore, Daten as DatenCore } from "./_export";
 import $ from "ts/eQuery";
 import * as ladebalken from "ts/ladebalken";
 import { AnfrageAntworten } from "./AnfrageAntworten";
@@ -8,7 +9,7 @@ import { AnfrageDaten } from "./AnfrageDaten";
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AnfrageAntwortLeer { }
 
-export interface AnfrageAntwortCore {
+export interface AnfrageAntwortCode {
   Code: string
 }
 
@@ -23,24 +24,29 @@ interface AnfrageAntwortFehler {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AnfrageDatenLeer { }
 
-export type ANTWORTEN = AnfrageAntworten;
-export type DATEN = AnfrageDaten;
+export type ANTWORTEN = AnfrageAntworten & {
+  "Core": AntwortenCore
+};
 
-type MODUL = keyof ANTWORTEN & string;
-type ZIEL = keyof ANTWORTEN[MODUL];
-export type AjaxAntwort<A extends ANTWORTEN[MODUL][ZIEL]> = Promise<AnfrageAntwortErfolg & A>
+export type DATEN = AnfrageDaten & {
+  "Core": DatenCore
+};
+
+type AAMODUL = keyof ANTWORTEN & string;
+type AAZIEL = keyof ANTWORTEN[AAMODUL];
+export type AjaxAntwort<A extends ANTWORTEN[AAMODUL][AAZIEL]> = Promise<AnfrageAntwortErfolg & A>
 
 export let letzteAnfrage: XMLHttpRequest | null = null;
 
-const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & keyof AD[M], A extends AA[M][Z], D extends AD[M][Z], AA extends Record<string, any> = ANTWORTEN, AD extends Record<string, any> = DATEN>(
-  modul: M,
-  ziel: Z,
+const ajax = <MODUL extends keyof AA & keyof AD & string, ZIEL extends keyof AA[MODUL] & keyof AD[MODUL], AANTWORT extends AA[MODUL][ZIEL], ADATEN extends AD[MODUL][ZIEL], AA extends Record<string, any> = ANTWORTEN, AD extends Record<string, any> = DATEN>(
+  modul: MODUL,
+  ziel: ZIEL,
   laden?: string | { titel: string; beschreibung: string | null; } | false,
-  daten?: D,
+  daten?: ADATEN,
   meldung?: number | { modul: string; meldung: number; } | false,
   sortieren?: string | string[] | false,
   host?: string
-): AjaxAntwort<A> => {
+): AjaxAntwort<AANTWORT> => {
   if (laden === undefined) {
     laden = "Die Anfrage wird behandelt...";
   }
@@ -51,7 +57,7 @@ const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & ke
     uiLaden.an(laden.titel, laden.beschreibung);
   }
 
-  return new Promise((erfolg: (rueckgabe: AnfrageAntwortErfolg & A) => void, fehler: (fehler: AnfrageAntwortFehler) => void) => {
+  return new Promise((erfolg: (rueckgabe: AnfrageAntwortErfolg & AANTWORT) => void, fehler: (fehler: AnfrageAntwortFehler) => void) => {
     if (meldung === undefined) {
       meldung = false;
     }
@@ -79,7 +85,7 @@ const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & ke
     anfrage.onreadystatechange = () => {
       if (anfrage.readyState === 4 && anfrage.status === 200) {
         try {
-          const r: { Erfolg: boolean } & A & AnfrageAntwortFehler = JSON.parse(anfrage.responseText) as { Erfolg: boolean } & A & AnfrageAntwortFehler;
+          const r: { Erfolg: boolean } & AANTWORT & AnfrageAntwortFehler = JSON.parse(anfrage.responseText) as { Erfolg: boolean } & AANTWORT & AnfrageAntwortFehler;
           try {
             $("#dshFehlerbox").ausblenden();
             if (r.Erfolg) {
@@ -96,7 +102,7 @@ const ajax = <M extends keyof AA & keyof AD & string, Z extends keyof AA[M] & ke
               if (meldung !== null && typeof meldung === "object") {
                 uiLaden.meldung(meldung.modul, meldung.meldung);
               }
-              erfolg(r as AnfrageAntwortErfolg & A);
+              erfolg(r as AnfrageAntwortErfolg & AANTWORT);
             } else {
               console.error("Fehler: ", r.Fehler);
               ajax("Kern", 30, { titel: "Fehler werden geladen", beschreibung: "Bitte warten" }, { fehler: r.Fehler }).then((r) => uiLaden.aendern("Fehler", r.Meldung, r.Knoepfe));
