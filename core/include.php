@@ -24,7 +24,6 @@ class Einbinden {
   	global $DSH_MODULE, $DSH_LINKMUSTER;
   	$seitenmodule = unserialize(file_get_contents(__DIR__."/seitenliste.core"));
   	$gefunden = false;
-    $modul;
     foreach($seitenmodule as $modul => $seiten) {
     	foreach($seiten as $seite => $datei) {
     		if(substr($seite, 0, 1) == "/") {
@@ -48,7 +47,7 @@ class Einbinden {
   		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
 
-  	if(!in_array($modul, array("Kern", "UI")) && Einbinden::modulLaden($modul, true, true, true) === false) {
+  	if(!in_array($modul, array("Kern", "UI")) && Einbinden::modulLaden($modul, true, true) === false) {
   		$urlganz = "Fehler/404";
   		$gefunden = "../../Kern/seiten/fehler/404.php";
   	}
@@ -106,10 +105,9 @@ class Einbinden {
   *	@param string $modul Das zu ladende Modul
   * @param bool $laden Ob die geladen-Funktion des Moduls ausgeführt werden soll
   * @param bool $configrueck Ob die Modulkonfiguration zurückgegeben werden soll
-  * @param bool $script Ob die benötigten Scripts zurückgegeben werden sollen
   * @return bool|array false wenn Modul nicht gefunden, sonst Modulkonfiguration
   */
-  static function modulLaden($modul, $laden = true, $configrueck = false, $scripts = false) {
+  static function modulLaden($modul, $laden = true, $configrueck = false) {
   	global $DSH_MODULE, $DSH_DATENBANKEN, $MODUL, $EINSTELLUNGEN;
   	if(!file_exists("$DSH_MODULE/$modul/modul.core")) {
   		// Modul gibt's nicht
@@ -124,7 +122,7 @@ class Einbinden {
   	foreach($config["benötigt"] as $b) {
   		if(!in_array($b, Einbinden::$geladeneModule)) {
   			Einbinden::$geladeneModule[] = $b;		// Vor modulLaden, um Endlosschleife zu verhindern!
-  			if(Einbinden::modulLaden($b, true, false, $scripts) === false) {
+  			if(Einbinden::modulLaden($b, true, false) === false) {
   				return false;
   			}
   		}
@@ -133,7 +131,7 @@ class Einbinden {
   	foreach($config["erweitert"] as $b) {
   		if(!in_array($b, Einbinden::$geladeneModule)) {
   			Einbinden::$geladeneModule[] = $b;		// Vor modulLaden, um Endlosschleife zu verhindern!
-  			Einbinden::modulLaden($b, true, false, $scripts);
+  			Einbinden::modulLaden($b, true, false);
   		}
   	}
 
@@ -149,10 +147,6 @@ class Einbinden {
   			include_once $check;
   		}
   	}
-
-    if($scripts) {
-      \Anfrage::addRueck("Scripts", $modul);
-    }
 
   	if(!$configrueck) {
   		return true;

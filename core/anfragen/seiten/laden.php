@@ -12,7 +12,7 @@
 
     /**
      * Gibt eine Seite aus und beendet das Skript
-     * @param string $seite :)
+     * @param string $seite
      */
     public static function seiteAus($seite) {
       global $DSH_TITEL, $CODE;

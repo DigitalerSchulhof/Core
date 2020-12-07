@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2016",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "inlineSourceMap": false,
+    "baseUrl": "./",
+    "rootDir": "./",
+    "outDir": "./js",
+    "strict": true,
+    "noImplicitReturns": true
+  },
+  "include": ["./ts/**/*.ts", "./module/*/ts/**/*.ts"],
+}

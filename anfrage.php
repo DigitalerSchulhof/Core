@@ -10,9 +10,7 @@
 * $DSH_BENUTZER   - Aktueller Benutzer
  */
 
-include_once(__DIR__."/yaml.php");
-use Async\YAML;
-
+include_once(__DIR__."/core/yaml.php");
 /*
  * Eine Anfrage gibt (außer im Falle eines Fehlers lol) immer JSON-Code zurück. Kommt ungültiges JSON zurück, wird, sofern dies nicht explizit verlangt wird, eine Fehlermeldung direkt an DSH übermittelt.
  *
@@ -38,12 +36,12 @@ class Anfrage {
   /** @var bool Ob die Anfrage erfolgreich ist */
   private static $ERFOLG = true;
 
-  /** @var [Rückgabefeld : string] => [Rückgabewert : mixed] Rückgabefelder mit deren Inhalt */
+  /** @var array [Rückgabefeld : string] => [Rückgabewert : mixed] Rückgabefelder mit deren Inhalt */
   private static $RUECK = [];
 
   /**
    * Setzt, ob die Anfrage erfolgreich ist
-   * @param bool $typ :)
+   * @param bool $erfolg
    */
   public static function setErfolg($erfolg) {
     self::$ERFOLG = $erfolg;
@@ -59,8 +57,8 @@ class Anfrage {
 
   /**
    * Setzt den Wert eines Rückgabefeldes
-   * @param string $feld :)
-   * @param mixed $wert :)
+   * @param string $feld
+   * @param mixed $wert
    */
   public static function setRueck($feld, $wert) {
     self::$RUECK[$feld] = $wert;
@@ -68,8 +66,8 @@ class Anfrage {
 
   /**
    * Hängt einen Rückgabewert an ein Rückgabefeld an, welches dann - obviously - ein Array ist
-   * @param string $feld  :)
-   * @param mixed ...$werte :)
+   * @param string $feld
+   * @param mixed ...$werte
    */
   public static function addRueck($feld, ...$werte) {
     if(!isset(self::$RUECK[$feld])) {
@@ -80,7 +78,7 @@ class Anfrage {
 
   /**
    * Gibt den Wert eines Rückgabefeldes zurück. <code>null</code> wenn es nicht gesetzt ist.
-   * @param string $feld :)
+   * @param string $feld
    * @return mixed
    */
   public static function getRueck($feld) {
@@ -106,7 +104,7 @@ class Anfrage {
    *  `2`: Aktuell ist kein Benutzer angemeldet.
    *  `3`: Du kannst hier schon 'nen anderen Wert eingeben, aber dann ist es halt kacke...
    *  `4`: Für diese Aktion besteht keine Berechtigung!
-   * @param string $modul
+   * @param string|true $modul
    * Wenn <code>null</code>: Das aktuelle Modul
    * Wenn <code>true</code>: Der Wert von $die und $modul = null
    * Sonst: das Modul des Fehlers
@@ -122,7 +120,7 @@ class Anfrage {
       $modul = null;
     }
     if($fehler < 1) {
-      $modul = $modul ?? "Core";
+      $modul ??= "Core";
     }
     $fehler = [$modul ?? $MODUL, $fehler];
     $d = false;
@@ -227,17 +225,16 @@ Core\Einbinden::modulLaden("Kern", true, false);
 
 $DSH_ALLEMODULE = Core\Einbinden::alleModuleBestimmen();
 
-$fehler = false;
-
-$fehler 		= $fehler || !isset($_POST);
+$fehler 		= !isset($_POST);
 $fehler 		= $fehler || !isset($_POST["modul"]);
 $fehler 		= $fehler || !Kern\Check::istModul($_POST["modul"]);
+$moduldir = "";
 if(!$fehler) {
   $moduldir 	= __DIR__."/module/{$_POST["modul"]}";
   if($_POST["modul"] === "Core") {
     $moduldir = __DIR__."/core";
   }
-  $fehler 		= $fehler || !is_dir($moduldir);
+  $fehler 		= !is_dir($moduldir);
 }
 
 if($fehler) {
