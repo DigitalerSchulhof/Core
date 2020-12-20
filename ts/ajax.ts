@@ -52,7 +52,7 @@ const ajax = <MODUL extends keyof AA & keyof AD & string, ZIEL extends keyof AA[
   }
   if (laden !== false) {
     if (typeof laden === "string") {
-      laden = { titel: laden, beschreibung: "Bitte warten..."};
+      laden = { titel: laden, beschreibung: "Bitte warten..." };
     }
     uiLaden.an(laden.titel, laden.beschreibung);
   }
@@ -99,8 +99,12 @@ const ajax = <MODUL extends keyof AA & keyof AD & string, ZIEL extends keyof AA[
                   }
                 }
               }
-              if (meldung !== null && typeof meldung === "object") {
-                uiLaden.meldung(meldung.modul, meldung.meldung);
+              if (meldung !== null) {
+                if (typeof meldung === "object") {
+                  uiLaden.meldung(meldung.modul, meldung.meldung);
+                } else if (typeof meldung === "number") {
+                  uiLaden.meldung(modul, meldung);
+                }
               }
               erfolg(r as AnfrageAntwortErfolg & AANTWORT);
             } else {
