@@ -1,25 +1,28 @@
 <?php
-include __DIR__."/../core/config.php";
-include __DIR__."/../yaml.php";
-include __DIR__."/lib/Less/Autoloader.php";
+include __DIR__ . "/../core/config.php";
+include __DIR__ . "/../yaml.php";
+include __DIR__ . "/lib/Less/Autoloader.php";
 Less_Autoloader::register();
-include __DIR__."/../module/Kern/klassen/db/db.php";
-include __DIR__."/../module/Kern/klassen/db/anfrage.php";
+include __DIR__ . "/../module/Kern/klassen/db/db.php";
+include __DIR__ . "/../module/Kern/klassen/db/anfrage.php";
+
 use \Kern\DB;
 
-$dbs = new DB($EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Host"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Port"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Benutzer"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Passwort"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["DB"], 
-              $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Schluessel"]
-            );
+$dbs = new DB(
+  $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Host"],
+  $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Port"],
+  $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Benutzer"],
+  $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Passwort"],
+  $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["DB"],
+  $EINSTELLUNGEN["Datenbanken"]["Schulhof"]["Schluessel"]
+);
+
 $cli = php_sapi_name() == "cli";
 
 use Async\YAML;
 
-$DSH_CORE = __DIR__."/../core";
-$DSH_MODULE = __DIR__."/../module";
+$DSH_CORE = __DIR__ . "/../core";
+$DSH_MODULE = __DIR__ . "/../module";
 
 /** @var array Priorität => Seitenliste */
 $globseitenliste = [];
@@ -34,9 +37,9 @@ $allestyles = array("layout" => "", "farben" => "", "drucken" => "");
 $allerechte = [];
 
 /**
-* Erzeugt die serialized-Version der YAML-Modulkonfiguration
-* @param string $modul Das Modul
-*/
+ * Erzeugt die serialized-Version der YAML-Modulkonfiguration
+ * @param string $modul Das Modul
+ */
 function modulKeimen($modul) {
   global $globseitenliste, $globangebote, $DSH_MODULE, $dbs, $allestyles, $allerechte;
   echo "Modul »{$modul}« keimen lassen\n";
@@ -50,19 +53,19 @@ function modulKeimen($modul) {
   );
 
 
-  if(!isset($config["name"])) {
+  if (!isset($config["name"])) {
     echo "Eintrag »name« fehlt in der Modulkonfiguration\n";
   }
-  if(!isset($config["beschreibung"])) {
+  if (!isset($config["beschreibung"])) {
     echo "Eintrag »beschreibung« fehlt in der Modulkonfiguration\n";
   }
-  if(!isset($config["lehrernetz"])) {
+  if (!isset($config["lehrernetz"])) {
     echo "Eintrag »lehrernetz« fehlt in der Modulkonfiguration\n";
   }
-  if(!isset($config["autor"])) {
+  if (!isset($config["autor"])) {
     echo "Eintrag »autor« fehlt in der Modulkonfiguration\n";
   }
-  if(!isset($config["version"])) {
+  if (!isset($config["version"])) {
     echo "Eintrag »version« fehlt in der Modulkonfiguration\n";
   }
 
@@ -71,7 +74,7 @@ function modulKeimen($modul) {
   // Seiten keimen lassen
   $seitenliste = "$DSH_MODULE/$modul/seiten/seitenliste.yml";
   $seitenprio = $config["seitenPrio"];
-  if(file_exists($seitenliste)) {
+  if (file_exists($seitenliste)) {
     $modulSeiten = YAML::loader($seitenliste);
     $modulSeiten = array($modul => $modulSeiten["seiten"]);
     $globseitenliste[$seitenprio] = array_merge(($globseitenliste[$seitenprio] ?? []), $modulSeiten);
@@ -79,16 +82,16 @@ function modulKeimen($modul) {
 
   // Rechte keimen lassen
   $rechteliste = "$DSH_MODULE/$modul/funktionen/rechte.yml";
-  if(file_exists($rechteliste)) {
+  if (file_exists($rechteliste)) {
     $modulRechte = YAML::loader($rechteliste);
-    foreach($modulRechte as $root => $rechte) {
+    foreach ($modulRechte as $root => $rechte) {
       $allerechte[$root] = array_merge_recursive($allerechte[$root] ?? array(), $rechte);
     }
   }
 
   // Einstelungen keimen lassen
   $einstellungenliste = "$DSH_MODULE/$modul/funktionen/einstellungen.yml";
-  if(file_exists($einstellungenliste)) {
+  if (file_exists($einstellungenliste)) {
     $modulEinstellungen = YAML::loader($einstellungenliste);
     $modulEinstellungen = $modulEinstellungen["einstellungen"];
     file_put_contents("$DSH_MODULE/$modul/funktionen/einstellungen.core", serialize($modulEinstellungen));
@@ -96,7 +99,7 @@ function modulKeimen($modul) {
 
   // Angebote keimen lassen
   $angeboteliste = "$DSH_MODULE/$modul/angebote/angebote.yml";
-  if(file_exists($angeboteliste)) {
+  if (file_exists($angeboteliste)) {
     $modulAngebote = YAML::loader($angeboteliste);
     $modulAngebote = $modulAngebote["angebote"];
     $globangebote[$modul] = $modulAngebote;
@@ -106,8 +109,8 @@ function modulKeimen($modul) {
 
   // Styles keimen lassen
   $styledir = "$DSH_MODULE/$modul/styles";
-  if(is_dir($styledir)) {
-    foreach(array_diff(scandir($styledir), array(".", "..")) as $style) {
+  if (is_dir($styledir)) {
+    foreach (array_diff(scandir($styledir), array(".", "..")) as $style) {
       echo "Style: module/$modul/styles/$style\n";
       flush();
 
@@ -118,16 +121,16 @@ function modulKeimen($modul) {
       ob_end_clean();
 
       $modus = &$allestyles["layout"];
-      foreach(explode("\n", $ob) as $zeile) {
-        if(substr($zeile, 0, strlen("// LAYOUT;")) === "// LAYOUT;") {
+      foreach (explode("\n", $ob) as $zeile) {
+        if (substr($zeile, 0, strlen("// LAYOUT;")) === "// LAYOUT;") {
           $modus = &$allestyles["layout"];
           continue;
         }
-        if(substr($zeile, 0, strlen("// FARBEN;")) === "// FARBEN;") {
+        if (substr($zeile, 0, strlen("// FARBEN;")) === "// FARBEN;") {
           $modus = &$allestyles["farben"];
           continue;
         }
-        if(substr($zeile, 0, strlen("// DRUCKEN;")) === "// DRUCKEN;") {
+        if (substr($zeile, 0, strlen("// DRUCKEN;")) === "// DRUCKEN;") {
           $modus = &$allestyles["drucken"];
           continue;
         }
@@ -139,22 +142,22 @@ function modulKeimen($modul) {
   flush();
 }
 
-if(!$cli) {
+if (!$cli) {
   echo "<pre>";
 }
 
 // Module scannen
-foreach(array_diff(scandir($DSH_MODULE), array(".", "..", ".htaccess")) as $modul) {
+foreach (array_diff(scandir($DSH_MODULE), array(".", "..", ".htaccess")) as $modul) {
   $MODULE[] = $modul;
 }
-foreach($MODULE as $modul) {
+foreach ($MODULE as $modul) {
   modulKeimen($modul);
 }
 
 krsort($globseitenliste);
 
 $seiten = [];
-foreach($globseitenliste as $s) {
+foreach ($globseitenliste as $s) {
   $seiten = array_merge($seiten, $s);
 }
 
@@ -162,8 +165,8 @@ file_put_contents("$DSH_CORE/seitenliste.core", serialize($seiten));
 echo "Seitenliste gespeichert.\n";
 
 $platzangebote = [];
-foreach($globangebote as $modul => $plaetze) {
-  foreach($plaetze as $platz => $angebot) {
+foreach ($globangebote as $modul => $plaetze) {
+  foreach ($plaetze as $platz => $angebot) {
     $platzangebote[$platz] = $platzangebote[$platz] ?? [];
     $platzangebote[$platz][$modul] = $angebot;
   }
@@ -178,15 +181,15 @@ $anfrage = $dbs->anfrage("SELECT s.bezeichnung, s.wert_h, s.wert_d, s.alias_h, s
 $stylesHell = [];
 $stylesDunkel = [];
 
-while($anfrage->werte($bezeichnung, $wertHell, $wertDunkel, $aliasHell, $aliasDunkel)) {
-  while($wertHell === null) {
+while ($anfrage->werte($bezeichnung, $wertHell, $wertDunkel, $aliasHell, $aliasDunkel)) {
+  while ($wertHell === null) {
     $anfrageHell = $dbs->anfrage("SELECT a.wert_h, a.alias_h FROM kern_styles as a WHERE a.id = ?", "i", $aliasHell);
     $anfrageHell->werte($wertHell, $aliasHell);
   }
-  while($wertDunkel === null) {
+  while ($wertDunkel === null) {
     $anfrageDunkel = $dbs->anfrage("SELECT a.wert_d, a.alias_d FROM kern_styles as a WHERE a.id = ?", "i", $aliasDunkel);
     $anfrageDunkel->werte($wertDunkel, $aliasDunkel);
-    if($wertDunkel === null && $aliasDunkel === null) {
+    if ($wertDunkel === null && $aliasDunkel === null) {
       $wertDunkel = $wertHell;
     }
   }
@@ -232,21 +235,20 @@ $less->Reset();
 $drucken    = $less->parse($drucken)->getCss();
 $less->Reset();
 
-if (!file_exists(__DIR__."/../css")) {
-  mkdir(__DIR__."/../css");
+if (!file_exists(__DIR__ . "/../css")) {
+  mkdir(__DIR__ . "/../css");
 }
 
-file_put_contents(__DIR__."/../css/layout.css",    $layout);
-file_put_contents(__DIR__."/../css/hell.css",      $hell);
-file_put_contents(__DIR__."/../css/dunkel.css",    $dunkel);
-file_put_contents(__DIR__."/../css/dunkelroh.css", $dunkelroh);
-file_put_contents(__DIR__."/../css/drucken.css",   $drucken);
+file_put_contents(__DIR__ . "/../css/layout.css",    $layout);
+file_put_contents(__DIR__ . "/../css/hell.css",      $hell);
+file_put_contents(__DIR__ . "/../css/dunkel.css",    $dunkel);
+file_put_contents(__DIR__ . "/../css/dunkelroh.css", $dunkelroh);
+file_put_contents(__DIR__ . "/../css/drucken.css",   $drucken);
 echo "Styles gespeichert.\n";
 
-file_put_contents(__DIR__."/../core/rechte.core",   serialize($allerechte));
+file_put_contents(__DIR__ . "/../core/rechte.core",   serialize($allerechte));
 echo "Rechte gespeichert.\n";
 
-if(!$cli) {
+if (!$cli) {
   echo "</pre>";
 }
-?>

@@ -20,66 +20,65 @@
  */
 core.ajaxanfrage = null;
 core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
-	host    = host    || "";
+  host = host || "";
   if (meldung === undefined) {
     meldung = null;
   }
   sortieren = sortieren || [];
-  daten   = daten   || {};
+  daten = daten || {};
 
-	if(laden !== null) {
-		if(typeof laden === "string") {
-			ui.laden.an(laden, "Bitte warten");
-		} else {
-			ui.laden.an(laden[0], laden[1]);
-		}
-	} else {
-		// HINTERGRUND
-	}
+  if (laden !== null) {
+    if (typeof laden === "string") {
+      ui.laden.an(laden, "Bitte warten");
+    } else {
+      ui.laden.an(laden[0], laden[1]);
+    }
+  } else {
+    // HINTERGRUND
+  }
 
   // Daten
   var pDaten = daten;
   var daten = new FormData();
-  for(let key in pDaten) {
-    if(Array.isArray(pDaten[key]) || typeof pDaten[key] === "object") {
+  for (let key in pDaten) {
+    if (Array.isArray(pDaten[key]) || typeof pDaten[key] === "object") {
       daten.append(key, JSON.stringify(pDaten[key]));
     } else {
       daten.append(key, pDaten[key]);
     }
   }
   daten.append("modul", modul);
-  daten.append("ziel",  ziel);
+  daten.append("ziel", ziel);
 
   // Host
-  if(host === true) {
+  if (host === true) {
     host = CMS_LN_HOST;
   }
-  if(typeof CMS_LN_HOST !== "undefined" && host === CMS_LN_HOST) {
+  if (typeof CMS_LN_HOST !== "undefined" && host === CMS_LN_HOST) {
     cms_lehrerdatenbankzugangsdaten(daten);
   }
 
-
   return new Promise((erfolg, fehler) => {
-		var anfrage = new XMLHttpRequest();
-		anfrage.onreadystatechange = _ => {
-			if (anfrage.readyState == 4 && anfrage.status == 200) {
+    var anfrage = new XMLHttpRequest();
+    anfrage.onreadystatechange = _ => {
+      if (anfrage.readyState == 4 && anfrage.status == 200) {
         core.ajaxanfrage = null;
         var r = null;
         try {
           r = JSON.parse(anfrage.responseText);
           try {
             $("#dshFehlerbox").ausblenden();
-            if(r.Erfolg) {
-              if(!Array.isArray(sortieren)) {
+            if (r.Erfolg) {
+              if (!Array.isArray(sortieren)) {
                 sortieren = [sortieren];
               }
-              for(let t of sortieren) {
-                if($("#"+t).existiert()) {
+              for (let t of sortieren) {
+                if ($("#" + t).existiert()) {
                   ui.tabelle.sortieren(t);
                 }
               }
-              if(meldung !== null) {
-                if(Number.isInteger(meldung)) {
+              if (meldung !== null) {
+                if (Number.isInteger(meldung)) {
                   ui.laden.meldung(modul, meldung);
                 } else {
                   ui.laden.meldung(meldung[0], meldung[1]);
@@ -88,10 +87,10 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
               erfolg(r);
             } else {
               console.error("Fehler: ", r.Fehler);
-              core.ajax("Kern", 30, ["Fehler werden geladen", "Bitte warten"], {fehler: r.Fehler}).then((r) => ui.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
+              core.ajax("Kern", 30, ["Fehler werden geladen", "Bitte warten"], { fehler: r.Fehler }).then(r => ui.laden.aendern("Fehler", r.Meldung, r.Knoepfe));
               fehler(r);
             }
-          } catch(err) {
+          } catch (err) {
             console.error(err);
             $("#dshMeldungInitial").ausblenden();
             $("#dshFehlerbox").einblenden();
@@ -99,7 +98,7 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
             ui.laden.aus();
             core.seiteladebalken.aus();
           }
-        } catch(err) {
+        } catch (err) {
           console.error("Kein gültiges JOSN: ", anfrage.responseText);
           $("#dshMeldungInitial").ausblenden();
           $("#dshFehlerbox").einblenden();
@@ -109,19 +108,19 @@ core.ajax = (modul, ziel, laden, daten, meldung, sortieren, host) => {
           ui.laden.aus();
           core.seiteladebalken.aus();
         }
-			}
-		};
-		anfrage.open("POST",host+"anfrage.php", true);
-		anfrage.send(daten);
-    core.ajaxanfrage =  anfrage;
-	});
-}
+      }
+    };
+    anfrage.open("POST", host + "anfrage.php", true);
+    anfrage.send(daten);
+    core.ajaxanfrage = anfrage;
+  });
+};
 
 core.multiajax = (modul, ziel, laden, arrays, statisch, host) => {
   var host = host || "";
 
-  if(laden !== null) {
-    if(typeof laden === "string") {
+  if (laden !== null) {
+    if (typeof laden === "string") {
       ui.laden.an(laden, null);
     } else {
       ui.laden.an(laden[0], laden[1]);
@@ -130,11 +129,11 @@ core.multiajax = (modul, ziel, laden, arrays, statisch, host) => {
     // HINTERGRUND
   }
 
-  return new Promise((erfolg) => {
-    var anfrage = (i) => {
+  return new Promise(erfolg => {
+    var anfrage = i => {
       ajax(modul, ziel, null, daten[i], host).then(erfolg);
-    }
+    };
 
     anfrage(0);
   });
-}
+};
